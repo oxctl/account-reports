@@ -7,7 +7,7 @@ import { Text } from '@instructure/ui-text'
 import { Link } from '@instructure/ui-link'
 import { Pagination } from '@instructure/ui-pagination'
 
-function SisImportsPage({ token }) {
+function SisImportsPage({ token, server }) {
   const [sisImports, setSisImports] = useState({ sis_imports: [] })
   const [sisError, setSisError] = useState(null)
   
@@ -25,7 +25,7 @@ function SisImportsPage({ token }) {
   useEffect(() => {
     if (!token) return
 
-    fetch('https://tools-dev.canvas.ox.ac.uk/api/v1/accounts/1/sis_imports', {
+    fetch(server+'/api/v1/accounts/1/sis_imports', {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -28,7 +28,7 @@ function HomePage() {
 			<List.Item>Get vertical page positioning sorted</List.Item>
 			<List.Item>Pagination of the results</List.Item>
 			<List.Item>Add sentry support</List.Item>
-			<List.Item>Apply Theme (maybe see https://github.com/oxctl/export-members/blob/master/src/App.jsx)</List.Item>
+			<List.Item>Apply Theme</List.Item>
 		</List>
 		
       </View>

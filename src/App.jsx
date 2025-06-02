@@ -25,13 +25,18 @@ function App() {
   const [needsToken, setNeedsToken] = useState(true)
   const [highContrast,setHighContrast] = useState(false)
   const [comInstructureBrandConfigJsonUrl,setComInstructureBrandConfigJsonUrl] = useState(null)
+  const [server,setServer] = useState(null)
   
   function  capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   }
 
-  const updateToken = (receivedToken) => {
+  const updateToken = (receivedToken, server) => {
     setToken(receivedToken)
+    
+   console.log("In App.jsx the server is "+server)
+      
+    setServer(server)
     const jwt = jwtDecode(receivedToken)
     setJwt(jwt)
   }
@@ -47,7 +52,7 @@ function App() {
       <LaunchOAuth
         promptLogin = {needsToken}
         accessToken = {token}
-        server = {{ proxyServer: 'https://tools-dev.canvas.ox.ac.uk' }}
+        server = {{ proxyServer: server }}
         promptUserLogin = {() => setNeedsToken(false)}
       >
 
@@ -68,14 +73,15 @@ function App() {
 		    </Tabs.Panel>
 		    
 		    <Tabs.Panel
-		      id="reports"
-		      renderTitle="Reports"
-		      textAlign="start"
-		      padding="large"
-		      isSelected={selectedIndex === 1} 
+		      id = "reports"
+		      renderTitle = "Reports"
+		      textAlign = "start"
+		      padding = "large"
+		      isSelected = {selectedIndex === 1} 
 		    >
 		       <ProvisioningReportsPage 
-		         token = {token} />
+		         token = {token} 
+		         server =  {server}/>
 		    </Tabs.Panel> 
 		    
 		    <Tabs.Panel
@@ -86,7 +92,8 @@ function App() {
 		      isSelected={selectedIndex === 2}
 		    >
 		      <SisImportsPage 
-		         token = {token} />    
+		         token = {token}
+		         server =  {server} />    
 		     </Tabs.Panel>        
         </Tabs>
       </LaunchOAuth>

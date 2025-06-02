@@ -7,9 +7,11 @@ import { Link } from '@instructure/ui-link'
 import { Text } from '@instructure/ui-text'
 import { Pagination } from '@instructure/ui-pagination'
 
-function ProvisioningReportsTPage({ token }) {
+function ProvisioningReportsPage({ token, server }) {
   const [reports, setReports] = useState([])
   const [error, setError] = useState(null)
+//  const [server,setServer] = useState([])
+ 
 
   function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1)
@@ -17,8 +19,8 @@ function ProvisioningReportsTPage({ token }) {
 
   useEffect(() => {
     if (!token) return
-
-    fetch('https://tools-dev.canvas.ox.ac.uk/api/v1/accounts/1/reports/provisioning_csv', {
+    let csvUrl = server+'/api/v1/accounts/1/reports/provisioning_csv'
+    fetch(csvUrl, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -81,4 +83,4 @@ function ProvisioningReportsTPage({ token }) {
  
 }
 
-export default ProvisioningReportsTPage
+export default ProvisioningReportsPage
