@@ -1,0 +1,90 @@
+{
+  "config": {
+  },
+  "ltiKey": {
+    "tool_configuration": {
+      "settings": {
+        "public_jwk": {},
+        "title": "Report Listings$TITLE_SUFFIX",
+        "description": "Presents links to useful pre-exiting Canvas reports: provisioning and SIS imports.",
+        "target_link_uri": "$TOOL_URL",
+        "oidc_initiation_url": "$LTI_SERVER_URL/lti/login_initiation/",
+        "public_jwk_url": "$LTI_SERVER_URL/.well-known/jwks.json",
+        "scopes": [],
+        "extensions": [
+          {
+            "platform": "canvas.instructure.com",
+            "settings": {
+
+
+TO DO
+
+
+
+
+              "placements": [
+                {
+                  "placement": "??????????",
+                  "message_type": "LtiResourceLinkRequest",
+                  "canvas_icon_class": "icon-settings"
+                }
+              ]
+            },
+            "privacy_level": "public"
+          }
+        ],
+
+
+
+TO DO
+
+
+
+
+        "custom_fields": { ??????????????????
+          "allowed_roles": "?????????????? TeacherEnrollment,DesignerEnrollment,Course Administrator,Account Admin,Learning Technologist,Unit Admin,Assistant Unit Admin,Data Administrator,Local Canvas Coordinator",
+          "canvas_course_id": "$Canvas.course.id",
+          "canvas_membership_roles": "$Canvas.membership.roles",
+          "canvas_root_account_global_id": "$Canvas.root_account.global_id",
+          "canvas_user_prefers_high_contrast": "$Canvas.user.prefersHighContrast",
+          "com_instructure_brand_config_json_url": "$com.instructure.brandConfigJSON.url"
+        }
+      }
+    },
+    "developer_key": {
+      "name": "Report Listings$TITLE_SUFFIX",
+      "redirect_uris": "$LTI_SERVER_URL/lti/login",
+      "scopes": []
+    }
+  },
+  "apiKey" : null,
+  "toolReg": {
+    "lti": {
+      "registrationId": "$LTI_REGISTRATION_ID",
+      "clientName": "Report Listings$TITLE_SUFFIX",
+      "clientId": "$LTI_DEV_ID",
+      "clientSecret": "$LTI_DEV_KEY",
+      "clientAuthenticationMethod": "client_secret_basic",
+      "authorizationGrantType": "implicit",
+      "redirectUri": "{baseUrl}/lti/login",
+      "scopes": [
+        "openid"
+      ],
+      "providerDetails": {
+        "authorizationUri": "$CANVAS_PROVIDER_URL/api/lti/authorize_redirect",
+        "tokenUri": "$CANVAS_PROVIDER_URL/login/oauth2/token",
+        "userInfoEndpoint": null,
+        "jwkSetUri": "$CANVAS_PROVIDER_URL/api/lti/security/jwks",
+        "issuerUri": null,
+        "configurationMetadata": {}
+      }
+    },
+    "proxy" : null,
+    "origins": [
+      "$TOOL_URL"
+    ],
+    "secret": null,
+    "issuer": null,
+    "nrpsAllowedRoles": []
+  }
+}
