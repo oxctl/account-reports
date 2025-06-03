@@ -46,7 +46,7 @@ function App() {
   const [selectedIndex, setSelectedIndex] = useState(0)
   const [token, setToken] = useState(null)
   const [jwt, setJwt] = useState(null)
-  const [needsToken, setNeedsToken] = useState(true)
+  const [needsToken, setNeedsToken] = useState(false)
   const [highContrast,setHighContrast] = useState(false)
   const [comInstructureBrandConfigJsonUrl,setComInstructureBrandConfigJsonUrl] = useState(null)
   const [server,setServer] = useState(null)

@@ -61,7 +61,7 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
                 throw new Error('You don\'t have permission to access your profile. Or your session has expired, please try relaunching the tool')
               }
             } else if (response.status === 400) {
-              //const err = await response.text()
+              const err = "Response of 400 Bad Request: we have given up and are looking longingly at the pub."
               console.error(err)
               throw new Error(err)
             } else {
