@@ -106,7 +106,7 @@ function SisImportsPage({ token, server }) {
 
                   <List.Item>
                   <Text>Warning messages: {processing_warnings}</Text>
-                  <WarningsList warnings={processing_warnings} />
+                  <WarningsList items={processing_warnings} />
 				  </List.Item>
 				  
                 </List>
