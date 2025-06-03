@@ -32,10 +32,7 @@ function App() {
   }
 
   const updateToken = (receivedToken, server) => {
-    setToken(receivedToken)
-    
-   console.log("In App.jsx the server is "+server)
-      
+    setToken(receivedToken)      
     setServer(server)
     const jwt = jwtDecode(receivedToken)
     setJwt(jwt)

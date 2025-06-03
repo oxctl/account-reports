@@ -23,12 +23,12 @@ function HomePage() {
   			
   		</Alert>
 		<List>
-			<List.Item>Grab server from LTI props</List.Item>
 			<List.Item>Ask for token just once</List.Item>
 			<List.Item>Get vertical page positioning sorted</List.Item>
 			<List.Item>Pagination of the results</List.Item>
 			<List.Item>Add sentry support</List.Item>
 			<List.Item>Apply Theme</List.Item>
+			<List.Item>Warnings array is flattened sisImports- why aint it an array</List.Item>
 		</List>
 		
       </View>

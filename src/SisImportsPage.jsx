@@ -11,21 +11,46 @@ function SisImportsPage({ token, server }) {
   const [sisImports, setSisImports] = useState({ sis_imports: [] })
   const [sisError, setSisError] = useState(null)
   
-  function prettifyWarnings ( warningsArray) {
-	
- 	 if (!warningsArray || warningsArray.length === 0) {
-   	 	return "No warnings";
-	 }
-	 
-	 console.log("number of warnings: "+warningsArray.length)
 
- 	 return warningsArray.join(": ");		
-  }
+  
+	function AttachmentsList({ items }) {
+	    
+	  if (!Array.isArray(items)) return null
+	
+	  return (
+	    <List>
+	      {items.map((item, index) => (
+	        <List.Item key={index}>
+	          <Link href={item.url} target="_blank" rel="noopener noreferrer">
+	            {item.filename}
+	          </Link>
+	        </List.Item>
+	      ))}
+	    </List>
+	  )
+	}
+	
+	function WarningsList({ items }) {
+	    
+	  if (!Array.isArray(items)) return null
+	
+	  return (
+	    <List>
+	      {warnings.map(([filename, message], index) => (		
+	        <List.Item key={index}>
+	          <strong>{filename}:</strong> {message}
+	        </List.Item>
+	      ))}
+	    </List>
+	  )
+	}
+	
+
 
   useEffect(() => {
     if (!token) return
 
-    fetch(server+'/api/v1/accounts/1/sis_imports', {
+    fetch(server+'/api/v1/accounts/1/sis_imports?per_page=100', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -55,23 +80,23 @@ function SisImportsPage({ token, server }) {
           {sisImports.sis_imports.slice(0, sisImports.sis_imports.length).map((sis) => {
             const {
               id,
-              created_at,
               ended_at,
-              workflow_state,
               user: { name } = {},
               errors_attachment: { url } = {},
+              csv_attachments,
               processing_warnings 
             } = sis  
-            
-            
+                     
             /* TO DO processing_warings seems to be a flattened array */          
 
             return (
               <List.Item key={id} margin="small 0">
-                <Text as="span" weight="bold">SIS Import ID: {id}</Text>
-                <List isUnstyled>
-                  <List.Item>User: {name}</List.Item>
-                  <List.Item>Date: {ended_at ? new Date(ended_at).toLocaleString() : 'N/A'}</List.Item>
+                <Text as="span" weight="bold">SIS Import ID: {id} {name} {ended_at ? new Date(ended_at).toLocaleString() : 'N/A'}</Text>
+                <List>
+                  <List.Item>
+                    <Text>Attachments:</Text>
+                    <AttachmentsList items={csv_attachments}/>
+                  </List.Item>
                   <List.Item>
                     Errors:&nbsp;
                     <Link href={url} rel="noopener noreferrer">
@@ -79,7 +104,11 @@ function SisImportsPage({ token, server }) {
                     </Link>
                   </List.Item>
 
-                  <List.Item>Warnings:&nbsp;{prettifyWarnings(processing_warnings)}</List.Item>
+                  <List.Item>
+                  <Text>Warning messages: {processing_warnings}</Text>
+                  <WarningsList warnings={processing_warnings} />
+				  </List.Item>
+				  
                 </List>
               </List.Item>
             )

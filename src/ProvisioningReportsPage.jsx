@@ -19,8 +19,7 @@ function ProvisioningReportsPage({ token, server }) {
 
   useEffect(() => {
     if (!token) return
-    let csvUrl = server+'/api/v1/accounts/1/reports/provisioning_csv'
-    fetch(csvUrl, {
+    fetch(server+'/api/v1/accounts/1/reports/provisioning_csv', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -66,7 +65,7 @@ function ProvisioningReportsPage({ token, server }) {
                 <Link href={url} rel="noopener noreferrer">
                   <Text as="span">{mainTitle} {extraInfo}</Text>
                 </Link>
-                <List isUnstyled>
+                <List>
                   <List.Item>Status: {status}</List.Item>
                   <List.Item>Created: {new Date(created_at).toLocaleString()}</List.Item>
                   <List.Item>
