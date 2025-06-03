@@ -1,4 +1,27 @@
-// SisImportsPage.js
+/*
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2015 - present Instructure, Inc.
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+ 
 import React, { useEffect, useState } from 'react'
 import { View } from '@instructure/ui-view'
 import { List } from '@instructure/ui-list'
@@ -6,23 +29,24 @@ import { Heading } from '@instructure/ui-heading'
 import { Text } from '@instructure/ui-text'
 import { Link } from '@instructure/ui-link'
 import { Pagination } from '@instructure/ui-pagination'
+import { ToggleDetails } from '@instructure/ui-toggle-details'
 
-function SisImportsPage({ token, server }) {
+function SisImportsPage({ token, server, handle403 }) {
   const [sisImports, setSisImports] = useState({ sis_imports: [] })
   const [sisError, setSisError] = useState(null)
   
 
   
-	function AttachmentsList({ items }) {
+	function AttachmentsList({ attachments }) {
 	    
-	  if (!Array.isArray(items)) return null
+	  if (!Array.isArray(attachments)) return null
 	
 	  return (
 	    <List>
-	      {items.map((item, index) => (
+	      {attachments.map((attachment, index) => (
 	        <List.Item key={index}>
-	          <Link href={item.url} target="_blank" rel="noopener noreferrer">
-	            {item.filename}
+	          <Link href={attachment.url} target="_blank" rel="noopener noreferrer">
+	            {attachment.filename}
 	          </Link>
 	        </List.Item>
 	      ))}
@@ -30,9 +54,9 @@ function SisImportsPage({ token, server }) {
 	  )
 	}
 	
-	function WarningsList({ items }) {
+	function WarningsList({ warnings }) {
 	    
-	  if (!Array.isArray(items)) return null
+	  if (!Array.isArray(warnings)) return null
 	
 	  return (
 	    <List>
@@ -45,19 +69,53 @@ function SisImportsPage({ token, server }) {
 	  )
 	}
 	
+	function CountsList({ counts }) {
+		
+	  if (!counts || Object.keys(counts).length === 0) {
+    	return <Text>No data available.</Text>
+  	  }
+	    
+  		return (
+  		  <List>
+   		   {Object.entries(counts).map(([key, value]) => (
+   		     <List.Item key={key}>
+    		      <Text as="span">{key}:</Text> {value}
+  		      </List.Item>
+   		   ))}
+  		  </List>
+ 		 )
+	}
+	
 
 
   useEffect(() => {
     if (!token) return
 
-    fetch(server+'/api/v1/accounts/1/sis_imports?per_page=100', {
+    fetch(server+'/api/v1/accounts/1/sis_imports?per_page=25', {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
       .then((response) => {
         if (!response.ok) {
-          throw new Error(`API error: ${response.status}`)
+          	if (response.status === 403) {
+              handle403()
+              throw new Error()
+            } else if (response.status === 401) {
+              const authHeader = response.headers.get('WWW-Authenticate')
+              if (authHeader && !authHeader.includes('proxy')) {
+                handle403()
+                throw new Error()
+              } else {
+                throw new Error('You don\'t have permission to access your profile. Or your session has expired, please try relaunching the tool')
+              }
+            } else if (response.status === 400) {
+              //const err = await response.text()
+              console.error(err)
+              throw new Error(err)
+            } else {
+              throw new Error('Bad response: ' + response.status)
+            }
         }
         return response.json()
       })
@@ -74,39 +132,43 @@ function SisImportsPage({ token, server }) {
         <Heading level="h1" as="h2">List of SIS Imports</Heading>
         {sisError && <Text color="danger">{sisError}</Text>}
 
-		<Text color="danger">TO DO processing_warings seems to be a flattened array</Text>
-
+		
         <List>
           {sisImports.sis_imports.slice(0, sisImports.sis_imports.length).map((sis) => {
             const {
               id,
+              progress,
               ended_at,
               user: { name } = {},
               errors_attachment: { url } = {},
+              data: {counts},
               csv_attachments,
               processing_warnings 
             } = sis  
-                     
-            /* TO DO processing_warings seems to be a flattened array */          
+                              
 
             return (
               <List.Item key={id} margin="small 0">
-                <Text as="span" weight="bold">SIS Import ID: {id} {name} {ended_at ? new Date(ended_at).toLocaleString() : 'N/A'}</Text>
+                <Text as="span" weight="bold">SIS Import ID: {id} {name} {ended_at ? new Date(ended_at).toLocaleString() : 'N/A'} =&gt; {progress}%</Text>
                 <List>
                   <List.Item>
-                    <Text>Attachments:</Text>
-                    <AttachmentsList items={csv_attachments}/>
+                    <ToggleDetails summary="Summary of changes"><CountsList counts={counts}/></ToggleDetails>
                   </List.Item>
                   <List.Item>
-                    Errors:&nbsp;
+                    <Text>Attachments:</Text>
+                    <AttachmentsList attachments={csv_attachments}/>
+                  </List.Item>
+
+                  <List.Item>
+                    <Text>Errors:&nbsp;</Text>
                     <Link href={url} rel="noopener noreferrer">
                       <Text as="span">{url ? url : 'No errors'}</Text>
                     </Link>
                   </List.Item>
 
                   <List.Item>
-                  <Text>Warning messages: {processing_warnings}</Text>
-                  <WarningsList items={processing_warnings} />
+                  <Text>Warning messages: </Text>
+                  <WarningsList warnings={processing_warnings} />
 				  </List.Item>
 				  
                 </List>
