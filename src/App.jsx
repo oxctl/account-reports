@@ -29,7 +29,7 @@ import { Heading } from '@instructure/ui-heading'
 import { Link } from '@instructure/ui-link'
 import { Text } from '@instructure/ui-text'
 import { Tabs } from '@instructure/ui-tabs'
-import { LtiApplyTheme, LtiTokenRetriever, LaunchOAuth } from '@oxctl/ui-lti'
+import { LtiApplyTheme, LtiTokenRetriever, LaunchOAuth, LtiHeightLimit } from '@oxctl/ui-lti'
 import { jwtDecode } from 'jwt-decode'
 
 import HomePage from './HomePage'
@@ -39,16 +39,17 @@ import SisImportsPage from './SisImportsPage'
 
 
 function App() {
-  const [reports, setReports] = useState([])
-  const [sisImports, setSisImports] = useState([])
-  const [error, setError] = useState(null)
-  const [sisError, setSisError] = useState(null)
+
   const [selectedIndex, setSelectedIndex] = useState(0)
+  
   const [token, setToken] = useState(null)
   const [jwt, setJwt] = useState(null)
   const [needsToken, setNeedsToken] = useState(false)
+  
   const [highContrast,setHighContrast] = useState(false)
   const [comInstructureBrandConfigJsonUrl,setComInstructureBrandConfigJsonUrl] = useState(null)
+  const [canvasUserPrefersHighContrast, setCanvasUserPrefersHighContrast] = useState(false)
+
   const [server,setServer] = useState(null)
   
   function  capitalizeFirstLetter(val) {
@@ -56,10 +57,18 @@ function App() {
   }
 
   const updateToken = (receivedToken, server) => {
-    setToken(receivedToken)      
+	
+    setToken(receivedToken)   
+       
     setServer(server)
-    const jwt = jwtDecode(receivedToken)
-    setJwt(jwt)
+    
+    const decodedJwt = jwtDecode(receivedToken)
+    setJwt(decodedJwt)
+    
+    const jwtClaim = decodedJwt['https://purl.imsglobal.org/spec/lti/claim/custom']  
+    setComInstructureBrandConfigJsonUrl(jwtClaim.com_instructure_brand_config_json_url)
+    setCanvasUserPrefersHighContrast(jwtClaim.canvas_user_prefers_high_contrast === 'true')
+
   }
 
   const handleTabChange = (event, { index }) => {
@@ -69,59 +78,66 @@ function App() {
   return (
 
     <LtiTokenRetriever handleJwt={updateToken}>
+    
+    		<LtiApplyTheme url={comInstructureBrandConfigJsonUrl} highContrast={canvasUserPrefersHighContrast}>
+    		
+              <LtiHeightLimit>
 
-      <LaunchOAuth
-        promptLogin = {needsToken}
-        accessToken = {token}
-        server = {{ proxyServer: server }}
-        promptUserLogin = {() => setNeedsToken(false)}
-      >
-
-        <Tabs
-          margin = "large auto"
-          padding = "medium"
-          onRequestTabChange = {handleTabChange}
-        >
-        
-		    <Tabs.Panel
-		      id="home"
-		      renderTitle="Home"
-		      textAlign="start"
-		      padding="large"
-		      isSelected={selectedIndex === 0} 
-		    >
-		      <HomePage />              
-		    </Tabs.Panel>
-		    
-		    <Tabs.Panel
-		      id = "reports"
-		      renderTitle = "Reports"
-		      textAlign = "start"
-		      padding = "large"
-		      isSelected = {selectedIndex === 1} 
-		    >
-		       <ProvisioningReportsPage 
-		         token = {token} 
-		         server =  {server}
-		         handle403={() => setNeedsToken(true) }
-		       />
-		    </Tabs.Panel> 
-		    
-		    <Tabs.Panel
-		      id="sisImports"
-		      renderTitle="SIS Imports"
-		      textAlign="start"
-		      padding="large"
-		      isSelected={selectedIndex === 2}
-		    >
-		      <SisImportsPage 
-		         token = {token}
-		         server =  {server} 
-		         handle403={() => setNeedsToken(true)}
-		      />    
-		     </Tabs.Panel>        
-        </Tabs>
-      </LaunchOAuth>
+			      <LaunchOAuth
+			        promptLogin = {needsToken}
+			        accessToken = {token}
+			        server = {{ proxyServer: server }}
+			        promptUserLogin = {() => setNeedsToken(false)}
+			      >
+			
+			        <Tabs
+			          margin = "large auto"
+			          padding = "medium"
+			          onRequestTabChange = {handleTabChange}
+			        >
+			        
+					    <Tabs.Panel
+					      id="home"
+					      renderTitle="Home"
+					      textAlign="start"
+					      padding="large"
+					      isSelected={selectedIndex === 0} 
+					    >
+					      <HomePage />              
+					    </Tabs.Panel>
+					    
+					    <Tabs.Panel
+					      id = "reports"
+					      renderTitle = "Reports"
+					      textAlign = "start"
+					      padding = "large"
+					      isSelected = {selectedIndex === 1} 
+					    >
+					       <ProvisioningReportsPage 
+					         token = {token} 
+					         server =  {server}
+					         handle403={() => setNeedsToken(true) }
+					       />
+					    </Tabs.Panel> 
+					    
+					    <Tabs.Panel
+					      id="sisImports"
+					      renderTitle="SIS Imports"
+					      textAlign="start"
+					      padding="large"
+					      isSelected={selectedIndex === 2}
+					    >
+					      <SisImportsPage 
+					         token = {token}
+					         server =  {server} 
+					         handle403={() => setNeedsToken(true)}
+					      />    
+					     </Tabs.Panel>        
+			        </Tabs>
+			      </LaunchOAuth>
+             </LtiHeightLimit>
+          </LtiApplyTheme>     
+      
     </LtiTokenRetriever>
   )
 }
