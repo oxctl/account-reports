@@ -25,17 +25,8 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client';
 import App from './App'
-import * as Sentry from '@sentry/react'
 
-const dsn = import.meta.env.VITE_SENTRY_DSN
-if (dsn) {
-  Sentry.init({
-    dsn: dsn,
-    environment: import.meta.env.VITE_SENTRY_ENV,
-    integrations: [Sentry.browserTracingIntegration()],
-    tracesSampleRate: 1.0
-  })
-}
+// not sure this is used, index.html invokes main.jsx
 
 const container = document.getElementById('app');
 const root = createRoot(container);

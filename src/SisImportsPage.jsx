@@ -141,6 +141,12 @@ function SisImportsPage({ token, server, handle403 }) {
 		
 		function onClick(url) {
 			setCurrentPageUrl(url)
+			
+			// Scroll to top when page changes
+			// TO DO - doesnt work
+			const el = document.getElementById("sisImports")
+            el?.scrollTo({ top: 0, behavior: "smooth" })
+			
 		}
 			
          
@@ -152,8 +158,11 @@ function SisImportsPage({ token, server, handle403 }) {
 		  	labelNext="Next Page"
 		  	labelPrev="Previous Page"
 		  	>
-		  	{prevPageUrl && <Pagination.Navigation direction="prev" label="Previous page" onClick={()=>onClick(prevPageUrl)}/>}
-		  	{nextPageUrl && <Pagination.Navigation direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}/>}
+		  	{/*prevPageUrl && <Pagination.Navigation direction="prev" label="Previous page" onClick={()=>onClick(prevPageUrl)}/>}
+		  	{nextPageUrl && <Pagination.Navigation direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}/>*/}
+		  	
+		    {prevPageUrl && <Pagination.Page direction="prev" label="Previous page" onClick={()=>onClick(prevPageUrl)}>&lt;</Pagination.Page>}
+		  	{nextPageUrl && <Pagination.Page direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}>&gt;</Pagination.Page>}
 		  </Pagination>
         )
         

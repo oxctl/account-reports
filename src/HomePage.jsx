@@ -47,7 +47,7 @@ function HomePage() {
   		</Alert>
 		<List>
 			<List.Item>Add "page =n=" so people know where they are?]</List.Item>
-			<List.Item>Add sentry support</List.Item>
+			<List.Item>Scroll to top of page after navigation button clicked</List.Item>
 			
 		</List>
 		
