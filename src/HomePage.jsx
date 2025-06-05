@@ -35,21 +35,8 @@ function HomePage() {
 
       <View as="div" padding="large">
         <Heading level="h1" as="h2">Provisioning Reports</Heading>
-        <Text>There are a number of report listings, click on the tab to view.</Text>
+        <Text>There are a number of different report listings, click on the tab to view.</Text>
 
-      	<Alert
-   			 variant="warning"
-  			 margin="small"
-   			 variantScreenReaderLabel="Warning, "
-			  >	
-			Not finished, see below for list of improvements 
-  			
-  		</Alert>
-		<List>
-			<List.Item>Add "page =n=" so people know where they are?]</List.Item>
-			<List.Item>Scroll to top of page after navigation button clicked</List.Item>
-			
-		</List>
 		
       </View>
   )

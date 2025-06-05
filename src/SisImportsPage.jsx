@@ -174,8 +174,6 @@ function SisImportsPage({ token, server, handle403 }) {
 
   return (
 	
-	
-
       <View as="div" padding="large">
         <Heading level="h1" as="h2">List of SIS Imports</Heading>
         {sisError && <Text color="danger">{sisError}</Text>}
@@ -197,7 +195,7 @@ function SisImportsPage({ token, server, handle403 }) {
 
             return (
               <List.Item key={id} margin="small 0">
-                <Text as="span" weight="bold">SIS Import ID: {id} {name} {ended_at ? new Date(ended_at).toLocaleString() : 'N/A'} =&gt; {progress}%</Text>
+                <Text as="span">SIS Import ID: {id} {name} ({ended_at ? new Date(ended_at).toLocaleString() : 'N/A'}) =&gt; {progress}%</Text>
                 <List>
                   <List.Item>
                     <ToggleDetails summary="Summary of changes"><CountsList counts={counts}/></ToggleDetails>
@@ -207,17 +205,20 @@ function SisImportsPage({ token, server, handle403 }) {
                     <AttachmentsList attachments={csv_attachments}/>
                   </List.Item>
 
+                  { url && 
                   <List.Item>
                     <Text>Errors:&nbsp;</Text>
                     <Link href={url} rel="noopener noreferrer">
                       <Text as="span">{url ? url : 'No errors'}</Text>
                     </Link>
                   </List.Item>
+                  }
 
+                  { processing_warnings && 
                   <List.Item>
                   <Text>Warning messages: </Text>
                   <WarningsList warnings={processing_warnings} />
-				  </List.Item>
+				  </List.Item>}
 				  
                 </List>
               </List.Item>

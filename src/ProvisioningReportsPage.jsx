@@ -130,10 +130,11 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
           {reports.slice(0, reports.length).map((report) => {
             const {
               id,
+              progress,
               status,
-              created_at,
+              ended_at,
               parameters: { extra_text } = {},
-              attachment: { size, url = '' } = {}
+              attachment: { url = '' } = {}
             } = report
 
             let mainTitle = extra_text?.match(/Reports.*$/)?.[0] || 'Pending'
@@ -147,13 +148,7 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
                 <Link href={url} rel="noopener noreferrer">
                   <Text as="span">{mainTitle} {extraInfo}</Text>
                 </Link>
-                <List>
-                  <List.Item>Status: {status}</List.Item>
-                  <List.Item>Created: {new Date(created_at).toLocaleString()}</List.Item>
-                  <List.Item>
-                    Size: {size ? (size / 1024).toFixed(2) : 'N/A'} KB
-                  </List.Item>
-                </List>
+                <Text as="span"> ({ended_at ? new Date(ended_at).toLocaleString() : 'N/A'})  =&gt; {progress}%</Text>
               </List.Item>
             )
           })}
