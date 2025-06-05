@@ -23,4 +23,23 @@ npx @oxctl/lti-auto-configuration create
 ```
 
 
+### Development 
 
+The deploy to development is done automatically when a new commit is made to master.
+
+### Releasing
+
+To release the latest code merge the master branch into the release branch Cloudflare will then deploy this to production.
+The best way to do this is to create a PR from `master` to `release`, this allows you to check what's going to be released.
+There is a GitHub action that can be manually run to do this.
+
+Alternatively to do this locally run checkout the release branch, fetch the latest code from the origin and run:
+```shell
+git merge origin/master
+```
+
+To see what is about to go into a release you can preview the changes between [master and release](https://github.com/oxctl/report-listings/compare/release...master), then to double check a PR can be created to merge the changes, reviewed and merged (at which point the release branch is built and deployed).
+
+## Sentry
+
+Application errors are reported using https://sentry.io for this application. There is DSN to be used for development and  production. There's no DSN for local development. Sentry is setup as early as possible in the application to capture as many errors as possible.
