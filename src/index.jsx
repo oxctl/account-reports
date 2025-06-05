@@ -25,28 +25,16 @@
 import React from 'react'
 import { createRoot } from 'react-dom/client';
 import App from './App'
-import { getSettings } from './utils'
 import * as Sentry from '@sentry/react'
 
-{
-  // Load sentry setup if defined.
-  // This is done early in the application to catch as much as possible.
-  const dsn = getSettings()?.sentryDsn
-  const env = getSettings()?.sentryEnv
-  
-  if (dsn) {
-    Sentry.init({
-      dsn,
-      integrations: [Sentry.browserTracingIntegration()],
-      environment: getSettings()?.sentryEnv,
-
-
-      // Set tracesSampleRate to 1.0 to capture 100%
-      // of transactions for performance monitoring.
-      // We recommend adjusting this value in production
-      tracesSampleRate: 1.0,
-    })
-  }
+const dsn = import.meta.env.VITE_SENTRY_DSN
+if (dsn) {
+  Sentry.init({
+    dsn: dsn,
+    environment: import.meta.env.VITE_SENTRY_ENV,
+    integrations: [Sentry.browserTracingIntegration()],
+    tracesSampleRate: 1.0
+  })
 }
 
 const container = document.getElementById('app');

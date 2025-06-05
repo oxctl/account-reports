@@ -36,8 +36,8 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
   
   const [reports, setReports] = useState([])
   const [error, setError] = useState(null)
-  const [nextPageUrl, setNextPageUrl] = useState(server+'/api/v1/accounts/1/reports/provisioning_csv?page=1&per_page=10')
-  const [prevPageUrl, setPrevPageUrl] = useState(server+'/api/v1/accounts/1/reports/provisioning_csv?page=1&per_page=10')
+  const [nextPageUrl, setNextPageUrl] = useState(null)
+  const [prevPageUrl, setPrevPageUrl] = useState(null)
   const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/1/reports/provisioning_csv?page=1&per_page=10')
 
 

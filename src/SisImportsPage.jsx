@@ -38,8 +38,8 @@ function SisImportsPage({ token, server, handle403 }) {
 
   const [sisImports, setSisImports] = useState({ sis_imports: [] })
   const [sisError, setSisError] = useState(null)
-  const [nextPageUrl, setNextPageUrl] = useState(server+'/api/v1/accounts/1/sis_imports?page=1&per_page=10')
-  const [prevPageUrl, setPrevPageUrl] = useState(server+'/api/v1/accounts/1/sis_imports?page=1&per_page=10')
+  const [nextPageUrl, setNextPageUrl] = useState(null)
+  const [prevPageUrl, setPrevPageUrl] = useState(null)
   const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/1/sis_imports?page=1&per_page=10')
  
   
