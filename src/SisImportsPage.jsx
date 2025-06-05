@@ -46,7 +46,6 @@ function SisImportsPage({ token, server, handle403 }) {
   useEffect(() => {
     if (!token) return
 
-    // TO DO get pagination working
     fetch(currentPageUrl, {
       headers: {
         Authorization: `Bearer ${token}`
@@ -113,7 +112,7 @@ function SisImportsPage({ token, server, handle403 }) {
 	    <List>
 	      {warnings.map(([filename, message], index) => (		
 	        <List.Item key={index}>
-	          <strong>{filename}:</strong> {message}
+	          <Text>{filename}:</Text> {message}
 	        </List.Item>
 	      ))}
 	    </List>
@@ -158,8 +157,6 @@ function SisImportsPage({ token, server, handle403 }) {
 		  	labelNext="Next Page"
 		  	labelPrev="Previous Page"
 		  	>
-		  	{/*prevPageUrl && <Pagination.Navigation direction="prev" label="Previous page" onClick={()=>onClick(prevPageUrl)}/>}
-		  	{nextPageUrl && <Pagination.Navigation direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}/>*/}
 		  	
 		    {prevPageUrl && <Pagination.Page direction="prev" label="Previous page" onClick={()=>onClick(prevPageUrl)}>&lt;</Pagination.Page>}
 		  	{nextPageUrl && <Pagination.Page direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}>&gt;</Pagination.Page>}
