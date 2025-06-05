@@ -14,6 +14,8 @@
     "@oxctl/ui-lti": "^2.4.0",
     "jwt-decode": "^4.0.0",
     "react": "^18.3.1",
+    "@sentry/react": "^8.37.1",
+    "@web3-storage/parse-link-header": "^3.1.0",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {

@@ -32,6 +32,8 @@ import * as Sentry from '@sentry/react'
   // Load sentry setup if defined.
   // This is done early in the application to catch as much as possible.
   const dsn = getSettings()?.sentryDsn
+  const env = getSettings()?.sentryEnv
+  
   if (dsn) {
     Sentry.init({
       dsn,

@@ -28,16 +28,18 @@ import { List } from '@instructure/ui-list'
 import { Heading } from '@instructure/ui-heading'
 import { Link } from '@instructure/ui-link'
 import { Text } from '@instructure/ui-text'
+
+import { parseLinkHeader } from '@web3-storage/parse-link-header'
 import { Pagination } from '@instructure/ui-pagination'
 
 function ProvisioningReportsPage({ token, server, handle403 }) {
-	
-  // ?????????????????????????????????????????????????????????	
-  // ??? unsure these are needed - just use local variables ??
-  // ?????????????????????????????????????????????????????????
   
   const [reports, setReports] = useState([])
   const [error, setError] = useState(null)
+  const [nextPageUrl, setNextPageUrl] = useState(server+'/api/v1/accounts/1/reports/provisioning_csv?page=1&per_page=10')
+  const [prevPageUrl, setPrevPageUrl] = useState(server+'/api/v1/accounts/1/reports/provisioning_csv?page=1&per_page=10')
+  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/1/reports/provisioning_csv?page=1&per_page=10')
+
 
   function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1)
@@ -45,7 +47,7 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
 
   useEffect(() => {
     if (!token) return
-    fetch(server+'/api/v1/accounts/1/reports/provisioning_csv', {
+    fetch(currentPageUrl, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -71,6 +73,13 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
               throw new Error('Bad response: ' + response.status)
             }
         }
+        
+        
+        // grab next / prev links
+        const links = parseLinkHeader(response.headers.get('Link'))
+        setNextPageUrl(links?.next?.url || null)
+        setPrevPageUrl(links?.prev?.url || null)
+               
         return response.json()
       })
       .then(setReports)
@@ -78,7 +87,32 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
         console.error('Fetch error (provisioning):', err)
         setError(err.message)
       })
-  }, [token])
+  }, [token, currentPageUrl])
+  
+  	function AddPagination () {
+		
+		function onClick(url) {
+			setCurrentPageUrl(url)
+		}
+			
+         
+      return (   
+		  <Pagination 
+		  	as="nav" 
+		  	margin="small" 
+		  	variant="compact"       
+		  	labelNext="Next Page"
+		  	labelPrev="Previous Page"
+		  	>
+		  	{prevPageUrl && <Pagination.Navigation direction="prev" label="Previous page" onClick={()=>onClick(prevPageUrl)}/>}
+		  	{nextPageUrl && <Pagination.Navigation direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}/>}
+		  </Pagination>
+        )
+     }
+        
+
+		
+	
   
   return (
 
@@ -119,6 +153,9 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
             )
           })}
         </List>
+        
+        <AddPagination/>
+               
       </View>
    
   )

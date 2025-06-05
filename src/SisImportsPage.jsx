@@ -23,24 +23,70 @@
  */
  
 import React, { useEffect, useState } from 'react'
+
 import { View } from '@instructure/ui-view'
 import { List } from '@instructure/ui-list'
 import { Heading } from '@instructure/ui-heading'
 import { Text } from '@instructure/ui-text'
 import { Link } from '@instructure/ui-link'
-import { Pagination } from '@instructure/ui-pagination'
 import { ToggleDetails } from '@instructure/ui-toggle-details'
 
+import { parseLinkHeader } from '@web3-storage/parse-link-header'
+import { Pagination } from '@instructure/ui-pagination'
+
 function SisImportsPage({ token, server, handle403 }) {
-	
-  // ?????????????????????????????????????????????????????????	
-  // ??? unsure these are needed - just use local variables ??
-  // ?????????????????????????????????????????????????????????
 
   const [sisImports, setSisImports] = useState({ sis_imports: [] })
   const [sisError, setSisError] = useState(null)
+  const [nextPageUrl, setNextPageUrl] = useState(server+'/api/v1/accounts/1/sis_imports?page=1&per_page=10')
+  const [prevPageUrl, setPrevPageUrl] = useState(server+'/api/v1/accounts/1/sis_imports?page=1&per_page=10')
+  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/1/sis_imports?page=1&per_page=10')
+ 
   
+  useEffect(() => {
+    if (!token) return
 
+    // TO DO get pagination working
+    fetch(currentPageUrl, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+      .then((response) => {
+        if (!response.ok) {
+          	if (response.status === 403) {
+              handle403()
+              throw new Error()
+            } else if (response.status === 401) {
+              const authHeader = response.headers.get('WWW-Authenticate')
+              if (authHeader && !authHeader.includes('proxy')) {
+                handle403()
+                throw new Error()
+              } else {
+                throw new Error('You don\'t have permission to access your profile. Or your session has expired, please try relaunching the tool')
+              }
+            } else if (response.status === 400) {
+              const err = "Response of 400 Bad Request: we have given up and are looking longingly at the pub."
+              console.error(err)
+              throw new Error(err)
+            } else {
+              throw new Error('Bad response: ' + response.status)
+            }
+        }
+        
+        // grab next / prev links
+        const links = parseLinkHeader(response.headers.get('Link'))
+        setNextPageUrl(links?.next?.url || null)
+        setPrevPageUrl(links?.prev?.url || null)
+                             
+        return response.json()
+      })
+      .then(setSisImports)
+      .catch((err) => {
+        console.error('Fetch error (SIS):', err)
+        setSisError(err.message)
+      })
+  }, [token, currentPageUrl])
   
 	function AttachmentsList({ attachments }) {
 	    
@@ -91,47 +137,35 @@ function SisImportsPage({ token, server, handle403 }) {
  		 )
 	}
 	
+	function AddPagination () {
+		
+		function onClick(url) {
+			setCurrentPageUrl(url)
+		}
+			
+         
+      return (   
+		  <Pagination 
+		  	as="nav" 
+		  	margin="small" 
+		  	variant="compact"       
+		  	labelNext="Next Page"
+		  	labelPrev="Previous Page"
+		  	>
+		  	{prevPageUrl && <Pagination.Navigation direction="prev" label="Previous page" onClick={()=>onClick(prevPageUrl)}/>}
+		  	{nextPageUrl && <Pagination.Navigation direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}/>}
+		  </Pagination>
+        )
+        
 
-
-  useEffect(() => {
-    if (!token) return
-
-    fetch(server+'/api/v1/accounts/1/sis_imports?per_page=25', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    })
-      .then((response) => {
-        if (!response.ok) {
-          	if (response.status === 403) {
-              handle403()
-              throw new Error()
-            } else if (response.status === 401) {
-              const authHeader = response.headers.get('WWW-Authenticate')
-              if (authHeader && !authHeader.includes('proxy')) {
-                handle403()
-                throw new Error()
-              } else {
-                throw new Error('You don\'t have permission to access your profile. Or your session has expired, please try relaunching the tool')
-              }
-            } else if (response.status === 400) {
-              const err = "Response of 400 Bad Request: we have given up and are looking longingly at the pub."
-              console.error(err)
-              throw new Error(err)
-            } else {
-              throw new Error('Bad response: ' + response.status)
-            }
-        }
-        return response.json()
-      })
-      .then(setSisImports)
-      .catch((err) => {
-        console.error('Fetch error (SIS):', err)
-        setSisError(err.message)
-      })
-  }, [token])
+		
+	}
+	
+	
 
   return (
+	
+	
 
       <View as="div" padding="large">
         <Heading level="h1" as="h2">List of SIS Imports</Heading>
@@ -181,6 +215,9 @@ function SisImportsPage({ token, server, handle403 }) {
             )
           })}
         </List>
+        
+        
+        <AddPagination/>
       </View>
     
   )

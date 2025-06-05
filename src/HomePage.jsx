@@ -46,10 +46,9 @@ function HomePage() {
   			
   		</Alert>
 		<List>
-			<List.Item>Pagination of the results</List.Item>
+			<List.Item>Add "page =n=" so people know where they are?]</List.Item>
 			<List.Item>Add sentry support</List.Item>
-			<List.Item>Apply Theme</List.Item>
-			<List.Item>TEST => LTI Height Limit</List.Item>
+			
 		</List>
 		
       </View>
