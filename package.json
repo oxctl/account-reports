@@ -29,6 +29,5 @@
     "globals": "^16.0.0",
     "vite": "^6.3.5",
     "vite-plugin-mkcert": "^1.17.8"
-  },
-  "proxy": "https://tools-dev.canvas.ox.ac.uk"
+  }
 }

@@ -41,11 +41,6 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
   const [prevPageUrl, setPrevPageUrl] = useState(null)
   const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/1/reports/provisioning_csv?page=1&per_page=10')
 
-
-  /*function capitalizeFirstLetter(val) {
-    return String(val).charAt(0).toUpperCase() + String(val).slice(1)
-  }*/
-
   useEffect(() => {
     if (!token) return
     fetch(currentPageUrl, {
