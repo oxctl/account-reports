@@ -31,6 +31,7 @@ import { Text } from '@instructure/ui-text'
 
 import { parseLinkHeader } from '@web3-storage/parse-link-header'
 import { Pagination } from '@instructure/ui-pagination'
+import { capitalizeFirstLetter } from "./utils/utils"
 
 function ProvisioningReportsPage({ token, server, handle403 }) {
   
@@ -41,9 +42,9 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
   const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/1/reports/provisioning_csv?page=1&per_page=10')
 
 
-  function capitalizeFirstLetter(val) {
+  /*function capitalizeFirstLetter(val) {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1)
-  }
+  }*/
 
   useEffect(() => {
     if (!token) return

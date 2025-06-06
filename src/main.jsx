@@ -40,7 +40,7 @@ if (dsn) {
   })
 }
 
-createRoot(document.getElementById('root')).render(
+createRoot(document.getElementById('app')).render(
   <StrictMode>
     <App />
   </StrictMode>,
