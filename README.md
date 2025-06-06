@@ -38,8 +38,10 @@ Alternatively to do this locally run checkout the release branch, fetch the late
 git merge origin/master
 ```
 
-To see what is about to go into a release you can preview the changes between [master and release](https://github.com/oxctl/report-listings/compare/release...master), then to double check a PR can be created to merge the changes, reviewed and merged (at which point the release branch is built and deployed).
+To see what is about to go into a release you can preview the changes between [master and release](https://github.com/oxctl/report-listings/compare/release...master), 
+then to double check a PR can be created to merge the changes, reviewed and merged (at which point the release branch is built and deployed).
 
 ## Sentry
 
-Application errors are reported using https://sentry.io for this application. There is DSN to be used for development and  production. There's no DSN for local development. Sentry is setup as early as possible in the application to capture as many errors as possible.
+Application errors are reported using https://sentry.io for this application. There is DSN to be used for development and  production. 
+There's no DSN for local development. Sentry is setup as early as possible in the application to capture as many errors as possible.
