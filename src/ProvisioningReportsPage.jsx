@@ -87,35 +87,6 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
       })
   }, [token, currentPageUrl])
   
-  	/*function AddPagination () {
-		
-		function onClick(url) {
-			setCurrentPageUrl(url)
-			
-			// Scroll to top when page changes
-			// TO DO - doesnt work
- 			const el = document.getElementById("reports")
-            el?.scrollTo({ top: 0, behavior: "smooth" })
-		}
-			
-         
-      return (   
-		  <Pagination 
-		  	as="nav" 
-		  	margin="small" 
-		  	variant="compact"       
-		  	labelNext="Next Page"
-		  	labelPrev="Previous Page"
-		  	>
-		    {prevPageUrl && <Pagination.Page direction="prev" label="Previous page" onClick={()=>onClick(prevPageUrl)}>&lt;</Pagination.Page>}
-		  	{nextPageUrl && <Pagination.Page direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}>&gt;</Pagination.Page>}
-		  </Pagination>
-        )
-     }*/
-        
-
-		
-	
   
   return (
 

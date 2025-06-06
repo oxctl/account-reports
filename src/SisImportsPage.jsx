@@ -137,58 +137,7 @@ function SisImportsPage({ token, server, handle403 }) {
   		  </List>
  		 )
 	}
-	
-	/*function AddPagination () {
 		
-		function onClick(url) {
-			setCurrentPageUrl(url)			
-		}
-			
-         
-      return (   
-		  <Pagination 
-		  	as="nav" 
-		  	margin="small" 
-		  	variant="compact"       
-		  	labelNext="Next Page"
-		  	labelPrev="Previous Page"
-		  	>
-		  	
-		    {prevPageUrl && <Pagination.Page direction="prev" label="Previous page" onClick={()=>onClick(prevPageUrl)}>&lt;</Pagination.Page>}
-		  	{nextPageUrl && <Pagination.Page direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}>&gt;</Pagination.Page>}
-		  </Pagination>
-        )
-        
-
-		
-	}*/
-	
-	/*function AddPagination ({prevUrl, nextUrl}) {
-		
-		function onClick(url) {
-			setCurrentPageUrl(url)			
-		}
-			
-         
-      return (   
-		  <Pagination 
-		  	as="nav" 
-		  	margin="small" 
-		  	variant="compact"       
-		  	labelNext="Next Page"
-		  	labelPrev="Previous Page"
-		  	>
-		  	
-		    {prevUrl && <Pagination.Page direction="prev" label="Previous page" onClick={()=>onClick(prevUrl)}>&lt;</Pagination.Page>}
-		  	{nextUrl && <Pagination.Page direction="next" label="Next page" onClick={()=>onClick(nextUrl)}>&gt;</Pagination.Page>}
-		  </Pagination>
-        )
-        
-
-		
-	}*/
-	
-	
 
   return (
 	

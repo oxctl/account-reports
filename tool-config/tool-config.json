@@ -27,7 +27,7 @@
           }
         ],
         "custom_fields": { 
-          "allowed_roles": "TeacherEnrollment,DesignerEnrollment,Course Administrator,Account Admin,Learning Technologist,Unit Admin,Assistant Unit Admin,Data Administrator,Local Canvas Coordinator",
+          "allowed_roles": "Account Admin,Learning Technologist,Data Administrator",
           "canvas_course_id": "$Canvas.course.id",
           "canvas_membership_roles": "$Canvas.membership.roles",
           "canvas_root_account_global_id": "$Canvas.root_account.global_id",
