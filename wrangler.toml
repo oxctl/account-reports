@@ -4,6 +4,9 @@ compatibility_date = "2023-09-18"
 compatibility_flags = ["nodejs_als", "nodejs_compat"]
 
 [env.preview.vars]
+
+# TO DO 
+
 LTI_AUD = "122010000000000***"
 LTI_ISS = "https://lti-dev.canvas.ox.ac.uk"
 SENTRY_ENV = "beta"
@@ -14,6 +17,9 @@ VITE_SENTRY_DSN = "https://d94d964a9faa42ee11afa535075bfa2d@o419652.ingest.us.se
 
 
 [env.production.vars]
+
+# TO DO
+
 LTI_AUD = "122010000000000***"
 LTI_ISS = "https://lti.canvas.ox.ac.uk"
 SENTRY_ENV = "prod"
