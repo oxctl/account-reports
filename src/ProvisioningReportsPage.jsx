@@ -33,6 +33,8 @@ import { parseLinkHeader } from '@web3-storage/parse-link-header'
 import { Pagination } from '@instructure/ui-pagination'
 import { capitalizeFirstLetter } from "./utils/utils"
 
+import { AddPagination } from './AddPagination'
+
 function ProvisioningReportsPage({ token, server, handle403 }) {
   
   const [reports, setReports] = useState([])
@@ -85,7 +87,7 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
       })
   }, [token, currentPageUrl])
   
-  	function AddPagination () {
+  	/*function AddPagination () {
 		
 		function onClick(url) {
 			setCurrentPageUrl(url)
@@ -109,7 +111,7 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
 		  	{nextPageUrl && <Pagination.Page direction="next" label="Next page" onClick={()=>onClick(nextPageUrl)}>&gt;</Pagination.Page>}
 		  </Pagination>
         )
-     }
+     }*/
         
 
 		
@@ -150,7 +152,7 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
           })}
         </List>
         
-        <AddPagination/>
+        <AddPagination prevUrl={prevPageUrl} nextUrl={nextPageUrl} currUrl={setCurrentPageUrl}/>
                
       </View>
    

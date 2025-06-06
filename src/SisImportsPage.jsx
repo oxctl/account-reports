@@ -34,6 +34,8 @@ import { ToggleDetails } from '@instructure/ui-toggle-details'
 import { parseLinkHeader } from '@web3-storage/parse-link-header'
 import { Pagination } from '@instructure/ui-pagination'
 
+import { AddPagination } from './AddPagination'
+
 function SisImportsPage({ token, server, handle403 }) {
 
   const [sisImports, setSisImports] = useState({ sis_imports: [] })
@@ -136,16 +138,10 @@ function SisImportsPage({ token, server, handle403 }) {
  		 )
 	}
 	
-	function AddPagination () {
+	/*function AddPagination () {
 		
 		function onClick(url) {
-			setCurrentPageUrl(url)
-			
-			// Scroll to top when page changes
-			// TO DO - doesnt work
-			const el = document.getElementById("sisImports")
-            el?.scrollTo({ top: 0, behavior: "smooth" })
-			
+			setCurrentPageUrl(url)			
 		}
 			
          
@@ -165,7 +161,32 @@ function SisImportsPage({ token, server, handle403 }) {
         
 
 		
-	}
+	}*/
+	
+	/*function AddPagination ({prevUrl, nextUrl}) {
+		
+		function onClick(url) {
+			setCurrentPageUrl(url)			
+		}
+			
+         
+      return (   
+		  <Pagination 
+		  	as="nav" 
+		  	margin="small" 
+		  	variant="compact"       
+		  	labelNext="Next Page"
+		  	labelPrev="Previous Page"
+		  	>
+		  	
+		    {prevUrl && <Pagination.Page direction="prev" label="Previous page" onClick={()=>onClick(prevUrl)}>&lt;</Pagination.Page>}
+		  	{nextUrl && <Pagination.Page direction="next" label="Next page" onClick={()=>onClick(nextUrl)}>&gt;</Pagination.Page>}
+		  </Pagination>
+        )
+        
+
+		
+	}*/
 	
 	
 
@@ -224,7 +245,7 @@ function SisImportsPage({ token, server, handle403 }) {
         </List>
         
         
-        <AddPagination/>
+        <AddPagination prevUrl={prevPageUrl} nextUrl={nextPageUrl} currUrl={setCurrentPageUrl}/>
       </View>
     
   )
