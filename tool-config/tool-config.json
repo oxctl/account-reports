@@ -15,16 +15,9 @@
           {
             "platform": "canvas.instructure.com",
             "settings": {
-
-
-TO DO
-
-
-
-
-              "placements": [
+            "placements": [
                 {
-                  "placement": "??????????",
+                  "placement": "account_navigation",
                   "message_type": "LtiResourceLinkRequest",
                   "canvas_icon_class": "icon-settings"
                 }
@@ -33,16 +26,8 @@ TO DO
             "privacy_level": "public"
           }
         ],
-
-
-
-TO DO
-
-
-
-
-        "custom_fields": { ??????????????????
-          "allowed_roles": "?????????????? TeacherEnrollment,DesignerEnrollment,Course Administrator,Account Admin,Learning Technologist,Unit Admin,Assistant Unit Admin,Data Administrator,Local Canvas Coordinator",
+        "custom_fields": { 
+          "allowed_roles": "TeacherEnrollment,DesignerEnrollment,Course Administrator,Account Admin,Learning Technologist,Unit Admin,Assistant Unit Admin,Data Administrator,Local Canvas Coordinator",
           "canvas_course_id": "$Canvas.course.id",
           "canvas_membership_roles": "$Canvas.membership.roles",
           "canvas_root_account_global_id": "$Canvas.root_account.global_id",
