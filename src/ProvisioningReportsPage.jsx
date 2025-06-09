@@ -35,13 +35,13 @@ import { capitalizeFirstLetter } from "./utils/utils"
 
 import { AddPagination } from './AddPagination'
 
-function ProvisioningReportsPage({ token, server, handle403 }) {
+function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
   
   const [reports, setReports] = useState([])
   const [error, setError] = useState(null)
   const [nextPageUrl, setNextPageUrl] = useState(null)
   const [prevPageUrl, setPrevPageUrl] = useState(null)
-  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/self/reports/provisioning_csv?page=1&per_page=10')
+  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/'+accountId+'/reports/provisioning_csv?page=1&per_page=10')
 
   useEffect(() => {
     if (!token) return
@@ -61,6 +61,9 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
                 handle403()
                 throw new Error()
               } else {
+	
+// user nenver sees this error, just get stuck in an auth loop - 
+	
                 throw new Error('You don\'t have permission to access your profile. Or your session has expired, please try relaunching the tool')
               }
             } else if (response.status === 400) {

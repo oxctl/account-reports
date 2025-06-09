@@ -36,13 +36,13 @@ import { Pagination } from '@instructure/ui-pagination'
 
 import { AddPagination } from './AddPagination'
 
-function SisImportsPage({ token, server, handle403 }) {
+function SisImportsPage({ token, server, accountId, handle403 }) {
 
   const [sisImports, setSisImports] = useState({ sis_imports: [] })
   const [sisError, setSisError] = useState(null)
   const [nextPageUrl, setNextPageUrl] = useState(null)
   const [prevPageUrl, setPrevPageUrl] = useState(null)
-  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/self/sis_imports?page=1&per_page=10')
+  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/'+accountId+'/sis_imports?page=1&per_page=10')
  
   
   useEffect(() => {

@@ -49,6 +49,7 @@ function App() {
   const [highContrast,setHighContrast] = useState(false)
   const [comInstructureBrandConfigJsonUrl,setComInstructureBrandConfigJsonUrl] = useState(null)
   const [canvasUserPrefersHighContrast, setCanvasUserPrefersHighContrast] = useState(false)
+  const [accountId,setAccountId] = useState(1)
 
   const [server,setServer] = useState(null)
   
@@ -68,6 +69,10 @@ function App() {
     const jwtClaim = decodedJwt['https://purl.imsglobal.org/spec/lti/claim/custom']  
     setComInstructureBrandConfigJsonUrl(jwtClaim.com_instructure_brand_config_json_url)
     setCanvasUserPrefersHighContrast(jwtClaim.canvas_user_prefers_high_contrast === 'true')
+	setAccountId(jwtClaim.canvas_account_id)
+	
+	
+	console.log("i'm in account numer "+accountId)
 
   }
 
@@ -103,24 +108,30 @@ function App() {
 					      padding="large"
 					      isSelected={selectedIndex === 0} 
 					    >
-					      <HomePage />              
+					      <HomePage 
+					      	accountId = {accountId}
+					      />              
 					    </Tabs.Panel>
 					    
-					    <Tabs.Panel
-					      id = "reports"
-					      renderTitle = "Reports"
-					      textAlign = "start"
-					      padding = "large"
-					      isSelected = {selectedIndex === 1} 
-					    >
-					       <ProvisioningReportsPage 
-					         token = {token} 
-					         server =  {server}
-					         handle403={() => setNeedsToken(true) }
-					       />
-					    </Tabs.Panel> 
+					  
+						    {accountId == 1 && <Tabs.Panel
+						      id = "reports"
+						      renderTitle = "Reports"
+						      textAlign = "start"
+						      padding = "large"
+						      isSelected = {selectedIndex === 1} 
+						    >
+						       <ProvisioningReportsPage 
+						         token = {token} 
+						         server =  {server}
+						         accountId = {accountId}
+						         handle403={() => setNeedsToken(true) }
+						       />
+						    </Tabs.Panel> 
+						 }
 					    
-					    <Tabs.Panel
+					   
+					     {accountId == 1 && <Tabs.Panel
 					      id="sisImports"
 					      renderTitle="SIS Imports"
 					      textAlign="start"
@@ -130,9 +141,13 @@ function App() {
 					      <SisImportsPage 
 					         token = {token}
 					         server =  {server} 
+					         accountId = {accountId}
 					         handle403={() => setNeedsToken(true)}
 					      />    
-					     </Tabs.Panel>        
+					     </Tabs.Panel>    
+					     
+						}
+					        
 			        </Tabs>
 			      </LaunchOAuth>
              </LtiHeightLimit>

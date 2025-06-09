@@ -30,14 +30,16 @@ import { List } from '@instructure/ui-list'
 import { Alert } from '@instructure/ui-alerts'
 
 
-function HomePage() {
+function HomePage({accountId}) {
+	
   return (
 
       <View as="div" padding="large">
         <Heading level="h1" as="h2">Provisioning Reports</Heading>
-        <Text>There are a number of different report listings, click on the tab to view.</Text>
-
-		
+         
+        {accountId == 1 && <Text>There are a number of different report listings, click on the tab to view.</Text>}
+        {accountId != 1 && <Text>This tool will only work in the root account.</Text>}
+       	
       </View>
   )
 }
