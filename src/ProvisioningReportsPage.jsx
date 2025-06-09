@@ -41,7 +41,7 @@ function ProvisioningReportsPage({ token, server, handle403 }) {
   const [error, setError] = useState(null)
   const [nextPageUrl, setNextPageUrl] = useState(null)
   const [prevPageUrl, setPrevPageUrl] = useState(null)
-  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/1/reports/provisioning_csv?page=1&per_page=10')
+  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/self/reports/provisioning_csv?page=1&per_page=10')
 
   useEffect(() => {
     if (!token) return

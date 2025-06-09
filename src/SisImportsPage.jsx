@@ -42,7 +42,7 @@ function SisImportsPage({ token, server, handle403 }) {
   const [sisError, setSisError] = useState(null)
   const [nextPageUrl, setNextPageUrl] = useState(null)
   const [prevPageUrl, setPrevPageUrl] = useState(null)
-  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/1/sis_imports?page=1&per_page=10')
+  const [currentPageUrl, setCurrentPageUrl] = useState(server+'/api/v1/accounts/self/sis_imports?page=1&per_page=10')
  
   
   useEffect(() => {
