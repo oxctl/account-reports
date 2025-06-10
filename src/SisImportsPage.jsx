@@ -144,7 +144,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
       <View as="div" padding="large">
         <Heading level="h1" as="h2">List of SIS Imports</Heading>
         {sisError && <Text color="danger">{sisError}</Text>}
-		{sis_imports.length == 0 && <Text>No available reports</Text>}
+		{sisImports.sis_imports.length == 0 && <Text>No available reports.</Text>}
 		
         <List>
           {sisImports.sis_imports.slice(0, sisImports.sis_imports.length).map((sis) => {
@@ -194,7 +194,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
         </List>
         
         
-        <AddPagination prevUrl={prevPageUrl} nextUrl={nextPageUrl} currUrl={setCurrentPageUrl}/>
+        <AddPagination prevUrl={prevPageUrl} currUrl={currentPageUrl} nextUrl={nextPageUrl} setCurrUrl={setCurrentPageUrl}/>
       </View>
     
   )

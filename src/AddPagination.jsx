@@ -1,10 +1,12 @@
 import { Pagination } from '@instructure/ui-pagination'
 
-export function AddPagination ({prevUrl, nextUrl, currUrl}) {
+export function AddPagination ({prevUrl, currUrl, nextUrl, setCurrUrl}) {
 		
 		function onClick(url) {
-			currUrl(url)
+			setCurrUrl(url)
 		}
+		
+		const pageNumber = currUrl.replace(/^ht.*?page=/,'').replace(/&.*$/,'')
 			
          
       return (   
@@ -16,8 +18,10 @@ export function AddPagination ({prevUrl, nextUrl, currUrl}) {
 		  	labelPrev="Previous Page"
 		  	>
 		  	
-		    {prevUrl && <Pagination.Page direction="prev" label="Previous page" onClick={()=>onClick(prevUrl)}>&lt;</Pagination.Page>}
-		  	{nextUrl && <Pagination.Page direction="next" label="Next page" onClick={()=>onClick(nextUrl)}>&gt;</Pagination.Page>}
+		    {prevUrl && <Pagination.Page onClick={()=>onClick(prevUrl)}>&lt;</Pagination.Page>}
+		     <Pagination.Page>{pageNumber}</Pagination.Page>
+		  	{nextUrl && <Pagination.Page  onClick={()=>onClick(nextUrl)}>&gt;</Pagination.Page>}
+		  	
 		  </Pagination>
         )
         

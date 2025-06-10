@@ -38,7 +38,7 @@ function HomePage({accountId}) {
         <Heading level="h1" as="h2">Provisioning Reports</Heading>
          
         {accountId == 1 && <Text>There are a number of different report listings, click on the tab to view.</Text>}
-        {accountId != 1 && <Text>Click on the 'Reports' tab to see a list of Provisioning reports.</Text>}
+        {accountId != 1 && <Text>Click on the 'Reports' tab to see a list of Provisioning reports which have been generated in this sub-account.</Text>}
        	
       </View>
   )

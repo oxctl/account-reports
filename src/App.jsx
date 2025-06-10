@@ -70,9 +70,6 @@ function App() {
     setComInstructureBrandConfigJsonUrl(jwtClaim.com_instructure_brand_config_json_url)
     setCanvasUserPrefersHighContrast(jwtClaim.canvas_user_prefers_high_contrast === 'true')
 	setAccountId(jwtClaim.canvas_account_id)
-	
-	
-	console.log("i'm in account numer "+accountId)
 
   }
 

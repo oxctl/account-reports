@@ -96,8 +96,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
       <View as="div" padding="large">
         <Heading level="h1" as="h2">List of Provisioning Reports</Heading>
         {error && <Text color="danger">{error}</Text>}
- 		{reports.length == 0 && <Text>No available reports</Text>}
- 		
+ 		{reports.length == 0 && <Text>No available reports.</Text>}
 
         <List>
           {reports.slice(0, reports.length).map((report) => {
@@ -127,7 +126,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
           })}
         </List>
         
-        <AddPagination prevUrl={prevPageUrl} nextUrl={nextPageUrl} currUrl={setCurrentPageUrl}/>
+        <AddPagination prevUrl={prevPageUrl} currUrl={currentPageUrl} nextUrl={nextPageUrl} setCurrUrl={setCurrentPageUrl}/>
                
       </View>
    
