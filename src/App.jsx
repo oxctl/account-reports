@@ -114,7 +114,7 @@ function App() {
 					    </Tabs.Panel>
 					    
 					  
-						    {accountId == 1 && <Tabs.Panel
+						<Tabs.Panel
 						      id = "reports"
 						      renderTitle = "Reports"
 						      textAlign = "start"
@@ -128,7 +128,7 @@ function App() {
 						         handle403={() => setNeedsToken(true) }
 						       />
 						    </Tabs.Panel> 
-						 }
+						 
 					    
 					   
 					     {accountId == 1 && <Tabs.Panel
