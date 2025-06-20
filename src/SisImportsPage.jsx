@@ -23,6 +23,8 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
   
   useEffect(() => {
     if (!token) return
+    
+    console.log("Curr page URL = "+currentPageUrl)
 
     fetch(currentPageUrl, {
       headers: {

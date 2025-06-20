@@ -11,6 +11,7 @@ import { jwtDecode } from 'jwt-decode'
 import HomePage from './HomePage'
 import ProvisioningReportsPage from './ProvisioningReportsPage'
 import SisImportsPage from './SisImportsPage'
+import SearchPage from './SearchPage'
 
 
 
@@ -112,6 +113,23 @@ function App() {
 					      isSelected={selectedIndex === 2}
 					    >
 					      <SisImportsPage 
+					         token = {token}
+					         server =  {server} 
+					         accountId = {accountId}
+					         handle403={() => setNeedsToken(true)}
+					      />    
+					     </Tabs.Panel>    
+					     
+						}
+						
+						 {accountId == 1 && <Tabs.Panel
+					      id="sisImportSearch"
+					      renderTitle="Search for SIS Import"
+					      textAlign="start"
+					      padding="large"
+					      isSelected={selectedIndex === 3}
+					    >
+					      <SearchPage 
 					         token = {token}
 					         server =  {server} 
 					         accountId = {accountId}
