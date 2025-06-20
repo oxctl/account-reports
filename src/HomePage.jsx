@@ -2,8 +2,6 @@ import React from 'react'
 import { View } from '@instructure/ui-view'
 import { Heading } from '@instructure/ui-heading'
 import { Text } from '@instructure/ui-text'
-import { List } from '@instructure/ui-list'
-import { Alert } from '@instructure/ui-alerts'
 
 
 function HomePage({accountId}) {

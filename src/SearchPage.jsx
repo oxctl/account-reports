@@ -16,15 +16,28 @@ import { IconButton, Button } from '@instructure/ui-buttons'
 function SearchPage({ token, server, accountId, handle403 }) {
 	
   const [sisImport, setSisImport] = useState(null) 
-  const [sisImportUrl, setSisImportUrl] = useState(null) 
+  const [sisImportUrl, setSisImportUrl] = useState() 
   const [sisError, setSisError] = useState(null)
   const [value, setValue] = useState('') // Test value
   const inputRef = useRef(null);
-  const [submittedValue, setSubmittedValue] = useState(null)
+  //const [submittedValue, setSubmittedValue] = useState(null)
   const [isLoading, setIsLoading] = useState(false)
+  
+            let id
+            let progress
+            let ended_at
+            let user
+            let url 
+
+            let counts
+            let csv_attachments 
+            let processing_warnings  
   
   useEffect(() => {
     if (!token) return
+    
+    // make sure API call URL is set up
+    if (!sisImportUrl) return
     
     console.log("sis import url = "+sisImportUrl)
 
@@ -77,7 +90,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
     }
 
     setIsLoading(true)
-    setSubmittedValue(value)
+    //setSubmittedValue(value)
     timeoutId = setTimeout(() => {
 		setSisImportUrl(server+'/api/v1/accounts/'+accountId+'/sis_imports/'+value)
 
@@ -90,6 +103,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
   
   const handleClear = () => {
     setValue('');
+    console.log("handle clear - should we be removing results??")
     inputRef.current?.focus(); // focus the input again
   }
     
@@ -106,12 +120,71 @@ function SearchPage({ token, server, accountId, handle403 }) {
     ) : null;
   }
 
+// TO DO - EXTRACT THSE 3
 
+  
+	function AttachmentsList({ attachments }) {
+	    
+	  if (!Array.isArray(attachments)) return null
+	
+	  return (
+	    <List>
+	      {attachments.map((attachment, index) => (
+	        <List.Item key={index}>
+	          <Link href={attachment.url} target="_blank" rel="noopener noreferrer">
+	            {attachment.filename}
+	          </Link>
+	        </List.Item>
+	      ))}
+	    </List>
+	  )
+	}
+	
+	function WarningsList({ warnings }) {
+	    
+	  if (!Array.isArray(warnings)) return null
+	
+	  return (
+	    <List>
+	      {warnings.map(([filename, message], index) => (		
+	        <List.Item key={index}>
+	          <Text>{filename}:</Text> {message}
+	        </List.Item>
+	      ))}
+	    </List>
+	  )
+	}
+
+	function CountsList({ counts }) {
+		
+	  if (!counts || Object.keys(counts).length === 0) {
+    	return <Text>No data available.</Text>
+  	  }
+	    
+  		return (
+  		  <List>
+   		   {Object.entries(counts).map(([key, value]) => (
+   		     <List.Item key={key}>
+    		      <Text as="span">{key}:</Text> {value}
+  		      </List.Item>
+   		   ))}
+  		  </List>
+ 		 )
+	}
 
 return (
 	
       <View as="div" padding="large">
         <Heading level="h1" as="h2">Search for SIS Import</Heading>
+        
+			{sisError && <Text color="danger">{sisError + " "}</Text>}
+			{!sisImport && sisImportUrl && <Text  color="danger">No SIS Import with that ID</Text>}
+		{<Text color="danger"><br/><br/>TO DO: 
+		<ul><li>Fails sometimes with Token fails to load</li>
+		<li>the No Import line flashes up</li>
+		<li>Details should remain when returning to tab</li>
+		<li>abstract auth into utils</li>
+		<li>abstract common stuff from both sis import pages</li></ul></Text>}
 		
 		<form
            name="getSisId"
@@ -140,10 +213,42 @@ return (
             	</Flex.Item>
           </Flex>
         </form>
-        
-         <View as="div">
-            <Text>Spinners then results</Text>
-         </View>
+        	
+		{sisImport && <List>
+		
+   
+            
+              <List.Item key={sisImport.id} margin="small 0">
+                <Text as="span">SIS Import ID: {sisImport.id} {sisImport.user.name ? sisImport.user.name : 'Unknown user'} ({sisImport.ended_at ? new Date(sisImport.ended_at).toLocaleString() : 'N/A'}) =&gt; {sisImport.progress}%</Text>
+                <List>
+                  <List.Item>
+                    <ToggleDetails summary="Summary of changes"><CountsList counts={sisImport.data.counts ? sisImport.data.counts : 0}/></ToggleDetails>
+                  </List.Item>
+                  <List.Item>
+                    <Text>Attachments:</Text>
+                    <AttachmentsList attachments={sisImport.csv_attachments}/>
+                  </List.Item>
+                  
+                  { sisImport.errors_attachment && sisImport.errors_attachment.url &&
+                  <List.Item>
+                    <Text>Errors:&nbsp;</Text>
+                    <Link href={sisImport.errors_attachment.url} rel="noopener noreferrer">
+                      <Text as="span">{sisImport.errors_attachment.url ? sisImport.errors_attachment.url : 'No errors'}</Text>
+                    </Link>
+                  </List.Item>
+                  }
+
+                  { sisImport.processing_warnings && 
+                  <List.Item>
+                  <Text>Warning messages: </Text>
+                  <WarningsList warnings={sisImport.processing_warnings} />
+				  </List.Item>}
+				  
+                </List>
+              </List.Item>
+            
+        </List>}
+     
 		
 		</View>
 	)
