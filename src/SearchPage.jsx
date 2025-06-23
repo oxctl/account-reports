@@ -5,6 +5,7 @@ import { List } from '@instructure/ui-list'
 import { Heading } from '@instructure/ui-heading'
 import { Text } from '@instructure/ui-text'
 import { TextInput } from '@instructure/ui-text-input'
+
 import { Link } from '@instructure/ui-link'
 import { ToggleDetails } from '@instructure/ui-toggle-details'
 import { ScreenReaderContent } from '@instructure/ui-a11y-content'
@@ -18,20 +19,25 @@ function SearchPage({ token, server, accountId, handle403 }) {
   const [sisImport, setSisImport] = useState(null) 
   const [sisImportUrl, setSisImportUrl] = useState() 
   const [sisError, setSisError] = useState(null)
-  const [value, setValue] = useState('') // Test value
+  const [value, setValue] = useState('') 
   const inputRef = useRef(null);
-  //const [submittedValue, setSubmittedValue] = useState(null)
-  const [isLoading, setIsLoading] = useState(false)
+  const [hideResults, setHideResults] = useState(false)
+ 
   
-            let id
-            let progress
-            let ended_at
-            let user
-            let url 
-
-            let counts
-            let csv_attachments 
-            let processing_warnings  
+  function missingImportMessage () {
+	
+	if (sisError) return [{type: 'newError', text: sisError}]
+	
+	if ( !sisImport && sisImportUrl ) {
+		console.log (" should show ERROR ")
+    	return [{type: 'newError', text: 'SIS Import not found'}]
+  
+    }
+    else {
+	  	console.log (" should NOT show error ")
+    	return []
+    }
+  }
   
   useEffect(() => {
     if (!token) return
@@ -48,6 +54,10 @@ function SearchPage({ token, server, accountId, handle403 }) {
     })
       .then((response) => {
         if (!response.ok) {
+	
+	    	//  hide the results
+    		setHideResults(true)
+    		
           	if (response.status === 403) {
               handle403()
               throw new Error()
@@ -57,23 +67,31 @@ function SearchPage({ token, server, accountId, handle403 }) {
                 handle403()
                 throw new Error()
               } else {
-                throw new Error('You don\'t have permission to access your profile. Or your session has expired, please try relaunching the tool')
+                throw new Error('You don\'t have permission or your session has expired, please try relaunching the tool')
               }
             } else if (response.status === 400) {
-              const err = "Response of 400 Bad Request: we have given up and are looking longingly at the pub."
+              const err = "400 error Bad Request."
+              console.error(err)
+              throw new Error(err)
+            } else if (response.status === 404) {
+              const err = "There is no SIS Import matching that ID."
               console.error(err)
               throw new Error(err)
             } else {
               throw new Error('Bad response: ' + response.status)
             }
         }
-                             
+        else {
+ 			// dont hide the results
+    		setHideResults(false)  
+    	}                       
         return response.json()
       })
       .then(setSisImport)
       .catch((err) => {
         console.error('Fetch error (SIS):', err)
         setSisError(err.message)
+        setHideResults(true)
       })
   }, [token, sisImportUrl])
   
@@ -82,6 +100,8 @@ function SearchPage({ token, server, accountId, handle403 }) {
   let timeoutId = null
 
   const handleSearch = (e) => {
+	
+	e.preventDefault(); // prevents page reload
 
     clearTimeout(timeoutId);
 
@@ -89,12 +109,12 @@ function SearchPage({ token, server, accountId, handle403 }) {
       return
     }
 
-    setIsLoading(true)
-    //setSubmittedValue(value)
     timeoutId = setTimeout(() => {
 		setSisImportUrl(server+'/api/v1/accounts/'+accountId+'/sis_imports/'+value)
 
     }, 1000)
+    
+
   }
 
   const handleChange = (event) => {
@@ -103,8 +123,15 @@ function SearchPage({ token, server, accountId, handle403 }) {
   
   const handleClear = () => {
     setValue('');
-    console.log("handle clear - should we be removing results??")
-    inputRef.current?.focus(); // focus the input again
+    
+    // remove any previous errors
+    setSisError(null)
+    
+    // hide results
+    setHideResults(true)
+    
+    // focus the input again
+    inputRef.current?.focus(); 
   }
     
   const renderClearButton = () => {
@@ -176,15 +203,14 @@ return (
 	
       <View as="div" padding="large">
         <Heading level="h1" as="h2">Search for SIS Import</Heading>
-        
-			{sisError && <Text color="danger">{sisError + " "}</Text>}
-			{!sisImport && sisImportUrl && <Text  color="danger">No SIS Import with that ID</Text>}
+
 		{<Text color="danger"><br/><br/>TO DO: 
-		<ul><li>Fails sometimes with Token fails to load</li>
-		<li>the No Import line flashes up</li>
-		<li>Details should remain when returning to tab</li>
+		<ul>
+		<li>Fails sometimes with Token fails to load</li>
+		<li>the Error Message flashes up</li>
+		<li>Return should submit</li>
 		<li>abstract auth into utils</li>
-		<li>abstract common stuff from both sis import pages</li></ul></Text>}
+		<li>abstract common presentation code for sis import details from both sis import pages</li></ul></Text>}
 		
 		<form
            name="getSisId"
@@ -200,6 +226,7 @@ return (
         		    	inputRef={ (el) => { inputRef.current = el }}
             			renderBeforeInput={<IconSearchLine inline={false} />}
             			renderAfterInput={renderClearButton()}
+            			messages={missingImportMessage()}
             			shouldNotWrap
           			/>
                	</Flex.Item>
@@ -213,11 +240,11 @@ return (
             	</Flex.Item>
           </Flex>
         </form>
+        
+        {console.log("hide rez = "+hideResults)}
         	
-		{sisImport && <List>
-		
-   
-            
+		{sisImport && !hideResults  && <List>
+		            
               <List.Item key={sisImport.id} margin="small 0">
                 <Text as="span">SIS Import ID: {sisImport.id} {sisImport.user.name ? sisImport.user.name : 'Unknown user'} ({sisImport.ended_at ? new Date(sisImport.ended_at).toLocaleString() : 'N/A'}) =&gt; {sisImport.progress}%</Text>
                 <List>
