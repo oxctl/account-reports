@@ -25,7 +25,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
   const [hideResults, setHideResults] = useState(false)
  
   
-  function missingImportMessage () {	
+  const missingImportMessage = () => {	
 	if (sisError) return [{type: 'newError', text: sisError}]
   }
   
