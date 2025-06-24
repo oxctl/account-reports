@@ -10,6 +10,9 @@ import { parseLinkHeader } from '@web3-storage/parse-link-header'
 import { AddPagination } from './AddPagination'
 import { SisImportListItem } from './SisImportListItem'
 
+import { handleResponseFailure } from "./utils/handleResponseFailure"
+
+
 function SisImportsPage({ token, server, accountId, handle403 }) {
 
   const [sisImports, setSisImports] = useState({ sis_imports: [] })
@@ -29,24 +32,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
     })
       .then((response) => {
         if (!response.ok) {
-          	if (response.status === 403) {
-              handle403()
-              throw new Error()
-            } else if (response.status === 401) {
-              const authHeader = response.headers.get('WWW-Authenticate')
-              if (authHeader && !authHeader.includes('proxy')) {
-                handle403()
-                throw new Error()
-              } else {
-                throw new Error('You don\'t have permission to access your profile. Or your session has expired, please try relaunching the tool')
-              }
-            } else if (response.status === 400) {
-              const err = "Response of 400 Bad Request: we have given up and are looking longingly at the pub."
-              console.error(err)
-              throw new Error(err)
-            } else {
-              throw new Error('Bad response: ' + response.status)
-            }
+			handleResponseFailure(response,handle403) 
         }
         
         // grab next / prev links
