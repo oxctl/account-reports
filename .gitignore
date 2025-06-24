@@ -1,0 +1,14 @@
+node_modules/
+tool-config/local-template.json
+__build__/
+build/
+.env*.local
+npm-debug.log
+yarn-error.log
+.yarnclean
+.babel-cache
+.DS_Store
+.npmrc
+.tmp/
+localhost-key.pem
+localhost.pem
