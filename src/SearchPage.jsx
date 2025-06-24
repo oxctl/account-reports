@@ -5,13 +5,9 @@ import { List } from '@instructure/ui-list'
 import { Heading } from '@instructure/ui-heading'
 import { Text } from '@instructure/ui-text'
 import { TextInput } from '@instructure/ui-text-input'
-
-import { Link } from '@instructure/ui-link'
-import { ToggleDetails } from '@instructure/ui-toggle-details'
 import { ScreenReaderContent } from '@instructure/ui-a11y-content'
 import { IconSearchLine, IconXSolid } from '@instructure/ui-icons'
 import { Flex } from '@instructure/ui-flex'
-
 import { IconButton, Button } from '@instructure/ui-buttons'
 
 import { SisImportListItem } from './SisImportListItem'

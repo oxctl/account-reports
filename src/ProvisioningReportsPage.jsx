@@ -6,7 +6,6 @@ import { Link } from '@instructure/ui-link'
 import { Text } from '@instructure/ui-text'
 
 import { parseLinkHeader } from '@web3-storage/parse-link-header'
-import { Pagination } from '@instructure/ui-pagination'
 import { capitalizeFirstLetter } from "./utils/utils"
 
 import { AddPagination } from './AddPagination'

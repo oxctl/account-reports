@@ -4,11 +4,8 @@ import { View } from '@instructure/ui-view'
 import { List } from '@instructure/ui-list'
 import { Heading } from '@instructure/ui-heading'
 import { Text } from '@instructure/ui-text'
-import { Link } from '@instructure/ui-link'
-import { ToggleDetails } from '@instructure/ui-toggle-details'
 
 import { parseLinkHeader } from '@web3-storage/parse-link-header'
-import { Pagination } from '@instructure/ui-pagination'
 
 import { AddPagination } from './AddPagination'
 import { SisImportListItem } from './SisImportListItem'
@@ -87,36 +84,6 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
   )
 }
 
-/*
-              <List.Item key={id} margin="small 0">
-                <Text as="span">SIS Import ID: {id} {name} ({ended_at ? new Date(ended_at).toLocaleString() : 'N/A'}) =&gt; {progress}%</Text>
-                <List>
-                  <List.Item>
-                    <ToggleDetails summary="Summary of changes"><CountsList counts={counts}/></ToggleDetails>
-                  </List.Item>
-                  <List.Item>
-                    <Text>Attachments:</Text>
-                    <AttachmentsList attachments={csv_attachments}/>
-                  </List.Item>
 
-                  { url && 
-                  <List.Item>
-                    <Text>Errors:&nbsp;</Text>
-                    <Link href={url} rel="noopener noreferrer">
-                      <Text as="span">{url ? url : 'No errors'}</Text>
-                    </Link>
-                  </List.Item>
-                  }
-
-                  { processing_warnings && 
-                  <List.Item>
-                  <Text>Warning messages: </Text>
-                  <WarningsList warnings={processing_warnings} />
-				  </List.Item>}
-				  
-                </List>
-              </List.Item>
-
-*/
 
 export default SisImportsPage
