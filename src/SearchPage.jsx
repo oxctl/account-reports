@@ -29,12 +29,9 @@ function SearchPage({ token, server, accountId, handle403 }) {
 	if (sisError) return [{type: 'newError', text: sisError}]
 	
 	if ( !sisImport && sisImportUrl ) {
-		console.log (" should show ERROR ")
     	return [{type: 'newError', text: 'SIS Import not found'}]
-  
     }
     else {
-	  	console.log (" should NOT show error ")
     	return []
     }
   }
@@ -45,19 +42,19 @@ function SearchPage({ token, server, accountId, handle403 }) {
     // make sure API call URL is set up
     if (!sisImportUrl) return
     
-    console.log("sis import url = "+sisImportUrl)
-
     fetch(sisImportUrl, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     })
       .then((response) => {
-        if (!response.ok) {
 	
-	    	//  hide the results
-    		setHideResults(true)
+		//  hide the results
+    	setHideResults(true)
     		
+        if (!response.ok) {    	
+	
+	    	// -- this is common --	
           	if (response.status === 403) {
               handle403()
               throw new Error()
@@ -67,18 +64,18 @@ function SearchPage({ token, server, accountId, handle403 }) {
                 handle403()
                 throw new Error()
               } else {
-                throw new Error('You don\'t have permission or your session has expired, please try relaunching the tool')
+                throw new Error('You don\'t have permission or your session has expired, please try relaunching the tool.')
               }
             } else if (response.status === 400) {
-              const err = "400 error Bad Request."
+              const err = "400 error - Bad Request."
               console.error(err)
               throw new Error(err)
             } else if (response.status === 404) {
-              const err = "There is no SIS Import matching that ID."
+              const err = "404 error - Not Found."
               console.error(err)
               throw new Error(err)
             } else {
-              throw new Error('Bad response: ' + response.status)
+              throw new Error(response.status+ ' error - Bad Response.')
             }
         }
         else {
@@ -90,7 +87,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
       .then(setSisImport)
       .catch((err) => {
         console.error('Fetch error (SIS):', err)
-        setSisError(err.message)
+        setSisError(err.message+' There is no SIS Import with that ID ')
         setHideResults(true)
       })
   }, [token, sisImportUrl])
@@ -206,9 +203,7 @@ return (
 
 		{<Text color="danger"><br/><br/>TO DO: 
 		<ul>
-		<li>Fails sometimes with Token fails to load</li>
 		<li>the Error Message flashes up</li>
-		<li>Return should submit</li>
 		<li>abstract auth into utils</li>
 		<li>abstract common presentation code for sis import details from both sis import pages</li></ul></Text>}
 		
@@ -240,8 +235,6 @@ return (
             	</Flex.Item>
           </Flex>
         </form>
-        
-        {console.log("hide rez = "+hideResults)}
         	
 		{sisImport && !hideResults  && <List>
 		            
