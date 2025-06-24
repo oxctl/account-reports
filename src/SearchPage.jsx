@@ -25,16 +25,8 @@ function SearchPage({ token, server, accountId, handle403 }) {
   const [hideResults, setHideResults] = useState(false)
  
   
-  function missingImportMessage () {
-	
+  function missingImportMessage () {	
 	if (sisError) return [{type: 'newError', text: sisError}]
-	
-	if ( !sisImport && sisImportUrl ) {
-    	return [{type: 'newError', text: 'SIS Import not found'}]
-    }
-    else {
-    	return []
-    }
   }
   
   useEffect(() => {
@@ -77,7 +69,10 @@ function SearchPage({ token, server, accountId, handle403 }) {
   const handleSearch = (e) => {
 	
 	e.preventDefault(); // prevents page reload
-
+	
+	//remove old message
+	setSisError('')
+	
     clearTimeout(timeoutId);
 
     if (!value.length) {
@@ -123,14 +118,10 @@ function SearchPage({ token, server, accountId, handle403 }) {
   }
 
 
-return (
+	return (
 	
       <View as="div" padding="large">
         <Heading level="h1" as="h2">Search for SIS Import</Heading>
-
-		{<Text color="danger"><br/><br/>TO DO: 
-		<ul>
-		<li>the Error Message flashes up</li></ul></Text>}
 		
 		<form
            name="getSisId"
