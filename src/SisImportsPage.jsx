@@ -65,56 +65,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
         setSisError(err.message)
       })
   }, [token, currentPageUrl])
-  
-	function AttachmentsList({ attachments }) {
-	    
-	  if (!Array.isArray(attachments)) return null
-	
-	  return (
-	    <List>
-	      {attachments.map((attachment, index) => (
-	        <List.Item key={index}>
-	          <Link href={attachment.url} target="_blank" rel="noopener noreferrer">
-	            {attachment.filename}
-	          </Link>
-	        </List.Item>
-	      ))}
-	    </List>
-	  )
-	}
-	
-	function WarningsList({ warnings }) {
-	    
-	  if (!Array.isArray(warnings)) return null
-	
-	  return (
-	    <List>
-	      {warnings.map(([filename, message], index) => (		
-	        <List.Item key={index}>
-	          <Text>{filename}:</Text> {message}
-	        </List.Item>
-	      ))}
-	    </List>
-	  )
-	}
-	
-	function CountsList({ counts }) {
-		
-	  if (!counts || Object.keys(counts).length === 0) {
-    	return <Text>No data available.</Text>
-  	  }
-	    
-  		return (
-  		  <List>
-   		   {Object.entries(counts).map(([key, value]) => (
-   		     <List.Item key={key}>
-    		      <Text as="span">{key}:</Text> {value}
-  		      </List.Item>
-   		   ))}
-  		  </List>
- 		 )
-	}
-		
+ 
 
   return (
 	
