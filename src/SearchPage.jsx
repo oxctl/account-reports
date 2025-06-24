@@ -14,6 +14,8 @@ import { Flex } from '@instructure/ui-flex'
 
 import { IconButton, Button } from '@instructure/ui-buttons'
 
+import { SisImportListItem } from './SisImportListItem'
+
 function SearchPage({ token, server, accountId, handle403 }) {
 	
   const [sisImport, setSisImport] = useState(null) 
@@ -146,7 +148,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
 
 // TO DO - EXTRACT THSE 3
 
-  
+  /*
 	function AttachmentsList({ attachments }) {
 	    
 	  if (!Array.isArray(attachments)) return null
@@ -195,6 +197,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
   		  </List>
  		 )
 	}
+*/
 
 return (
 	
@@ -237,36 +240,7 @@ return (
         </form>
         	
 		{sisImport && !hideResults  && <List>
-		            
-              <List.Item key={sisImport.id} margin="small 0">
-                <Text as="span">SIS Import ID: {sisImport.id} {sisImport.user.name ? sisImport.user.name : 'Unknown user'} ({sisImport.ended_at ? new Date(sisImport.ended_at).toLocaleString() : 'N/A'}) =&gt; {sisImport.progress}%</Text>
-                <List>
-                  <List.Item>
-                    <ToggleDetails summary="Summary of changes"><CountsList counts={sisImport.data.counts ? sisImport.data.counts : 0}/></ToggleDetails>
-                  </List.Item>
-                  <List.Item>
-                    <Text>Attachments:</Text>
-                    <AttachmentsList attachments={sisImport.csv_attachments}/>
-                  </List.Item>
-                  
-                  { sisImport.errors_attachment && sisImport.errors_attachment.url &&
-                  <List.Item>
-                    <Text>Errors:&nbsp;</Text>
-                    <Link href={sisImport.errors_attachment.url} rel="noopener noreferrer">
-                      <Text as="span">{sisImport.errors_attachment.url ? sisImport.errors_attachment.url : 'No errors'}</Text>
-                    </Link>
-                  </List.Item>
-                  }
-
-                  { sisImport.processing_warnings && 
-                  <List.Item>
-                  <Text>Warning messages: </Text>
-                  <WarningsList warnings={sisImport.processing_warnings} />
-				  </List.Item>}
-				  
-                </List>
-              </List.Item>
-            
+			<SisImportListItem key={sisImport.id} sisImport={sisImport}/>        
         </List>}
      
 		

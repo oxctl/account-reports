@@ -11,6 +11,7 @@ import { parseLinkHeader } from '@web3-storage/parse-link-header'
 import { Pagination } from '@instructure/ui-pagination'
 
 import { AddPagination } from './AddPagination'
+import { SisImportListItem } from './SisImportListItem'
 
 function SisImportsPage({ token, server, accountId, handle403 }) {
 
@@ -123,20 +124,19 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
 		{sisImports.sis_imports.length == 0 && <Text>No available reports.</Text>}
 		
         <List>
-          {sisImports.sis_imports.slice(0, sisImports.sis_imports.length).map((sis) => {
-            const {
-              id,
-              progress,
-              ended_at,
-              user: { name } = {},
-              errors_attachment: { url } = {},
-              data: {counts},
-              csv_attachments,
-              processing_warnings 
-            } = sis  
-                              
+  			{sisImports.sis_imports.map((sisImport) => (
+    			<SisImportListItem key={sisImport.id} sisImport={sisImport} />
+  			))}
+        </List>
+        
+        
+        <AddPagination prevUrl={prevPageUrl} currUrl={currentPageUrl} nextUrl={nextPageUrl} setCurrUrl={setCurrentPageUrl}/>
+      </View>
+    
+  )
+}
 
-            return (
+/*
               <List.Item key={id} margin="small 0">
                 <Text as="span">SIS Import ID: {id} {name} ({ended_at ? new Date(ended_at).toLocaleString() : 'N/A'}) =&gt; {progress}%</Text>
                 <List>
@@ -165,15 +165,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
 				  
                 </List>
               </List.Item>
-            )
-          })}
-        </List>
-        
-        
-        <AddPagination prevUrl={prevPageUrl} currUrl={currentPageUrl} nextUrl={nextPageUrl} setCurrUrl={setCurrentPageUrl}/>
-      </View>
-    
-  )
-}
+
+*/
 
 export default SisImportsPage
