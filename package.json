@@ -9,7 +9,7 @@
     "start": "VITE_GIT_SHA=development vite",
     "preview": "vite preview"
   },
-    "browserslist": {
+  "browserslist": {
     "production": [
       ">0.2%",
       "not dead",
