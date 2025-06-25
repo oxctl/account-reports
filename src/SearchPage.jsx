@@ -68,8 +68,9 @@ function SearchPage({ token, server, accountId, handle403 }) {
 
   const handleSearch = (e) => {
 	
-	e.preventDefault(); // prevents page reload
-	
+	// allows enter / return to submit
+	e.preventDefault()
+  
 	//remove old message
 	setSisError('')
 	
