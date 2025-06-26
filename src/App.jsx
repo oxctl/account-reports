@@ -1,9 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { View } from "@instructure/ui-view";
-import { List } from "@instructure/ui-list";
-import { Heading } from "@instructure/ui-heading";
-import { Link } from "@instructure/ui-link";
-import { Text } from "@instructure/ui-text";
+import React, {  useState } from "react";
+
 import { Tabs } from "@instructure/ui-tabs";
 import {
   LtiApplyTheme,
@@ -11,6 +7,7 @@ import {
   LaunchOAuth,
   LtiHeightLimit,
 } from "@oxctl/ui-lti";
+
 import { jwtDecode } from "jwt-decode";
 
 import HomePage from "./HomePage";
@@ -22,10 +19,9 @@ function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
 
   const [token, setToken] = useState(null);
-  const [jwt, setJwt] = useState(null);
   const [needsToken, setNeedsToken] = useState(false);
 
-  const [highContrast, setHighContrast] = useState(false);
+
   const [
     comInstructureBrandConfigJsonUrl,
     setComInstructureBrandConfigJsonUrl,
@@ -35,10 +31,6 @@ function App() {
   const [accountId, setAccountId] = useState(1);
 
   const [server, setServer] = useState(null);
-
-  function capitalizeFirstLetter(val) {
-    return String(val).charAt(0).toUpperCase() + String(val).slice(1);
-  }
 
   const updateToken = (receivedToken, server) => {
     setToken(receivedToken);
