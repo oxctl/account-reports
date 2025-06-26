@@ -3,7 +3,6 @@ import React, { useEffect, useState, useRef } from "react";
 import { View } from "@instructure/ui-view";
 import { List } from "@instructure/ui-list";
 import { Heading } from "@instructure/ui-heading";
-import { Text } from "@instructure/ui-text";
 import { TextInput } from "@instructure/ui-text-input";
 import { ScreenReaderContent } from "@instructure/ui-a11y-content";
 import { IconSearchLine, IconXSolid } from "@instructure/ui-icons";
