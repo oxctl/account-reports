@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, { useState } from "react";
 
 import { Tabs } from "@instructure/ui-tabs";
 import {
@@ -20,7 +20,6 @@ function App() {
 
   const [token, setToken] = useState(null);
   const [needsToken, setNeedsToken] = useState(false);
-
 
   const [
     comInstructureBrandConfigJsonUrl,
