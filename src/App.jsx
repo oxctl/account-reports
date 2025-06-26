@@ -17,7 +17,7 @@ import SearchPage from "./SearchPage";
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
-
+  const [jwt, setJwt] = useState(null);
   const [token, setToken] = useState(null);
   const [needsToken, setNeedsToken] = useState(false);
 
