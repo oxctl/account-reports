@@ -11,7 +11,7 @@ if (dsn) {
     dsn: dsn,
     environment: import.meta.env.VITE_SENTRY_ENV,
     integrations: [Sentry.browserTracingIntegration()],
-    tracesSampleRate: 1.0,
+    tracesSampleRate: import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE,
   });
 }
 
