@@ -43,5 +43,9 @@ then to double check a PR can be created to merge the changes, reviewed and merg
 
 ## Sentry
 
-Application errors are reported using https://sentry.io for this application. There is DSN to be used for development and  production. 
-There's no DSN for local development. Sentry is setup as early as possible in the application to capture as many errors as possible.
+Application errors are reported using https://sentry.io for this application. There is DSN to be used for development and  production and 
+should be set up by hand as a Cloudflare (or equivalent) environment variable 'VITE_SENTRY_DSN'.
+ 
+There's no DSN for local development. 
+
+Sentry is setup as early as possible in the application to capture as many errors as possible.
