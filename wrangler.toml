@@ -3,6 +3,9 @@
 # Although we don't generally use this, it means KV commands use this as a prefix.
 name = "report-listings"
 
+# Output directory
+pages_build_output_dir = "build"
+
 [env.preview.vars]
 VITE_SENTRY_DSN = 
 VITE_SENTRY_ENV = "beta"
