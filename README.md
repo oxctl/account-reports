@@ -5,6 +5,15 @@ Presents links to useful Canvas reports
 
 TLS is enabled by the mkcert vite plugin which can be disabled through `vite.config.js`
 
+## Hosting
+
+The tool does not have a back-end, it is a JavaScript Vite application. The easiest way to host is to use Cloudflare Pages & link to  Github repository on the Cloudflare Pages 'Settings' pages. The following buidl options also need setting
+
+ - Build command: `npm test && npm run build`
+ - Build output: `build`
+ - Root directory:
+ - Build comments: `Enabled`
+
 ## Installing the tool
 
 Configuring the tool can be done with `@oxctl/lti-auto-configuration`.
