@@ -28,6 +28,9 @@
         ],
         "custom_fields": { 
           "allowed_roles": "Account Admin,Learning Technologist,Data Administrator",
+          "canvas_account_id": "$Canvas.account.id",
+          "canvas_account_name": "$Canvas.account.name",
+          "canvas_api_base_url": "$Canvas.api.baseUrl",
           "canvas_membership_roles": "$Canvas.membership.roles",
           "canvas_root_account_global_id": "$Canvas.root_account.global_id",
           "canvas_user_prefers_high_contrast": "$Canvas.user.prefersHighContrast",
