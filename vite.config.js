@@ -11,6 +11,17 @@ export default defineConfig({
     }),
     react(),
   ],
+  build: {
+    rollupOptions: {
+      plugins: [
+        // Enable rollup polyfills plugin
+        // used during production bundling
+        nodePolyfills()
+      ]
+    },
+    // This means we don't have to change the config in cloudflare.
+    outDir: 'build'
+  },
   server: {
     port: 3000,
     https: true,
