@@ -1,6 +1,6 @@
 {
   "title_suffix": " (dev)",
-  "frontend_url": "set at runtime",
-  "backend_url": "set at runtime",
+  "frontend_url": https://report-listings.pages.dev,
+  "backend_url": "set up if necessary",
   "lti_registration_id": "universityofoxford-report-listings-dev"
 }
