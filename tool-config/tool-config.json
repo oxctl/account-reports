@@ -8,8 +8,8 @@
         "title": "Report Listings$TITLE_SUFFIX",
         "description": "Presents links to useful pre-exiting Canvas reports: provisioning and SIS imports.",
         "target_link_uri": "$TOOL_URL",
-        "oidc_initiation_url": "$LTI_SERVER_URL/lti/login_initiation/",
-        "public_jwk_url": "$LTI_SERVER_URL/.well-known/jwks.json",
+        "oidc_initiation_url": "$TOOLS_SERVER_URL/lti/login_initiation/",
+        "public_jwk_url": "$TOOLS_SERVER_URL/.well-known/jwks.json",
         "scopes": [],
         "extensions": [
           {
@@ -40,14 +40,14 @@
     },
     "developer_key": {
       "name": "Report Listings$TITLE_SUFFIX",
-      "redirect_uris": "$LTI_SERVER_URL/lti/login",
+      "redirect_uris": "$TOOLS_SERVER_URL/lti/login",
       "scopes": []
     }
   },
   "apiKey" : null,
   "toolReg": {
     "lti": {
-      "registrationId": "$LTI_REGISTRATION_ID",
+      "registrationId": "$TOOLS_REGISTRATION_ID",
       "clientName": "Report Listings$TITLE_SUFFIX",
       "clientId": "$LTI_DEV_ID",
       "clientSecret": "$LTI_DEV_KEY",
