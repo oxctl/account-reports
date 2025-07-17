@@ -7,11 +7,11 @@ name = "report-listings"
 pages_build_output_dir = "build"
 
 [env.preview.vars]
-VITE_SENTRY_DSN = 
+#VITE_SENTRY_DSN = 
 VITE_SENTRY_ENV = "beta"
 VITE_SENTRY_TRACES_SAMPLE_RATE = "1.0"
 
 [env.production.vars]
-VITE_SENTRY_DSN = 
+#VITE_SENTRY_DSN = 
 VITE_SENTRY_ENV = "prod"
 VITE_SENTRY_TRACES_SAMPLE_RATE = "1.0"
