@@ -39,7 +39,17 @@
       "scopes": []
     }
   },
-  "apiKey" : null,
+  "apiKey"  : {
+    "developer_key": {
+      "name": "Report Listings$TITLE_SUFFIX",
+      "require_scopes": true,
+      "redirect_uris" : "$TOOLS_SERVER_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
+      "scopes": [
+        "url:GET|/api/v1/accounts/:account_id/reports",
+        "url:GET|/api/v1/accounts/:account_id/sis_imports"
+      ]
+    }
+  },
   "toolReg": {
     "lti": {
       "registrationId": "$TOOLS_REGISTRATION_ID",
