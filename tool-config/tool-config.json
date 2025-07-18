@@ -52,10 +52,10 @@
   },
   "toolReg": {
     "lti": {
-      "registrationId": "$TOOLS_REGISTRATION_ID",
+      "registrationId": "$LTI_REGISTRATION_ID",
       "clientName": "Report Listings$TITLE_SUFFIX",
-      "clientId": "$LTI_DEV_ID",
-      "clientSecret": "$LTI_DEV_KEY",
+      "clientId": "????$LTI_DEV_ID",
+      "clientSecret": "?????$LTI_DEV_KEY",
       "clientAuthenticationMethod": "client_secret_basic",
       "authorizationGrantType": "implicit",
       "redirectUri": "{baseUrl}/lti/login",
@@ -71,12 +71,12 @@
         "configurationMetadata": {}
       }
     },
-    "proxy" : null,
+    "proxy" : null, 
     "origins": [
       "$TOOL_URL"
     ],
     "secret": null,
-    "issuer": null,
+    "issuer": "$TOOLS_SERVER_URL",
     "nrpsAllowedRoles": []
   }
 }
