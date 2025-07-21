@@ -41,7 +41,7 @@
   },
   "apiKey"  : {
     "developer_key": {
-      "name": "Report Listings$TITLE_SUFFIX",
+      "name": "Report Listings API$TITLE_SUFFIX",
       "require_scopes": true,
       "redirect_uris" : "$TOOLS_SERVER_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
       "scopes": [
