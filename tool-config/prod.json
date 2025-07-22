@@ -1,7 +1,7 @@
 {
   "title_suffix": "",
   "tool_url": "https://report-listings.canvas.ox.ac.uk",
-  "tools_server_url": "https://lti.canvas.ox.ac.uk",
+  "tools_server_url": "https://tools.canvas.ox.ac.uk",
   "canvas_provider_url": "https://canvas.ox.ac.uk/",
   "lti_registration_id": "universityofoxford-report-listings"
 }

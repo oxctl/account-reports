@@ -28,6 +28,7 @@
         ],
         "custom_fields": {    
           "canvas_account_id": "$Canvas.account.id",
+          "canvas_api_base_url": "$Canvas.api.baseUrl",
           "canvas_user_prefers_high_contrast": "$Canvas.user.prefersHighContrast",
           "com_instructure_brand_config_json_url": "$com.instructure.brandConfigJSON.url"
         }
@@ -45,7 +46,9 @@
       "require_scopes": true,
       "redirect_uris" : "$TOOLS_SERVER_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
       "scopes": [
-        "url:GET|/api/v1/accounts/:account_id/reports",
+        "url:GET|/api/v1/accounts/:account_id/reports",     
+        "url:GET|/api/v1/accounts/:account_id/reports/:report", 
+        "url:GET|/api/v1/accounts/:account_id/sis_imports/:id",      
         "url:GET|/api/v1/accounts/:account_id/sis_imports"
       ]
     }
@@ -81,6 +84,8 @@
       "redirectUri": "{baseUrl}/login/oauth2/code/{registrationId}",
       "scopes": [
         "url:GET|/api/v1/accounts/:account_id/reports",
+        "url:GET|/api/v1/accounts/:account_id/reports/:report", 
+        "url:GET|/api/v1/accounts/:account_id/sis_imports/:id",
         "url:GET|/api/v1/accounts/:account_id/sis_imports"
       ],
       "providerDetails": {
