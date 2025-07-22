@@ -1,6 +1,7 @@
 {
   "title_suffix": " (dev)",
-  "tool_url": "https://report-listings.pages.dev",
-  "lti_server_url": "https://lti-dev.canvas.ox.ac.uk",
+  "tool_url": "https://main.report-listings.pages.dev",
+  "tools_server_url": "https://tools-dev.canvas.ox.ac.uk",
+  "canvas_provider_url": "https://universityofoxford.beta.instructure.com/",
   "lti_registration_id": "universityofoxford-report-listings-dev"
 }

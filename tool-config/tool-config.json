@@ -8,8 +8,8 @@
         "title": "Report Listings$TITLE_SUFFIX",
         "description": "Presents links to useful pre-exiting Canvas reports: provisioning and SIS imports.",
         "target_link_uri": "$TOOL_URL",
-        "oidc_initiation_url": "$LTI_SERVER_URL/lti/login_initiation/",
-        "public_jwk_url": "$LTI_SERVER_URL/.well-known/jwks.json",
+        "oidc_initiation_url": "$TOOLS_SERVER_URL/lti/login_initiation/",
+        "public_jwk_url": "$TOOLS_SERVER_URL/.well-known/jwks.json",
         "scopes": [],
         "extensions": [
           {
@@ -26,13 +26,9 @@
             "privacy_level": "public"
           }
         ],
-        "custom_fields": { 
-          "allowed_roles": "Account Admin,Learning Technologist,Data Administrator",
+        "custom_fields": {    
           "canvas_account_id": "$Canvas.account.id",
-          "canvas_account_name": "$Canvas.account.name",
           "canvas_api_base_url": "$Canvas.api.baseUrl",
-          "canvas_membership_roles": "$Canvas.membership.roles",
-          "canvas_root_account_global_id": "$Canvas.root_account.global_id",
           "canvas_user_prefers_high_contrast": "$Canvas.user.prefersHighContrast",
           "com_instructure_brand_config_json_url": "$com.instructure.brandConfigJSON.url"
         }
@@ -40,11 +36,23 @@
     },
     "developer_key": {
       "name": "Report Listings$TITLE_SUFFIX",
-      "redirect_uris": "$LTI_SERVER_URL/lti/login",
+      "redirect_uris": "$TOOLS_SERVER_URL/lti/login",
       "scopes": []
     }
   },
-  "apiKey" : null,
+  "apiKey"  : {
+    "developer_key": {
+      "name": "Report Listings API$TITLE_SUFFIX",
+      "require_scopes": true,
+      "redirect_uris" : "$TOOLS_SERVER_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
+      "scopes": [
+        "url:GET|/api/v1/accounts/:account_id/reports",     
+        "url:GET|/api/v1/accounts/:account_id/reports/:report", 
+        "url:GET|/api/v1/accounts/:account_id/sis_imports/:id",      
+        "url:GET|/api/v1/accounts/:account_id/sis_imports"
+      ]
+    }
+  },
   "toolReg": {
     "lti": {
       "registrationId": "$LTI_REGISTRATION_ID",
@@ -66,12 +74,34 @@
         "configurationMetadata": {}
       }
     },
-    "proxy" : null,
+    "proxy" :  {
+      "registrationId": "$LTI_REGISTRATION_ID",
+      "clientName": "Report Listings$TITLE_SUFFIX",
+      "clientId": "$API_DEV_ID",
+      "clientSecret": "$API_DEV_KEY",
+      "clientAuthenticationMethod": "client_secret_post",
+      "authorizationGrantType": "authorization_code",
+      "redirectUri": "{baseUrl}/login/oauth2/code/{registrationId}",
+      "scopes": [
+        "url:GET|/api/v1/accounts/:account_id/reports",
+        "url:GET|/api/v1/accounts/:account_id/reports/:report", 
+        "url:GET|/api/v1/accounts/:account_id/sis_imports/:id",
+        "url:GET|/api/v1/accounts/:account_id/sis_imports"
+      ],
+      "providerDetails": {
+        "authorizationUri": "$CANVAS_URL/login/oauth2/auth",
+        "tokenUri": "$CANVAS_URL/login/oauth2/token",
+        "userInfoEndpoint": null,
+        "jwkSetUri": null,
+        "issuerUri": null,
+        "configurationMetadata": {}
+      }
+    }, 
     "origins": [
       "$TOOL_URL"
     ],
     "secret": null,
-    "issuer": null,
+    "issuer": "$TOOLS_SERVER_URL",
     "nrpsAllowedRoles": []
   }
 }
