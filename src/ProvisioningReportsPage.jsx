@@ -84,8 +84,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
               </Link>
               <Text as="span">
                 {" "}
-                ({ended_at ? new Date(ended_at).toLocaleString() : "N/A"}) =&gt;{" "}
-                {progress}%
+                ({ended_at ? new Date(ended_at).toLocaleString() : "N/A"})
               </Text>
             </List.Item>
           );
