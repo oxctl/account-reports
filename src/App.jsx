@@ -102,7 +102,7 @@ function App() {
                 />
               </Tabs.Panel>
 
-              {accountId == 1 && (
+              {accountId == 1 && hasSisPermish && (
                 <Tabs.Panel
                   id="sisImports"
                   renderTitle="SIS Imports"
@@ -119,7 +119,7 @@ function App() {
                 </Tabs.Panel>
               )}
 
-              {accountId == 1 && (
+              {accountId == 1 && hasSisPermish && (
                 <Tabs.Panel
                   id="sisImportSearch"
                   renderTitle="Search for SIS Import"
