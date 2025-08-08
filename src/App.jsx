@@ -19,6 +19,7 @@ function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [token, setToken] = useState(null);
   const [needsToken, setNeedsToken] = useState(false);
+  const [hasSisPermish, setHasSisPermish] = useState(false);
 
   const [
     comInstructureBrandConfigJsonUrl,
@@ -45,7 +46,13 @@ function App() {
     setCanvasUserPrefersHighContrast(
       jwtClaim.canvas_user_prefers_high_contrast === "true",
     );
+    
+    // which subaccount are we in?
     setAccountId(jwtClaim.canvas_account_id);
+    
+    // check the user has sis_manage permission
+    setHasSisPermish(jwtClaim.canvas_membership_permissions == "manage_sis");
+    
   };
 
   const handleTabChange = (event, { index }) => {
