@@ -80,7 +80,6 @@ function App() {
               <Tabs.Panel
                 id="home"
                 renderTitle="Home"
-                textAlign="start"
                 padding="large"
                 isSelected={selectedIndex === 0}
               >
@@ -90,7 +89,6 @@ function App() {
               <Tabs.Panel
                 id="reports"
                 renderTitle="Reports"
-                textAlign="start"
                 padding="large"
                 isSelected={selectedIndex === 1}
               >
@@ -106,7 +104,6 @@ function App() {
                 <Tabs.Panel
                   id="sisImports"
                   renderTitle="SIS Imports"
-                  textAlign="start"
                   padding="large"
                   isSelected={selectedIndex === 2}
                 >
@@ -123,7 +120,6 @@ function App() {
                 <Tabs.Panel
                   id="sisImportSearch"
                   renderTitle="Search for SIS Import"
-                  textAlign="start"
                   padding="large"
                   isSelected={selectedIndex === 3}
                 >
@@ -139,7 +135,6 @@ function App() {
               <Tabs.Panel
                 id="accountReportsPage"
                 renderTitle="Account Reports"
-                textAlign="start"
                 padding="large"
                 isSelected={selectedIndex === 4}
               >
