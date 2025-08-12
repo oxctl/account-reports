@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from "react";
-import Loading from "./Loading";
-import Error from "./Error";
-import Reports from "./Reports";
 
 function AccountReportsPage({ token, server, accountId, handle403 }) {
 
