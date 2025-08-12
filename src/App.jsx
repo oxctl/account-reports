@@ -31,18 +31,11 @@ function App() {
   const [accountId, setAccountId] = useState(1);
 
   const [server, setServer] = useState(null);
-  const [getServerUrl,setGetServerUrl] = useState(null);
-  const [getToken,setGetToken] = useState(null);
 
   const updateToken = (receivedToken, server) => {
     setToken(receivedToken);
 
     setServer(server);
-    
-    setGetServerUrl(import.meta.env.VITE_GET_SERVER_URL);
-    setGetToken(import.meta.env.VITE_GET_TOKEN);
-    
-    console.log("DA GET servier be: "+getServerUrl)
 
     const decodedJwt = jwtDecode(receivedToken);
 
