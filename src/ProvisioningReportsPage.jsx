@@ -13,13 +13,12 @@ import { AddPagination } from "./AddPagination";
 import { Loading } from "./Loading";
 
 function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
-	
   const [reports, setReports] = useState([]);
   const [error, setError] = useState(null);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [prevPageUrl, setPrevPageUrl] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+
   const [currentPageUrl, setCurrentPageUrl] = useState(
     server +
       "/api/v1/accounts/" +
@@ -35,7 +34,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
       },
     })
       .then((response) => {
-	    setLoading(false);
+        setLoading(false);
         if (!response.ok) {
           handleResponseFailure(response, handle403);
         }
@@ -61,10 +60,13 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
       </Heading>
       {error && <Text color="danger">{error}</Text>}
 
-      
-      {loading ? <Loading/> : reports.length == 0 && <Text>No available reports.</Text> }
+      {loading ? (
+        <Loading />
+      ) : (
+        reports.length == 0 && <Text>No available reports.</Text>
+      )}
 
-       <List>
+      <List>
         {reports.slice(0, reports.length).map((report) => {
           const {
             id,
