@@ -4,7 +4,6 @@ import Error from "./Error";
 import Reports from "./Reports";
 
 function AccountReportsPage({ token, server, accountId, handle403 }) {
-
   const [error, setError] = useState(null);
 
   return (
@@ -18,9 +17,7 @@ function AccountReportsPage({ token, server, accountId, handle403 }) {
         <p>To be completed</p>
       </Text>
     </View>
-  ); 
-
+  );
 }
-
 
 export default AccountReportsPage;
