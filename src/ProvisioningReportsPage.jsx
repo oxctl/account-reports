@@ -64,7 +64,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
       
       {loading ? <Loading/> : reports.length == 0 && <Text>No available reports.</Text> }
 
-<List>
+       <List>
         {reports.slice(0, reports.length).map((report) => {
           const {
             id,
