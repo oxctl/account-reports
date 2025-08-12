@@ -67,7 +67,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
       )}
 
       <List>
-        {reports.slice(0, reports.length).map((report) => {
+        {reports.map((report) => {
           const {
             id,
             progress,
