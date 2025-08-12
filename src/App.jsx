@@ -47,13 +47,12 @@ function App() {
     setCanvasUserPrefersHighContrast(
       jwtClaim.canvas_user_prefers_high_contrast === "true",
     );
-    
+
     // which subaccount are we in?
     setAccountId(jwtClaim.canvas_account_id);
-    
+
     // check the user has sis_manage permission
     setHasSisPermish(jwtClaim.canvas_membership_permissions == "manage_sis");
-    
   };
 
   const handleTabChange = (event, { index }) => {
@@ -136,23 +135,21 @@ function App() {
                   />
                 </Tabs.Panel>
               )}
-              
-                            
-                <Tabs.Panel
-                  id="accountReportsPage"
-                  renderTitle="Account Reports"
-                  textAlign="start"
-                  padding="large"
-                  isSelected={selectedIndex === 4}
-                >
-                  <AccountReportsPage
-                    token={token}
-                    server={server}
-                    accountId={accountId}
-                    handle403={() => setNeedsToken(true)}
-                  />
-                </Tabs.Panel>
-              
+
+              <Tabs.Panel
+                id="accountReportsPage"
+                renderTitle="Account Reports"
+                textAlign="start"
+                padding="large"
+                isSelected={selectedIndex === 4}
+              >
+                <AccountReportsPage
+                  token={token}
+                  server={server}
+                  accountId={accountId}
+                  handle403={() => setNeedsToken(true)}
+                />
+              </Tabs.Panel>
             </Tabs>
           </LaunchOAuth>
         </LtiHeightLimit>
