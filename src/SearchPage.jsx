@@ -22,11 +22,10 @@ function SearchPage({ token, server, accountId, handle403 }) {
   const [hideResults, setHideResults] = useState(false);
   const [loading, setLoading] = useState(false);
 
-
   const missingImportMessage = () => {
     if (sisError) {
-	  return [{ type: "newError", text: sisError }];
-	}
+      return [{ type: "newError", text: sisError }];
+    }
   };
 
   useEffect(() => {
@@ -46,7 +45,6 @@ function SearchPage({ token, server, accountId, handle403 }) {
         setLoading(false);
 
         if (!response.ok) {
-	      
           handleResponseFailure(response, handle403);
         } else {
           // dont hide the results
@@ -69,7 +67,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
     e.preventDefault();
 
     setLoading(true);
-    
+
     //remove old message
     setSisError("");
 
@@ -92,7 +90,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
 
   const handleClear = () => {
     setValue("");
-    
+
     setLoading(false);
 
     // remove any previous errors
@@ -150,12 +148,16 @@ function SearchPage({ token, server, accountId, handle403 }) {
           </Flex.Item>
         </Flex>
       </form>
-      
-    
-    {loading ? <Loading/> : sisImport && !hideResults && (
-        <List>
-          <SisImportListItem key={sisImport.id} sisImport={sisImport} />
-        </List>
+
+      {loading ? (
+        <Loading />
+      ) : (
+        sisImport &&
+        !hideResults && (
+          <List>
+            <SisImportListItem key={sisImport.id} sisImport={sisImport} />
+          </List>
+        )
       )}
     </View>
   );
