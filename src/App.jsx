@@ -14,6 +14,7 @@ import HomePage from "./HomePage";
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
 import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
+import AccountReportsPage from "./AccountReportsPage";
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -30,11 +31,18 @@ function App() {
   const [accountId, setAccountId] = useState(1);
 
   const [server, setServer] = useState(null);
+  const [getServerUrl,setGetServerUrl] = useState(null);
+  const [getToken,setGetToken] = useState(null);
 
   const updateToken = (receivedToken, server) => {
     setToken(receivedToken);
 
     setServer(server);
+    
+    setGetServerUrl(import.meta.env.VITE_GET_SERVER_URL);
+    setGetToken(import.meta.env.VITE_GET_TOKEN);
+    
+    console.log("DA GET servier be: "+getServerUrl)
 
     const decodedJwt = jwtDecode(receivedToken);
 
@@ -135,6 +143,23 @@ function App() {
                   />
                 </Tabs.Panel>
               )}
+              
+                            
+                <Tabs.Panel
+                  id="accountReportsPage"
+                  renderTitle="Account Reports"
+                  textAlign="start"
+                  padding="large"
+                  isSelected={selectedIndex === 4}
+                >
+                  <AccountReportsPage
+                    token={token}
+                    server={server}
+                    accountId={accountId}
+                    handle403={() => setNeedsToken(true)}
+                  />
+                </Tabs.Panel>
+              
             </Tabs>
           </LaunchOAuth>
         </LtiHeightLimit>
