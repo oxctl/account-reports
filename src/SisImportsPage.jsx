@@ -35,7 +35,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
       },
     })
       .then((response) => {
-	    setLoading(false);
+        setLoading(false);
         if (!response.ok) {
           handleResponseFailure(response, handle403);
         }
@@ -55,21 +55,21 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
   }, [token, currentPageUrl]);
 
   return (
-	    
-	      
     <View as="div" padding="large">
       <Heading level="h1" as="h2">
         List of SIS Imports
       </Heading>
       {sisError && <Text color="danger">{sisError}</Text>}
-      
-      { loading ? <Loading/> :
-      
-      <List>
-        {sisImports.sis_imports.map((sisImport) => (
-          <SisImportListItem key={sisImport.id} sisImport={sisImport} />
-        ))}
-      </List>}
+
+      {loading ? (
+        <Loading />
+      ) : (
+        <List>
+          {sisImports.sis_imports.map((sisImport) => (
+            <SisImportListItem key={sisImport.id} sisImport={sisImport} />
+          ))}
+        </List>
+      )}
 
       <AddPagination
         prevUrl={prevPageUrl}
