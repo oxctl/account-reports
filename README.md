@@ -1,4 +1,4 @@
-# Report Listings
+# Account Reports
 Presents links to useful Canvas reports
 
 ## Development Setup
