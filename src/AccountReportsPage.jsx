@@ -14,7 +14,7 @@ function AccountReportsPage({ token, server, accountId, handle403 }) {
       {error && <Text color="danger">{error}</Text>}
 
       <Text>
-        <p>To be completed</p>
+        <p>To be completed. Innit.</p>
       </Text>
     </View>
   );
