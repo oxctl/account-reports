@@ -5,8 +5,8 @@
     "tool_configuration": {
       "settings": {
         "public_jwk": {},
-        "title": "Report Listings$TITLE_SUFFIX",
-        "description": "Presents links to useful pre-exiting Canvas reports: provisioning and SIS imports.",
+        "title": "Account Reports$TITLE_SUFFIX",
+        "description": "Presents links to useful Canvas reports: account reports, provisioning and SIS imports.",
         "target_link_uri": "$TOOL_URL",
         "oidc_initiation_url": "$TOOLS_SERVER_URL/lti/login_initiation/",
         "public_jwk_url": "$TOOLS_SERVER_URL/.well-known/jwks.json",
@@ -36,14 +36,14 @@
       }
     },
     "developer_key": {
-      "name": "Report Listings$TITLE_SUFFIX",
+      "name": "Account Reports$TITLE_SUFFIX",
       "redirect_uris": "$TOOLS_SERVER_URL/lti/login",
       "scopes": []
     }
   },
   "apiKey"  : {
     "developer_key": {
-      "name": "Report Listings API$TITLE_SUFFIX",
+      "name": "Account Reports API$TITLE_SUFFIX",
       "require_scopes": true,
       "redirect_uris" : "$TOOLS_SERVER_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
       "scopes": [
@@ -57,7 +57,7 @@
   "toolReg": {
     "lti": {
       "registrationId": "$LTI_REGISTRATION_ID",
-      "clientName": "Report Listings$TITLE_SUFFIX",
+      "clientName": "Account Reports$TITLE_SUFFIX",
       "clientId": "$LTI_DEV_ID",
       "clientSecret": "$LTI_DEV_KEY",
       "clientAuthenticationMethod": "client_secret_basic",
@@ -77,7 +77,7 @@
     },
     "proxy" :  {
       "registrationId": "$LTI_REGISTRATION_ID",
-      "clientName": "Report Listings$TITLE_SUFFIX",
+      "clientName": "Account Reports$TITLE_SUFFIX",
       "clientId": "$API_DEV_ID",
       "clientSecret": "$API_DEV_KEY",
       "clientAuthenticationMethod": "client_secret_post",
