@@ -14,11 +14,13 @@ import HomePage from "./HomePage";
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
 import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
+import AccountReportsPage from "./AccountReportsPage";
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [token, setToken] = useState(null);
   const [needsToken, setNeedsToken] = useState(false);
+  const [hasSisPermish, setHasSisPermish] = useState(false);
 
   const [
     comInstructureBrandConfigJsonUrl,
@@ -45,7 +47,12 @@ function App() {
     setCanvasUserPrefersHighContrast(
       jwtClaim.canvas_user_prefers_high_contrast === "true",
     );
+
+    // which subaccount are we in?
     setAccountId(jwtClaim.canvas_account_id);
+
+    // check the user has sis_manage permission
+    setHasSisPermish(jwtClaim.canvas_membership_permissions == "manage_sis");
   };
 
   const handleTabChange = (event, { index }) => {
@@ -73,7 +80,6 @@ function App() {
               <Tabs.Panel
                 id="home"
                 renderTitle="Home"
-                textAlign="start"
                 padding="large"
                 isSelected={selectedIndex === 0}
               >
@@ -83,7 +89,6 @@ function App() {
               <Tabs.Panel
                 id="reports"
                 renderTitle="Reports"
-                textAlign="start"
                 padding="large"
                 isSelected={selectedIndex === 1}
               >
@@ -95,11 +100,10 @@ function App() {
                 />
               </Tabs.Panel>
 
-              {accountId == 1 && (
+              {accountId == 1 && hasSisPermish && (
                 <Tabs.Panel
                   id="sisImports"
                   renderTitle="SIS Imports"
-                  textAlign="start"
                   padding="large"
                   isSelected={selectedIndex === 2}
                 >
@@ -112,11 +116,10 @@ function App() {
                 </Tabs.Panel>
               )}
 
-              {accountId == 1 && (
+              {accountId == 1 && hasSisPermish && (
                 <Tabs.Panel
                   id="sisImportSearch"
                   renderTitle="Search for SIS Import"
-                  textAlign="start"
                   padding="large"
                   isSelected={selectedIndex === 3}
                 >
@@ -128,6 +131,20 @@ function App() {
                   />
                 </Tabs.Panel>
               )}
+
+              <Tabs.Panel
+                id="accountReportsPage"
+                renderTitle="Account Reports"
+                padding="large"
+                isSelected={selectedIndex === 4}
+              >
+                <AccountReportsPage
+                  token={token}
+                  server={server}
+                  accountId={accountId}
+                  handle403={() => setNeedsToken(true)}
+                />
+              </Tabs.Panel>
             </Tabs>
           </LaunchOAuth>
         </LtiHeightLimit>

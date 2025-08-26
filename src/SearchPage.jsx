@@ -10,7 +10,7 @@ import { Flex } from "@instructure/ui-flex";
 import { IconButton, Button } from "@instructure/ui-buttons";
 
 import { SisImportListItem } from "./SisImportListItem";
-
+import { Loading } from "./Loading";
 import { handleResponseFailure } from "./utils/handleResponseFailure";
 
 function SearchPage({ token, server, accountId, handle403 }) {
@@ -20,9 +20,12 @@ function SearchPage({ token, server, accountId, handle403 }) {
   const [value, setValue] = useState("");
   const inputRef = useRef(null);
   const [hideResults, setHideResults] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const missingImportMessage = () => {
-    if (sisError) return [{ type: "newError", text: sisError }];
+    if (sisError) {
+      return [{ type: "newError", text: sisError }];
+    }
   };
 
   useEffect(() => {
@@ -39,6 +42,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
       .then((response) => {
         //  hide the results
         setHideResults(true);
+        setLoading(false);
 
         if (!response.ok) {
           handleResponseFailure(response, handle403);
@@ -50,7 +54,7 @@ function SearchPage({ token, server, accountId, handle403 }) {
       })
       .then(setSisImport)
       .catch((err) => {
-        console.error("Fetch error (SIS):", err);
+        setLoading(false);
         setSisError(err.message + " There is no SIS Import with that ID ");
         setHideResults(true);
       });
@@ -61,6 +65,8 @@ function SearchPage({ token, server, accountId, handle403 }) {
   const handleSearch = (e) => {
     // allows enter / return to submit
     e.preventDefault();
+
+    setLoading(true);
 
     //remove old message
     setSisError("");
@@ -84,6 +90,8 @@ function SearchPage({ token, server, accountId, handle403 }) {
 
   const handleClear = () => {
     setValue("");
+
+    setLoading(false);
 
     // remove any previous errors
     setSisError(null);
@@ -141,10 +149,15 @@ function SearchPage({ token, server, accountId, handle403 }) {
         </Flex>
       </form>
 
-      {sisImport && !hideResults && (
-        <List>
-          <SisImportListItem key={sisImport.id} sisImport={sisImport} />
-        </List>
+      {loading ? (
+        <Loading />
+      ) : (
+        sisImport &&
+        !hideResults && (
+          <List>
+            <SisImportListItem key={sisImport.id} sisImport={sisImport} />
+          </List>
+        )
       )}
     </View>
   );

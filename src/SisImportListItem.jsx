@@ -62,7 +62,7 @@ export function SisImportListItem({ sisImport }) {
         {sisImport.ended_at
           ? new Date(sisImport.ended_at).toLocaleString()
           : "N/A"}
-        ) =&gt; {sisImport.progress}%
+        )
       </Text>
       <List>
         <List.Item>

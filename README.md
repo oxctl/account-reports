@@ -1,4 +1,4 @@
-# Report Listings
+# Account Reports
 Presents links to useful Canvas reports
 
 ## Development Setup
@@ -47,7 +47,7 @@ Alternatively to do this locally run checkout the release branch, fetch the late
 git merge origin/master
 ```
 
-To see what is about to go into a release you can preview the changes between [master and release](https://github.com/oxctl/report-listings/compare/release...master), 
+To see what is about to go into a release you can preview the changes between [master and release](https://github.com/oxctl/account-reports/compare/release...master), 
 then to double check a PR can be created to merge the changes, reviewed and merged (at which point the release branch is built and deployed).
 
 ## Sentry

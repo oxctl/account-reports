@@ -9,6 +9,7 @@ import { parseLinkHeader } from "@web3-storage/parse-link-header";
 
 import { AddPagination } from "./AddPagination";
 import { SisImportListItem } from "./SisImportListItem";
+import { Loading } from "./Loading";
 
 import { handleResponseFailure } from "./utils/handleResponseFailure";
 
@@ -17,6 +18,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
   const [sisError, setSisError] = useState(null);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [prevPageUrl, setPrevPageUrl] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [currentPageUrl, setCurrentPageUrl] = useState(
     server +
       "/api/v1/accounts/" +
@@ -33,6 +35,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
       },
     })
       .then((response) => {
+        setLoading(false);
         if (!response.ok) {
           handleResponseFailure(response, handle403);
         }
@@ -57,13 +60,16 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
         List of SIS Imports
       </Heading>
       {sisError && <Text color="danger">{sisError}</Text>}
-      {sisImports.sis_imports.length == 0 && <Text>No available reports.</Text>}
 
-      <List>
-        {sisImports.sis_imports.map((sisImport) => (
-          <SisImportListItem key={sisImport.id} sisImport={sisImport} />
-        ))}
-      </List>
+      {loading ? (
+        <Loading />
+      ) : (
+        <List>
+          {sisImports.sis_imports.map((sisImport) => (
+            <SisImportListItem key={sisImport.id} sisImport={sisImport} />
+          ))}
+        </List>
+      )}
 
       <AddPagination
         prevUrl={prevPageUrl}

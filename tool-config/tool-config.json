@@ -29,6 +29,7 @@
         "custom_fields": {    
           "canvas_account_id": "$Canvas.account.id",
           "canvas_api_base_url": "$Canvas.api.baseUrl",
+          "canvas_membership_permissions": "$Canvas.membership.permissions<manage_sis>",
           "canvas_user_prefers_high_contrast": "$Canvas.user.prefersHighContrast",
           "com_instructure_brand_config_json_url": "$com.instructure.brandConfigJSON.url"
         }
