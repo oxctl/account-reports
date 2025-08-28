@@ -70,8 +70,6 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
         {reports.map((report) => {
           const {
             id,
-            progress,
-            status,
             ended_at,
             parameters: { extra_text } = {},
             attachment: { url = "" } = {},
