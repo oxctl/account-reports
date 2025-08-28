@@ -1,3 +1,9 @@
+/**
+ * Capitalizes the first letter of a given string.
+ *
+ * @param {string} response - HTTP response status code
+ * @param {string} handle403 - function to deal with a 403 response, ie, authenticate the user
+ */
 export function handleResponseFailure(response, handle403) {
   if (response.status === 403) {
     handle403();
@@ -10,7 +16,7 @@ export function handleResponseFailure(response, handle403) {
     } else {
       // user nenver sees this error, just get stuck in an auth loop - ------------------------------------------
       throw new Error(
-        "You don't have permission or your session has expired, please try relaunching the tool.",
+        "You don't have permission or your session has expired, please try relaunching the tool" +  "."
       );
     }
   } else if (response.status === 400) {
