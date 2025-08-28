@@ -10,7 +10,7 @@ export function handleResponseFailure(response, handle403) {
     } else {
       // user nenver sees this error, just get stuck in an auth loop - ------------------------------------------
       throw new Error(
-        "You don't have permission or your session has expired, please try relaunching the tool.",
+        "You don't have permission or your session has expired, please try relaunching the tool."
       );
     }
   } else if (response.status === 400) {
