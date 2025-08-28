@@ -5,6 +5,6 @@
  * @returns {string} - The input string with the first letter capitalized.
  */
 export function capitalizeFirstLetter(val) {
-	if (!val) return "";
+  if (!val) return "";
   return val.charAt(0).toUpperCase() + val.slice(1);
 }

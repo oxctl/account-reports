@@ -29,7 +29,6 @@ function SearchPage({ token, server, accountId, handle403 }) {
   };
 
   useEffect(() => {
-
     if (!token || !sisImportUrl) return;
 
     fetch(sisImportUrl, {
