@@ -3,32 +3,34 @@ async function checkOk(response) {
   if (!response.ok) {
     if (response.status === 403) {
       // This will happen the first time someone uses the tool.
-      throw new LoginError('Proxy doesn\'t have token for user')
+      throw new LoginError("Proxy doesn't have token for user");
     } else if (response.status === 401) {
-      const authHeader = response.headers.get('WWW-Authenticate')
+      const authHeader = response.headers.get("WWW-Authenticate");
       if (authHeader) {
-        if (!authHeader.includes('proxy')) {
+        if (!authHeader.includes("proxy")) {
           // This will typically happen when someone has deleted their token
-          throw new LoginError('Your token isn\'t valid any more')
+          throw new LoginError("Your token isn't valid any more");
         }
         // TODO We should have better parsing of the header
-        if (authHeader.includes('invalid_token')) {
-          throw new Error('Your session has expired, please try relaunching the tool')
+        if (authHeader.includes("invalid_token")) {
+          throw new Error(
+            "Your session has expired, please try relaunching the tool",
+          );
         }
       }
       // If there's no auth header look in the JSON
-      await response.json().then(error => {
-        if (error.status === 'unauthorised') {
+      await response.json().then((error) => {
+        if (error.status === "unauthorised") {
           // Attempting an operation for something they don't have access to.
-          throw new UnauthorizedError()
+          throw new UnauthorizedError();
         } else {
           // This is probably because you need to renew you're token because the scopes have changed.
-          throw new LoginError('Token isn\'t valid for this operation.')
+          throw new LoginError("Token isn't valid for this operation.");
         }
-      })
+      });
     }
   }
-  return response
+  return response;
 }
 
 /**
@@ -38,7 +40,7 @@ async function checkOk(response) {
 class LoginError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'Login Error';
+    this.name = "Login Error";
   }
 }
 /**
@@ -48,8 +50,8 @@ class LoginError extends Error {
 class UnauthorizedError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'Unauthorized Error';
+    this.name = "Unauthorized Error";
   }
 }
 
-export {checkOk, LoginError, UnauthorizedError}
+export { checkOk, LoginError, UnauthorizedError };
