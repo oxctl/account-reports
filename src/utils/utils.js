@@ -1,3 +1,4 @@
 export function capitalizeFirstLetter(val) {
-  return String(val).charAt(0).toUpperCase() + String(val).slice(1);
+	if (!val) return "";
+  return val.charAt(0).toUpperCase() + val.slice(1);
 }
