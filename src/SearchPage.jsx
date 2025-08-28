@@ -29,10 +29,8 @@ function SearchPage({ token, server, accountId, handle403 }) {
   };
 
   useEffect(() => {
-    if (!token) return;
 
-    // make sure API call URL is set up
-    if (!sisImportUrl) return;
+    if (!token || !sisImportUrl) return;
 
     fetch(sisImportUrl, {
       headers: {
