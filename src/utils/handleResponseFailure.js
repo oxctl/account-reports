@@ -1,6 +1,6 @@
 /**
  * Deals with the situation where the end-user gets a 403 when making a request. 
- This can be due to them not having an LTI token or some other issue. 
+ * This can be due to them not having an LTI token or some other issue. 
  If the error is a 403 then the second function argument deals with it.
  *
  * @param {string} response - HTTP response status code
@@ -17,10 +17,7 @@ export function handleResponseFailure(response, handle403) {
       throw new Error();
     } else {
       // user nenver sees this error, just get stuck in an auth loop -
-      throw new Error(
-        response.status +
-          " you don't have permission or your session has expired please try relaunching the tool.",
-      );
+      throw new Error(response.status + " you don't have permission.");
     }
   } else if (response.status === 400) {
     const err = "400 error - Bad Request.";
