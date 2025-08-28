@@ -16,10 +16,11 @@ export function handleResponseFailure(response, handle403) {
       handle403();
       throw new Error();
     } else {
-      // user nenver sees this error, just get stuck in an auth loop - 
-      throw new Error(response.status + 
-        " you don't have permission or your session has expired, please try relaunching the tool.");
-
+      // user nenver sees this error, just get stuck in an auth loop -
+      throw new Error(
+        response.status +
+          " you don't have permission or your session has expired, please try relaunching the tool.",
+      );
     }
   } else if (response.status === 400) {
     const err = "400 error - Bad Request.";
