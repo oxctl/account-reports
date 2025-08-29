@@ -10,16 +10,20 @@ import ExternalAdminUsersJob from "./jobs/ExternalAdminUsersJob";
 import SubaccountAdminsJob from "./jobs/SubaccountAdminsJob";
 import ReportAction from "./ReportAction";
 
-
-function AccountReportsPage({ token, server, baseUrl, accountId, rootAccountId, handle403 }) {
-
+function AccountReportsPage({
+  token,
+  server,
+  baseUrl,
+  accountId,
+  rootAccountId,
+  handle403,
+}) {
   const [alerts, setAlerts] = useState([]);
   const showRootAccountReports = accountId == rootAccountId;
   const alertIdRef = React.useRef(0);
-  
-  
-	// Set up all the reports & say which are displayed in places other than the root account  
-    const reports = useMemo(
+
+  // Set up all the reports & say which are displayed in places other than the root account
+  const reports = useMemo(
     () => [
       {
         name: "Account Admin Users",
@@ -53,14 +57,11 @@ function AccountReportsPage({ token, server, baseUrl, accountId, rootAccountId, 
         showOnSubaccount: true,
       },
     ],
-    []
+    [],
   );
 
   const addAlert = useCallback((alert) => {
-    setAlerts((prev) => [
-      ...prev,
-      { ...alert, id: alertIdRef.current++ },
-    ]);
+    setAlerts((prev) => [...prev, { ...alert, id: alertIdRef.current++ }]);
   }, []);
 
   const removeAlert = useCallback((removeId) => {
@@ -78,16 +79,14 @@ function AccountReportsPage({ token, server, baseUrl, accountId, rootAccountId, 
         {alert.message}
       </Alert>
     ));
-    
-    
+
   const renderReports = () => {
-	
     const visibleReports = showRootAccountReports
       ? reports
       : reports.filter((r) => r.showOnSubaccount);
-      
+
     const options = {};
-    
+
     if (accountId) options.accountId = accountId;
     if (baseUrl) options.baseUrl = baseUrl;
     if (rootAccountId) options.rootAccountId = rootAccountId;
@@ -124,6 +123,5 @@ function AccountReportsPage({ token, server, baseUrl, accountId, rootAccountId, 
     </>
   );
 }
-
 
 export default AccountReportsPage;

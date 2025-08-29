@@ -1,10 +1,7 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Button } from "@instructure/ui-buttons";
 import { Spinner } from "@instructure/ui-spinner";
 import { Link } from "@instructure/ui-link";
-
-
-
 
 // --- ReportAction as a function component ---
 function ReportAction({ name, report, addAlert }) {
@@ -21,8 +18,11 @@ function ReportAction({ name, report, addAlert }) {
       setComplete(true);
       addAlert({ variant: "success", message: `${name} report is complete.` });
     } catch (e) {
-	console.log("Exception chucked in a fit ==> "+e)
-      addAlert({ variant: "error", message: `${name} report failed to complete.` });
+      console.log("Exception chucked in a fit ==> " + e);
+      addAlert({
+        variant: "error",
+        message: `${name} report failed to complete.`,
+      });
     } finally {
       setRunning(false);
     }
@@ -54,7 +54,11 @@ function ReportAction({ name, report, addAlert }) {
       {running ? (
         <Spinner size="x-small" renderTitle="running" />
       ) : (
-        complete && <Link href="#" onClick={download}>Download</Link>
+        complete && (
+          <Link href="#" onClick={download}>
+            Download
+          </Link>
+        )
       )}
     </>
   );
