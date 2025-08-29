@@ -142,6 +142,8 @@ function App() {
                   token={token}
                   server={server}
                   accountId={accountId}
+                  baseUrl={server + "/api/v1"}
+                  rootAccountId={1}
                   handle403={() => setNeedsToken(true)}
                 />
               </Tabs.Panel>
