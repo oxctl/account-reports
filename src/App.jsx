@@ -17,7 +17,7 @@ import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
 import AccountReportsPage from "./AccountReportsPage";
 
-import { ROOT_ACCOUNT_ID } from './utils/constants'
+import { ROOT_ACCOUNT_ID } from "./utils/constants";
 
 /**
  * The tool works differently for people with the sis_manage permission at the
