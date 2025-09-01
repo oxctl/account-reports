@@ -110,7 +110,6 @@ function App() {
                     token={token}
                     server={server}
                     accountId={accountId}
-                    baseUrl={server + "/api/v1"}
                     rootAccountId={ROOT_ACCOUNT_ID}
                     handle403={() => setNeedsToken(true)}
                   />

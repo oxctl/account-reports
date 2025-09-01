@@ -16,24 +16,14 @@ import ReportAction from "./ReportAction";
  * @function ProvisioningReportsPage
  * @param {string} token - API token used for authenticating requests.
  * @param {string} server - Base server URL for the Canvas instance.
- 
- baseURL ?????
- 
- 
  * @param {string|number} accountId - The Canvas account ID to run the reports against.
- 
- 
- root account ID
- 
- 
- 
+ * @param {string|number} rootAccountId - The Canvas root account ID 
  * @param {Function} handle403 - Callback to handle 403 (Forbidden) errors from the API - gets user to authenticate.
  * @returns {JSX.Element} The rendered Provisioning Reports page.
  */
 function AccountReportsPage({
   token,
   server,
-  baseUrl,
   accountId,
   rootAccountId,
   handle403,
@@ -121,7 +111,7 @@ function AccountReportsPage({
     // Options passed to each job runner
     const options = {};
     if (accountId) options.accountId = accountId;
-    if (baseUrl) options.baseUrl = baseUrl;
+    if (server) options.baseUrl = server+"/api/v1";
     if (rootAccountId) options.rootAccountId = rootAccountId;
 
     // Render each report in a grid row with heading, description, and action button
