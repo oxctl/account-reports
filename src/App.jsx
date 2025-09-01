@@ -17,6 +17,8 @@ import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
 import AccountReportsPage from "./AccountReportsPage";
 
+import { ROOT_ACCOUNT_ID } from './utils/constants'
+
 /**
  * The tool works differently for people with the sis_manage permission at the
  * root account with lots more tabs available. Everyone will see the Account Tools and
@@ -109,7 +111,7 @@ function App() {
                     server={server}
                     accountId={accountId}
                     baseUrl={server + "/api/v1"}
-                    rootAccountId={1}
+                    rootAccountId={ROOT_ACCOUNT_ID}
                     handle403={() => setNeedsToken(true)}
                   />
                 </Tabs.Panel>
@@ -128,7 +130,7 @@ function App() {
                   />
                 </Tabs.Panel>
 
-                {accountId == 1 && hasSisPermish && (
+                {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
                   <Tabs.Panel
                     id="sisImports"
                     renderTitle="SIS Imports"
@@ -144,7 +146,7 @@ function App() {
                   </Tabs.Panel>
                 )}
 
-                {accountId == 1 && hasSisPermish && (
+                {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
                   <Tabs.Panel
                     id="sisImportSearch"
                     renderTitle="Search for SIS Import"
