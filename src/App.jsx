@@ -100,7 +100,7 @@ function App() {
               >
                 <Tabs.Panel
                   id="accountReportsPage"
-                  renderTitle="Account Reports"
+                  renderTitle="User Reports"
                   padding="large"
                   isSelected={selectedIndex === 0}
                 >
@@ -116,7 +116,7 @@ function App() {
 
                 <Tabs.Panel
                   id="reports"
-                  renderTitle="Reports"
+                  renderTitle="Provisioning Reports"
                   padding="large"
                   isSelected={selectedIndex === 1}
                 >

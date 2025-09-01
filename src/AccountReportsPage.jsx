@@ -10,6 +10,26 @@ import ExternalAdminUsersJob from "./jobs/ExternalAdminUsersJob";
 import SubaccountAdminsJob from "./jobs/SubaccountAdminsJob";
 import ReportAction from "./ReportAction";
 
+/**
+ * Renders the Provisioning Reports page for a Canvas account.
+ *
+ * @function ProvisioningReportsPage
+ * @param {string} token - API token used for authenticating requests.
+ * @param {string} server - Base server URL for the Canvas instance.
+ 
+ baseURL ?????
+ 
+ 
+ * @param {string|number} accountId - The Canvas account ID to run the reports against.
+ 
+ 
+ root account ID
+ 
+ 
+ 
+ * @param {Function} handle403 - Callback to handle 403 (Forbidden) errors from the API - gets user to authenticate.
+ * @returns {JSX.Element} The rendered Provisioning Reports page.
+ */
 function AccountReportsPage({
   token,
   server,
@@ -18,11 +38,18 @@ function AccountReportsPage({
   rootAccountId,
   handle403,
 }) {
+  // Track all alert messages shown to the user (e.g., success/error notices)
   const [alerts, setAlerts] = useState([]);
+
+  // Determine if the current account is the root account
   const showRootAccountReports = accountId == rootAccountId;
+
+  // A ref that increments to give each alert a unique stable ID
   const alertIdRef = React.useRef(0);
 
-  // Set up all the reports & say which are displayed in places other than the root account
+  // --- Reports configuration ---
+  // Define all available reports (name, description, job runner).
+  // Some reports should only be shown at the root account level.
   const reports = useMemo(
     () => [
       {
@@ -60,14 +87,18 @@ function AccountReportsPage({
     [],
   );
 
+  // --- Alert handling ---
+  // Add a new alert message
   const addAlert = useCallback((alert) => {
     setAlerts((prev) => [...prev, { ...alert, id: alertIdRef.current++ }]);
   }, []);
 
+  // Remove a specific alert by ID
   const removeAlert = useCallback((removeId) => {
     setAlerts((prev) => prev.filter((alert) => alert.id !== removeId));
   }, []);
 
+  // Render all alert messages
   const renderAlerts = () =>
     alerts.map((alert) => (
       <Alert
@@ -80,17 +111,20 @@ function AccountReportsPage({
       </Alert>
     ));
 
+  // Render the list of reports available for this account
   const renderReports = () => {
+    // Show all reports if root account, otherwise only subaccount-enabled reports
     const visibleReports = showRootAccountReports
       ? reports
       : reports.filter((r) => r.showOnSubaccount);
 
+    // Options passed to each job runner
     const options = {};
-
     if (accountId) options.accountId = accountId;
     if (baseUrl) options.baseUrl = baseUrl;
     if (rootAccountId) options.rootAccountId = rootAccountId;
 
+    // Render each report in a grid row with heading, description, and action button
     return visibleReports.map((report, idx) => (
       <Grid.Row key={idx}>
         <Grid.Col width={3}>
