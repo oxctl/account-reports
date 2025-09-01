@@ -18,10 +18,10 @@ import SearchPage from "./SearchPage";
 import AccountReportsPage from "./AccountReportsPage";
 
 /**
- * The tool works differently for people with the sis_manage permission at the 
+ * The tool works differently for people with the sis_manage permission at the
  * root account with lots more tabs available. Everyone will see the Account Tools and
-  * Provisioning reports page
- */ 
+ * Provisioning reports page
+ */
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -66,11 +66,10 @@ function App() {
     setSelectedIndex(index);
   };
 
-
-/*
- * We assume the user is authenticated and then handle the exception 
- * if they are not (using promptUserLog / setNeedsToken).
- */
+  /*
+   * We assume the user is authenticated and then handle the exception
+   * if they are not (using promptUserLog / setNeedsToken).
+   */
   return (
     <LtiTokenRetriever handleJwt={updateToken}>
       <LtiApplyTheme
@@ -84,89 +83,84 @@ function App() {
             server={{ proxyServer: server }}
             promptUserLogin={() => setNeedsToken(false)}
           >
-          <View as="div" padding="large">
-      <Heading level="h1" as="h2">
-        Account Reports
-      </Heading>
+            <View as="div" padding="large">
+              <Heading level="h1" as="h2">
+                Account Reports
+              </Heading>
 
-      
-        <Text>
-          There are a number of different reports which can be generated from within this account. 
-          Click on the appropriate tab to view.
-        </Text>
-      
+              <Text>
+                There are a number of different reports which can be generated
+                from within this account. Click on the appropriate tab to view.
+              </Text>
 
-            <Tabs
-              margin="large auto"
-              padding="medium"
-              onRequestTabChange={handleTabChange}
-            >
-
-              <Tabs.Panel
-                id="accountReportsPage"
-                renderTitle="Account Reports"
-                padding="large"
-                isSelected={selectedIndex === 0}
+              <Tabs
+                margin="large auto"
+                padding="medium"
+                onRequestTabChange={handleTabChange}
               >
-                <AccountReportsPage
-                  token={token}
-                  server={server}
-                  accountId={accountId}
-                  baseUrl={server + "/api/v1"}
-                  rootAccountId={1}
-                  handle403={() => setNeedsToken(true)}
-                />
-              </Tabs.Panel>
-
-              <Tabs.Panel
-                id="reports"
-                renderTitle="Reports"
-                padding="large"
-                isSelected={selectedIndex === 1}
-              >
-                <ProvisioningReportsPage
-                  token={token}
-                  server={server}
-                  accountId={accountId}
-                  handle403={() => setNeedsToken(true)}
-                />
-              </Tabs.Panel>
-
-              {accountId == 1 && hasSisPermish && (
                 <Tabs.Panel
-                  id="sisImports"
-                  renderTitle="SIS Imports"
+                  id="accountReportsPage"
+                  renderTitle="Account Reports"
                   padding="large"
-                  isSelected={selectedIndex === 2}
+                  isSelected={selectedIndex === 0}
                 >
-                  <SisImportsPage
+                  <AccountReportsPage
+                    token={token}
+                    server={server}
+                    accountId={accountId}
+                    baseUrl={server + "/api/v1"}
+                    rootAccountId={1}
+                    handle403={() => setNeedsToken(true)}
+                  />
+                </Tabs.Panel>
+
+                <Tabs.Panel
+                  id="reports"
+                  renderTitle="Reports"
+                  padding="large"
+                  isSelected={selectedIndex === 1}
+                >
+                  <ProvisioningReportsPage
                     token={token}
                     server={server}
                     accountId={accountId}
                     handle403={() => setNeedsToken(true)}
                   />
                 </Tabs.Panel>
-              )}
 
-              {accountId == 1 && hasSisPermish && (
-                <Tabs.Panel
-                  id="sisImportSearch"
-                  renderTitle="Search for SIS Import"
-                  padding="large"
-                  isSelected={selectedIndex === 3}
-                >
-                  <SearchPage
-                    token={token}
-                    server={server}
-                    accountId={accountId}
-                    handle403={() => setNeedsToken(true)}
-                  />
-                </Tabs.Panel>
-              )}
+                {accountId == 1 && hasSisPermish && (
+                  <Tabs.Panel
+                    id="sisImports"
+                    renderTitle="SIS Imports"
+                    padding="large"
+                    isSelected={selectedIndex === 2}
+                  >
+                    <SisImportsPage
+                      token={token}
+                      server={server}
+                      accountId={accountId}
+                      handle403={() => setNeedsToken(true)}
+                    />
+                  </Tabs.Panel>
+                )}
 
-
-            </Tabs>
-                </View>
+                {accountId == 1 && hasSisPermish && (
+                  <Tabs.Panel
+                    id="sisImportSearch"
+                    renderTitle="Search for SIS Import"
+                    padding="large"
+                    isSelected={selectedIndex === 3}
+                  >
+                    <SearchPage
+                      token={token}
+                      server={server}
+                      accountId={accountId}
+                      handle403={() => setNeedsToken(true)}
+                    />
+                  </Tabs.Panel>
+                )}
+              </Tabs>
+            </View>
           </LaunchOAuth>
         </LtiHeightLimit>
       </LtiApplyTheme>
