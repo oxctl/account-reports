@@ -92,4 +92,3 @@ function ReportAction({ name, report, addAlert }) {
 }
 
 export default ReportAction;
-

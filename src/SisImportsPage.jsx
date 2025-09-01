@@ -35,7 +35,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
   const [loading, setLoading] = useState(true);
   // State: currently selected page URL
   const [currentPageUrl, setCurrentPageUrl] = useState(
-    `${server}/api/v1/accounts/${accountId}/sis_imports?page=1&per_page=10`
+    `${server}/api/v1/accounts/${accountId}/sis_imports?page=1&per_page=10`,
   );
 
   /**

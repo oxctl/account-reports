@@ -93,19 +93,13 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
           } = report;
 
           // Extract main title (e.g., "Users", "Courses")
-          let mainTitle =
-            extra_text?.match(/Reports.*$/)?.[0] || "Pending";
-          mainTitle = capitalizeFirstLetter(
-            mainTitle.replace("Reports: ", ""),
-          );
+          let mainTitle = extra_text?.match(/Reports.*$/)?.[0] || "Pending";
+          mainTitle = capitalizeFirstLetter(mainTitle.replace("Reports: ", ""));
 
           // Extract optional extra info (like term)
-          let extraInfo =
-            extra_text?.match(/^(.*?)(?=Reports)/)?.[1] || "";
+          let extraInfo = extra_text?.match(/^(.*?)(?=Reports)/)?.[1] || "";
           extraInfo =
-            "(" +
-            extraInfo.replace("Term: ", "").replace(/; $/, "") +
-            ")";
+            "(" + extraInfo.replace("Term: ", "").replace(/; $/, "") + ")";
 
           return (
             <List.Item key={id} margin="small 0">
@@ -117,9 +111,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
               </Link>
               <Text as="span">
                 {" "}
-                ({ended_at
-                  ? new Date(ended_at).toLocaleString()
-                  : "N/A"})
+                ({ended_at ? new Date(ended_at).toLocaleString() : "N/A"})
               </Text>
             </List.Item>
           );
