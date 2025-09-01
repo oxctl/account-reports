@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Tabs } from "@instructure/ui-tabs";
+import { Text } from "@instructure/ui-text";
 import {
   LtiApplyTheme,
   LtiTokenRetriever,
@@ -9,12 +10,18 @@ import {
 } from "@oxctl/ui-lti";
 
 import { jwtDecode } from "jwt-decode";
-
-import HomePage from "./HomePage";
+import { View } from "@instructure/ui-view";
+import { Heading } from "@instructure/ui-heading";
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
 import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
 import AccountReportsPage from "./AccountReportsPage";
+
+/**
+ * The tool works differently for people with the sis_manage permission at the 
+ * root account with lots more tabs available. Everyone will see the Account Tools and
+  * Provisioning reports page
+ */ 
 
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -59,6 +66,11 @@ function App() {
     setSelectedIndex(index);
   };
 
+
+/*
+ * We assume the user is authenticated and then handle the exception 
+ * if they are not (using promptUserLog / setNeedsToken).
+ */
   return (
     <LtiTokenRetriever handleJwt={updateToken}>
       <LtiApplyTheme
@@ -72,18 +84,38 @@ function App() {
             server={{ proxyServer: server }}
             promptUserLogin={() => setNeedsToken(false)}
           >
+          <View as="div" padding="large">
+      <Heading level="h1" as="h2">
+        Account Reports
+      </Heading>
+
+      
+        <Text>
+          There are a number of different reports which can be generated from within this account. 
+          Click on the appropriate tab to view.
+        </Text>
+      
+
             <Tabs
               margin="large auto"
               padding="medium"
               onRequestTabChange={handleTabChange}
             >
+
               <Tabs.Panel
-                id="home"
-                renderTitle="Home"
+                id="accountReportsPage"
+                renderTitle="Account Reports"
                 padding="large"
                 isSelected={selectedIndex === 0}
               >
-                <HomePage accountId={accountId} />
+                <AccountReportsPage
+                  token={token}
+                  server={server}
+                  accountId={accountId}
+                  baseUrl={server + "/api/v1"}
+                  rootAccountId={1}
+                  handle403={() => setNeedsToken(true)}
+                />
               </Tabs.Panel>
 
               <Tabs.Panel
@@ -132,22 +164,9 @@ function App() {
                 </Tabs.Panel>
               )}
 
-              <Tabs.Panel
-                id="accountReportsPage"
-                renderTitle="Account Reports"
-                padding="large"
-                isSelected={selectedIndex === 4}
-              >
-                <AccountReportsPage
-                  token={token}
-                  server={server}
-                  accountId={accountId}
-                  baseUrl={server + "/api/v1"}
-                  rootAccountId={1}
-                  handle403={() => setNeedsToken(true)}
-                />
-              </Tabs.Panel>
+
             </Tabs>
+                </View>
           </LaunchOAuth>
         </LtiHeightLimit>
       </LtiApplyTheme>
