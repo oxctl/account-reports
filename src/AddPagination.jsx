@@ -5,6 +5,7 @@ export function AddPagination({ prevUrl, currUrl, nextUrl, setCurrUrl }) {
     setCurrUrl(url);
   }
 
+  // extract the current page number from the current URL
   const pageNumber = currUrl.replace(/^ht.*?page=/, "").replace(/&.*$/, "");
 
   return (

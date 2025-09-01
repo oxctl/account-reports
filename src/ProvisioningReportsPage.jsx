@@ -12,22 +12,33 @@ import { handleResponseFailure } from "./utils/handleResponseFailure";
 import { AddPagination } from "./AddPagination";
 import { Loading } from "./Loading";
 
+/**
+ * Renders the Provisioning Reports page for a Canvas account.
+ *
+ * @function ProvisioningReportsPage
+ * @param {string} token - Canvas API token used for authenticating requests.
+ * @param {string} server - Base server URL for the Canvas instance.
+ * @param {string|number} accountId - The Canvas account ID to run the reports against.
+ * @param {Function} handle403 - Callback to handle 403 (Forbidden) errors from the API - gets user to authenticate.
+ * @returns {JSX.Element} The rendered Provisioning Reports page.
+ */
 function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
+  // State for reports, errors, pagination, and loading state
   const [reports, setReports] = useState([]);
   const [error, setError] = useState(null);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [prevPageUrl, setPrevPageUrl] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  // Track the current API endpoint (starts with page 1, 10 per page)
   const [currentPageUrl, setCurrentPageUrl] = useState(
-    server +
-      "/api/v1/accounts/" +
-      accountId +
-      "/reports/provisioning_csv?page=1&per_page=10",
+    `${server}/api/v1/accounts/${accountId}/reports/provisioning_csv?page=1&per_page=10`,
   );
 
+  // Fetch reports when token or currentPageUrl changes
   useEffect(() => {
     if (!token) return;
+
     fetch(currentPageUrl, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -35,18 +46,20 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
     })
       .then((response) => {
         setLoading(false);
+
         if (!response.ok) {
+          // Handles 403 / authentication issues
           handleResponseFailure(response, handle403);
         }
 
-        // grab next / prev links
+        // Extract pagination links (next/prev) from HTTP headers
         const links = parseLinkHeader(response.headers.get("Link"));
         setNextPageUrl(links?.next?.url || null);
         setPrevPageUrl(links?.prev?.url || null);
 
         return response.json();
       })
-      .then(setReports)
+      .then(setReports) // Save the JSON reports into state
       .catch((err) => {
         console.error("Fetch error (provisioning):", err);
         setError(err.message);
@@ -58,34 +71,39 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
       <Heading level="h1" as="h2">
         List of Provisioning Reports
       </Heading>
+
+      {/* Show error if fetch failed */}
       {error && <Text color="danger">{error}</Text>}
 
+      {/* Show spinner while loading, or message if empty */}
       {loading ? (
         <Loading />
       ) : (
-        reports.length == 0 && <Text>No available reports.</Text>
+        reports.length === 0 && <Text>No available reports.</Text>
       )}
 
+      {/* Render each report item */}
       <List>
         {reports.map((report) => {
           const {
             id,
-            progress,
-            status,
             ended_at,
             parameters: { extra_text } = {},
             attachment: { url = "" } = {},
           } = report;
 
+          // Extract main title (e.g., "Users", "Courses")
           let mainTitle = extra_text?.match(/Reports.*$/)?.[0] || "Pending";
           mainTitle = capitalizeFirstLetter(mainTitle.replace("Reports: ", ""));
 
+          // Extract optional extra info (like term)
           let extraInfo = extra_text?.match(/^(.*?)(?=Reports)/)?.[1] || "";
           extraInfo =
             "(" + extraInfo.replace("Term: ", "").replace(/; $/, "") + ")";
 
           return (
             <List.Item key={id} margin="small 0">
+              {/* Download link to CSV report */}
               <Link href={url} rel="noopener noreferrer">
                 <Text as="span">
                   {mainTitle} {extraInfo}
@@ -100,6 +118,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
         })}
       </List>
 
+      {/* Pagination controls */}
       <AddPagination
         prevUrl={prevPageUrl}
         currUrl={currentPageUrl}

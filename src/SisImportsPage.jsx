@@ -13,34 +13,49 @@ import { Loading } from "./Loading";
 
 import { handleResponseFailure } from "./utils/handleResponseFailure";
 
+/**
+ * Renders the Provisioning Reports page for a Canvas account.
+ *
+ * @function ProvisioningReportsPage
+ * @param {string} token - API token used for authenticating requests.
+ * @param {string} server - Base server URL for the Canvas instance.
+ * @param {string|number} accountId - The Canvas account ID to run the reports against.
+ * @param {Function} handle403 - Callback to handle 403 (Forbidden) errors from the API - gets user to authenticate.
+ * @returns {JSX.Element} The rendered Provisioning Reports page.
+ */
 function SisImportsPage({ token, server, accountId, handle403 }) {
+  // State: list of SIS imports (default empty array inside object)
   const [sisImports, setSisImports] = useState({ sis_imports: [] });
+  // State: error message if request fails
   const [sisError, setSisError] = useState(null);
+  // State: pagination links
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [prevPageUrl, setPrevPageUrl] = useState(null);
+  // State: loading flag for spinner
   const [loading, setLoading] = useState(true);
+  // State: currently selected page URL
   const [currentPageUrl, setCurrentPageUrl] = useState(
-    server +
-      "/api/v1/accounts/" +
-      accountId +
-      "/sis_imports?page=1&per_page=10",
+    `${server}/api/v1/accounts/${accountId}/sis_imports?page=1&per_page=10`,
   );
 
+  /**
+   * Effect: Fetch SIS imports whenever the token or current page changes.
+   */
   useEffect(() => {
     if (!token) return;
 
     fetch(currentPageUrl, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => {
         setLoading(false);
+
+        // Handle failed responses
         if (!response.ok) {
           handleResponseFailure(response, handle403);
         }
 
-        // grab next / prev links
+        // Parse pagination links from response headers
         const links = parseLinkHeader(response.headers.get("Link"));
         setNextPageUrl(links?.next?.url || null);
         setPrevPageUrl(links?.prev?.url || null);
@@ -59,8 +74,11 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
       <Heading level="h1" as="h2">
         List of SIS Imports
       </Heading>
+
+      {/* Show error message if API call failed */}
       {sisError && <Text color="danger">{sisError}</Text>}
 
+      {/* Show spinner while loading, otherwise the list */}
       {loading ? (
         <Loading />
       ) : (
@@ -71,6 +89,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
         </List>
       )}
 
+      {/* Pagination controls */}
       <AddPagination
         prevUrl={prevPageUrl}
         currUrl={currentPageUrl}
