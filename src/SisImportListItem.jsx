@@ -4,7 +4,7 @@ import { Link } from "@instructure/ui-link";
 import { ToggleDetails } from "@instructure/ui-toggle-details";
 
 export function SisImportListItem({ sisImport }) {
-  function AttachmentsList({ attachments }) {
+  const AttachmentsList = ({ attachments }) => {
     if (!Array.isArray(attachments)) return null;
 
     return (
@@ -24,7 +24,7 @@ export function SisImportListItem({ sisImport }) {
     );
   }
 
-  function WarningsList({ warnings }) {
+  const  WarningsList = ({ warnings }) => {
     if (!Array.isArray(warnings)) return null;
 
     return (
@@ -38,7 +38,7 @@ export function SisImportListItem({ sisImport }) {
     );
   }
 
-  function CountsList({ counts }) {
+  const CountsList = ({ counts }) => {
     if (!counts || Object.keys(counts).length === 0) {
       return <Text>No data available.</Text>;
     }
