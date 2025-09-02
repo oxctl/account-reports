@@ -3,7 +3,7 @@ import { Pagination } from "@instructure/ui-pagination";
 export function AddPagination({ prevUrl, currUrl, nextUrl, setCurrUrl }) {
   const onClick = (url) => {
     setCurrUrl(url);
-  }
+  };
 
   // extract the current page number from the current URL
   const pageNumber = currUrl.replace(/^ht.*?page=/, "").replace(/&.*$/, "");
