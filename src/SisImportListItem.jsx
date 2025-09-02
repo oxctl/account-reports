@@ -22,9 +22,9 @@ export function SisImportListItem({ sisImport }) {
         ))}
       </List>
     );
-  }
+  };
 
-  const  WarningsList = ({ warnings }) => {
+  const WarningsList = ({ warnings }) => {
     if (!Array.isArray(warnings)) return null;
 
     return (
@@ -36,7 +36,7 @@ export function SisImportListItem({ sisImport }) {
         ))}
       </List>
     );
-  }
+  };
 
   const CountsList = ({ counts }) => {
     if (!counts || Object.keys(counts).length === 0) {
@@ -52,7 +52,7 @@ export function SisImportListItem({ sisImport }) {
         ))}
       </List>
     );
-  }
+  };
 
   return (
     <List.Item key={sisImport.id} margin="small 0">
