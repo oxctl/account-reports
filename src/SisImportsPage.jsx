@@ -25,7 +25,7 @@ import { handleResponseFailure } from "./utils/handleResponseFailure";
  */
 function SisImportsPage({ token, server, accountId, handle403 }) {
   // State: list of SIS imports (default empty array inside object)
-  const [sisImports, setSisImports] = useState({ sis_imports: [] });
+  const [sisImports, setSisImports] = useState([]);
   // State: error message if request fails
   const [sisError, setSisError] = useState(null);
   // State: pagination links
