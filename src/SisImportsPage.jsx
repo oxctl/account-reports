@@ -62,7 +62,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
 
         return response.json();
       })
-      .then(setSisImports)
+      .then((data) => setSisImports(data.sis_imports || []))
       .catch((err) => {
         console.error("Fetch error (SIS):", err);
         setSisError(err.message);
@@ -83,7 +83,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
         <Loading />
       ) : (
         <List>
-          {sisImports.sis_imports.map((sisImport) => (
+          {sisImports.map((sisImport) => (
             <SisImportListItem key={sisImport.id} sisImport={sisImport} />
           ))}
         </List>
