@@ -15,9 +15,9 @@ if (dsn) {
   });
 }
 
-  console.log("DSN " + dsn);
-  console.log("Traces " + tracesSampleRate);
-  console.log("environment " + environment);
+console.log("DSN " + dsn);
+console.log("Traces " + tracesSampleRate);
+console.log("environment " + environment);
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
