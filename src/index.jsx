@@ -14,8 +14,6 @@ if (dsn) {
 }
 
 console.log("DSN " + dsn);
-console.log("ENV "+import.meta.env.VITE_SENTRY_ENV)
+console.log("ENV " + import.meta.env.VITE_SENTRY_ENV);
 
-createRoot(document.getElementById("app")).render(
-    <App/>
-);
+createRoot(document.getElementById("app")).render(<App />);
