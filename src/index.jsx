@@ -17,7 +17,6 @@ if (dsn) {
 
 console.log("DSN " + dsn);
 
-
 createRoot(document.getElementById("app")).render(
   <StrictMode>
     <App />
