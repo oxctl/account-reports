@@ -13,10 +13,11 @@ if (dsn) {
     integrations: [Sentry.browserTracingIntegration()],
     tracesSampleRate: import.meta.env.VITE_SENTRY_TRACES_SAMPLE_RATE,
   });
+}
+
   console.log("DSN " + dsn);
   console.log("Traces " + tracesSampleRate);
   console.log("environment " + environment);
-}
 
 createRoot(document.getElementById("app")).render(
   <StrictMode>
