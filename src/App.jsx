@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import { Tabs } from "@instructure/ui-tabs";
 import { Text } from "@instructure/ui-text";
@@ -17,6 +17,8 @@ import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
 import AccountReportsPage from "./AccountReportsPage";
 
+import { handleResponseFailure } from "./utils/handleResponseFailure";
+
 import { ROOT_ACCOUNT_ID } from "./utils/constants";
 
 /**
@@ -28,6 +30,7 @@ import { ROOT_ACCOUNT_ID } from "./utils/constants";
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [token, setToken] = useState(null);
+  const [error, setError] = useState(null);
   const [needsToken, setNeedsToken] = useState(false);
   const [hasSisPermish, setHasSisPermish] = useState(false);
 
@@ -67,6 +70,31 @@ function App() {
   const handleTabChange = (event, { index }) => {
     setSelectedIndex(index);
   };
+  
+  
+  // Check token exists by call a tool suport endpoint => get 401 if user hasnt granted access then ask for it
+  useEffect(() => {
+
+    if (!token) return;
+    fetch(server+"/tokens/refresh", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // Handles 40x / authentication issues
+          setNeedsToken(true)
+        }
+        
+        return response.json();
+      })
+      .then()
+      .catch((err) => {
+        console.error("Fetch error (App):", err);
+        setError(err.message);
+      });
+  }, [token]);
 
   /*
    * We assume the user is authenticated and then handle the exception
@@ -111,7 +139,7 @@ function App() {
                     server={server}
                     accountId={accountId}
                     rootAccountId={ROOT_ACCOUNT_ID}
-                    handle403={() => setNeedsToken(true)}
+                    handle40x={() => setNeedsToken(true)}
                   />
                 </Tabs.Panel>
 
@@ -125,7 +153,7 @@ function App() {
                     token={token}
                     server={server}
                     accountId={accountId}
-                    handle403={() => setNeedsToken(true)}
+                    handle40x={() => setNeedsToken(true)}
                   />
                 </Tabs.Panel>
 
@@ -140,7 +168,7 @@ function App() {
                       token={token}
                       server={server}
                       accountId={accountId}
-                      handle403={() => setNeedsToken(true)}
+                      handle40x={() => setNeedsToken(true)}
                     />
                   </Tabs.Panel>
                 )}
@@ -156,7 +184,7 @@ function App() {
                       token={token}
                       server={server}
                       accountId={accountId}
-                      handle403={() => setNeedsToken(true)}
+                      handle40x={() => setNeedsToken(true)}
                     />
                   </Tabs.Panel>
                 )}

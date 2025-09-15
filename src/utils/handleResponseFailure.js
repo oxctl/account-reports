@@ -6,15 +6,15 @@
  * @param {string} response - HTTP response status code
  * @param {Object} handle403 - function to deal with a 403 response, ie, authenticate the user
  */
-export function handleResponseFailure(response, handle403) {
+export function handleResponseFailure(response, handle40x) {
   if (response.status === 403) {
-    handle403();
-    throw new Error();
+    handle40x();
+    throw new Error("403");
   } else if (response.status === 401) {
     const authHeader = response.headers.get("WWW-Authenticate");
-    if (authHeader && !authHeader.includes("proxy")) {
-      handle403();
-      throw new Error();
+    if (authHeader && !authHeader.includes("proxy")) {	
+      handle40x();
+      throw new Error("401");
     } else {
       // user nenver sees this error, just get stuck in an auth loop -
       throw new Error(response.status + " you don't have permission.");

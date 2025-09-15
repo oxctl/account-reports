@@ -20,10 +20,10 @@ import { handleResponseFailure } from "./utils/handleResponseFailure";
  * @param {string} token - API token used for authenticating requests.
  * @param {string} server - Base server URL for the Canvas instance.
  * @param {string|number} accountId - The Canvas account ID to run the reports against.
- * @param {Function} handle403 - Callback to handle 403 (Forbidden) errors from the API - gets user to authenticate.
+ * @param {Function} handle40x - Callback to handle 40x (Forbidden) errors from the API - gets user to authenticate.
  * @returns {JSX.Element} The rendered Provisioning Reports page.
  */
-function SisImportsPage({ token, server, accountId, handle403 }) {
+function SisImportsPage({ token, server, accountId, handle40x }) {
   // State: list of SIS imports (default empty array inside object)
   const [sisImports, setSisImports] = useState([]);
   // State: error message if request fails
@@ -52,7 +52,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
 
         // Handle failed responses
         if (!response.ok) {
-          handleResponseFailure(response, handle403);
+          handleResponseFailure(response, handle40x);
         }
 
         // Parse pagination links from response headers
