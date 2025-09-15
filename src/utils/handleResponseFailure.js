@@ -12,7 +12,7 @@ export function handleResponseFailure(response, handle40x) {
     throw new Error("403");
   } else if (response.status === 401) {
     const authHeader = response.headers.get("WWW-Authenticate");
-    if (authHeader && !authHeader.includes("proxy")) {	
+    if (authHeader && !authHeader.includes("proxy")) {
       handle40x();
       throw new Error("401");
     } else {

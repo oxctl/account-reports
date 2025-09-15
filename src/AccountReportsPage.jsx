@@ -28,7 +28,6 @@ function AccountReportsPage({
   rootAccountId,
   handle40x,
 }) {
-	
   // Track all alert messages shown to the user (e.g., success/error notices)
   const [alerts, setAlerts] = useState([]);
 

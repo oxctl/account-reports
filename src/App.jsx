@@ -70,13 +70,11 @@ function App() {
   const handleTabChange = (event, { index }) => {
     setSelectedIndex(index);
   };
-  
-  
+
   // Check token exists by call a tool suport endpoint => get 401 if user hasnt granted access then ask for it
   useEffect(() => {
-
     if (!token) return;
-    fetch(server+"/tokens/refresh", {
+    fetch(server + "/tokens/refresh", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -84,9 +82,9 @@ function App() {
       .then((response) => {
         if (!response.ok) {
           // Handles 40x / authentication issues
-          setNeedsToken(true)
+          setNeedsToken(true);
         }
-        
+
         return response.json();
       })
       .then()
