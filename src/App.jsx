@@ -65,7 +65,7 @@ function App() {
 
     // check the user has sis_manage permission
     setHasSisPermish(jwtClaim.canvas_membership_permissions == "manage_sis");
-        
+
     // Check token exists by call a tool suport endpoint => get 401 if user hasnt granted access then ask for it
     if (!token) return;
     fetch(server + "/tokens/refresh", {
@@ -91,7 +91,6 @@ function App() {
   const handleTabChange = (event, { index }) => {
     setSelectedIndex(index);
   };
-
 
   /*
    * We assume the user is authenticated and then handle the exception
