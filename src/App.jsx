@@ -65,8 +65,8 @@ function App() {
 
     // check the user has sis_manage permission
     setHasSisPermish(jwtClaim.canvas_membership_permissions == "manage_sis");
-        
-    checkAccess(receivedServer,receivedToken)
+
+    checkAccess(receivedServer, receivedToken);
   };
 
   const handleTabChange = (event, { index }) => {
@@ -74,19 +74,16 @@ function App() {
   };
 
   // Check token exists by call a tool suport endpoint => get 401 if user hasnt granted access then ask for it
- 	function checkAccess(server,jwt) {
-
-	// check whether user has a Canvas Access Token ()dont rollow redirects)
+  function checkAccess(server, jwt) {
+    // check whether user has a Canvas Access Token ()dont rollow redirects)
     fetch(server + "/tokens/refresh", {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
       redirect: "manual",
-
     })
       .then((response) => {
         if (!response.ok) {
-	
           // Handles 40x / authentication issues
           setNeedsToken(true);
         }
