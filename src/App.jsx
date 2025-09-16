@@ -44,10 +44,10 @@ function App() {
 
   const [server, setServer] = useState(null);
 
-  const updateToken = (receivedToken, server) => {
+  const updateToken = (receivedToken, receivedServer) => {
     setToken(receivedToken);
 
-    setServer(server);
+    setServer(receivedServer);
 
     const decodedJwt = jwtDecode(receivedToken);
 
@@ -66,15 +66,27 @@ function App() {
     // check the user has sis_manage permission
     setHasSisPermish(jwtClaim.canvas_membership_permissions == "manage_sis");
         
-    // Check token exists by call a tool suport endpoint => get 401 if user hasnt granted access then ask for it
-    if (!token) return;
+    checkAccess(receivedServer,receivedToken)
+  };
+
+  const handleTabChange = (event, { index }) => {
+    setSelectedIndex(index);
+  };
+
+  // Check token exists by call a tool suport endpoint => get 401 if user hasnt granted access then ask for it
+ 	function checkAccess(server,jwt) {
+
+	// check whether user has a Canvas Access Token ()dont rollow redirects)
     fetch(server + "/tokens/refresh", {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${jwt}`,
       },
+      redirect: "manual",
+
     })
       .then((response) => {
         if (!response.ok) {
+	
           // Handles 40x / authentication issues
           setNeedsToken(true);
         }
@@ -86,12 +98,7 @@ function App() {
         console.error("Fetch error (App):", err);
         setError(err.message);
       });
-  };
-
-  const handleTabChange = (event, { index }) => {
-    setSelectedIndex(index);
-  };
-
+  }
 
   /*
    * We assume the user is authenticated and then handle the exception
