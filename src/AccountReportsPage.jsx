@@ -18,7 +18,7 @@ import ReportAction from "./ReportAction";
  * @param {string} server - Base server URL for the Canvas instance.
  * @param {string|number} accountId - The Canvas account ID to run the reports against.
  * @param {string|number} rootAccountId - The Canvas root account ID
- * @param {Function} handle403 - Callback to handle 403 (Forbidden) errors from the API - gets user to authenticate.
+ * @param {Function} handle40x - Callback to handle 40x errors from the API - gets user to authenticate.
  * @returns {JSX.Element} The rendered Provisioning Reports page.
  */
 function AccountReportsPage({
@@ -26,7 +26,7 @@ function AccountReportsPage({
   server,
   accountId,
   rootAccountId,
-  handle403,
+  handle40x,
 }) {
   // Track all alert messages shown to the user (e.g., success/error notices)
   const [alerts, setAlerts] = useState([]);

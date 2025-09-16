@@ -19,10 +19,10 @@ import { Loading } from "./Loading";
  * @param {string} token - Canvas API token used for authenticating requests.
  * @param {string} server - Base server URL for the Canvas instance.
  * @param {string|number} accountId - The Canvas account ID to run the reports against.
- * @param {Function} handle403 - Callback to handle 403 (Forbidden) errors from the API - gets user to authenticate.
+ * @param {Function} handle40x - Callback to handle 40x errors from the API - gets user to authenticate.
  * @returns {JSX.Element} The rendered Provisioning Reports page.
  */
-function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
+function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
   // State for reports, errors, pagination, and loading state
   const [reports, setReports] = useState([]);
   const [error, setError] = useState(null);
@@ -48,8 +48,8 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
         setLoading(false);
 
         if (!response.ok) {
-          // Handles 403 / authentication issues
-          handleResponseFailure(response, handle403);
+          // Handles 40x / authentication issues
+          handleResponseFailure(response, handle40x);
         }
 
         // Extract pagination links (next/prev) from HTTP headers

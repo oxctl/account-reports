@@ -27,6 +27,7 @@ class ReportApi {
       ...this.#defaultOptions,
       ...options,
     };
+
     let report;
     // Only check for old list if we are happy to accept an old report, this should really look over multiple pages
     // but it's unlikely that a recent report is on a subsequent page.
