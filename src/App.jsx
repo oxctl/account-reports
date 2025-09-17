@@ -67,7 +67,6 @@ function App() {
 
     checkAccess(receivedServer, receivedToken);
   };
-  
 
   const handleTabChange = (event, { index }) => {
     setSelectedIndex(index);
@@ -93,11 +92,12 @@ function App() {
         console.error("Fetch error (App):", err);
         setAlert({
           variant: "error",
-          message: `Unable to access Canvas. Please contact support. `+err.message,
+          message:
+            `Unable to access Canvas. Please contact support. ` + err.message,
         });
       });
   }
-  
+
   /*
    * We assume the user is authenticated and then handle the exception
    * if they are not (using promptUserLog / setNeedsToken).
@@ -119,14 +119,13 @@ function App() {
               <Heading level="h1" as="h2">
                 Account Reports
               </Heading>
-              
-              {/* Show alert if fetch failed */}
-              {alert && <Alert
-  			      variant={alert.variant}
-                  renderCloseButtonLabel="Close" >
-                  {alert.message}
-              </Alert>}
 
+              {/* Show alert if fetch failed */}
+              {alert && (
+                <Alert variant={alert.variant} renderCloseButtonLabel="Close">
+                  {alert.message}
+                </Alert>
+              )}
 
               <Text>
                 There are a number of different reports which can be generated
