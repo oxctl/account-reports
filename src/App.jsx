@@ -93,7 +93,8 @@ function App() {
         setAlert({
           variant: "error",
           message:
-            `Unable to initialise the tool. Please contact support and report the problem: ` + err.message,
+            `Unable to initialise the tool. Please contact support and report the problem: ` +
+            err.message,
         });
       });
   }
