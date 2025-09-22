@@ -137,13 +137,12 @@ function AccountReportsPage({
   };
 
   return (
-
-      <>
+    <>
       {renderAlerts()}
       <View as="div" padding="large">
-            <Heading variant="titleSection" level="h2">
-        User Reports
-      </Heading>
+        <Heading variant="titleSection" level="h2">
+          User Reports
+        </Heading>
         <Grid vAlign="middle" width="100%">
           {renderReports()}
         </Grid>

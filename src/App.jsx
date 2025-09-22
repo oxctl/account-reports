@@ -117,9 +117,7 @@ function App() {
             promptUserLogin={() => setNeedsToken(false)}
           >
             <View as="div" padding="large">
-              <Heading level="h1">
-                Account Reports
-              </Heading>
+              <Heading level="h1">Account Reports</Heading>
 
               {/* Show alert if fetch failed */}
               {alert && <Alert variant={alert.variant}>{alert.message}</Alert>}
