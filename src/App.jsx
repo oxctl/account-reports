@@ -122,11 +122,7 @@ function App() {
               </Heading>
 
               {/* Show alert if fetch failed */}
-              {alert && (
-                <Alert variant={alert.variant}>
-                  {alert.message}
-                </Alert>
-              )}
+              {alert && <Alert variant={alert.variant}>{alert.message}</Alert>}
 
               <Text>
                 There are a number of different reports which can be generated
