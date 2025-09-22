@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View } from "@instructure/ui-view";
 import { List } from "@instructure/ui-list";
 import { Heading } from "@instructure/ui-heading";
-import { Text } from "@instructure/ui-text";
+import { Alert } from "@instructure/ui-alerts";
 
 import { parseLinkHeader } from "@web3-storage/parse-link-header";
 
@@ -27,7 +27,7 @@ function SisImportsPage({ token, server, accountId, handle40x }) {
   // State: list of SIS imports (default empty array inside object)
   const [sisImports, setSisImports] = useState([]);
   // State: error message if request fails
-  const [sisError, setSisError] = useState(null);
+  const [alert, setAlert] = useState(null);
   // State: pagination links
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [prevPageUrl, setPrevPageUrl] = useState(null);
@@ -65,7 +65,12 @@ function SisImportsPage({ token, server, accountId, handle40x }) {
       .then((data) => setSisImports(data.sis_imports || []))
       .catch((err) => {
         console.error("Fetch error (SIS):", err);
-        setSisError(err.message);
+        setAlert({
+          variant: "warning",
+          message:
+            `Unable to fetch the list of imports: ` +
+            err.message,
+        });
       });
   }, [token, currentPageUrl]);
 
@@ -76,7 +81,7 @@ function SisImportsPage({ token, server, accountId, handle40x }) {
       </Heading>
 
       {/* Show error message if API call failed */}
-      {sisError && <Text color="danger">{sisError}</Text>}
+      {alert && <Alert variant={alert.variant} renderCloseButtonLabel="Close">{alert.message}</Alert>}
 
       {/* Show spinner while loading, otherwise the list */}
       {loading ? (
