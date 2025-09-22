@@ -68,7 +68,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
 
   return (
     <View as="div" padding="large">
-      <Heading level="h1" as="h2">
+      <Heading variant="titleSection" level="h2">
         List of Provisioning Reports
       </Heading>
 
