@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 import { Tabs } from "@instructure/ui-tabs";
 import { Text } from "@instructure/ui-text";
@@ -12,12 +12,11 @@ import {
 import { jwtDecode } from "jwt-decode";
 import { View } from "@instructure/ui-view";
 import { Heading } from "@instructure/ui-heading";
+import { Alert } from "@instructure/ui-alerts";
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
 import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
 import AccountReportsPage from "./AccountReportsPage";
-
-import { handleResponseFailure } from "./utils/handleResponseFailure";
 
 import { ROOT_ACCOUNT_ID } from "./utils/constants";
 
@@ -30,7 +29,7 @@ import { ROOT_ACCOUNT_ID } from "./utils/constants";
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [token, setToken] = useState(null);
-  const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [needsToken, setNeedsToken] = useState(false);
   const [hasSisPermish, setHasSisPermish] = useState(false);
 
@@ -87,13 +86,16 @@ function App() {
           // Handles 40x / authentication issues
           setNeedsToken(true);
         }
-
-        return response.json();
       })
       .then()
       .catch((err) => {
         console.error("Fetch error (App):", err);
-        setError(err.message);
+        setAlert({
+          variant: "error",
+          message:
+            `Unable to initialise the tool. Please contact support and report the problem: ` +
+            err.message,
+        });
       });
   }
 
@@ -118,6 +120,13 @@ function App() {
               <Heading level="h1" as="h2">
                 Account Reports
               </Heading>
+
+              {/* Show alert if fetch failed */}
+              {alert && (
+                <Alert variant={alert.variant} renderCloseButtonLabel="Close">
+                  {alert.message}
+                </Alert>
+              )}
 
               <Text>
                 There are a number of different reports which can be generated
