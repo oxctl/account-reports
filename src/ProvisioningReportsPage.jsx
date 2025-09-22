@@ -60,7 +60,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
 
         return response.json();
       })
-      .then((data) => setReports(data)) // Save the JSON reports into state
+      .then((data) => setReports(data|| [])) // Save the JSON reports into state
       .catch((err) => {
         console.error("Fetch error (provisioning):", err);
         setAlert({
