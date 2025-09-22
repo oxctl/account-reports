@@ -123,7 +123,7 @@ function App() {
 
               {/* Show alert if fetch failed */}
               {alert && (
-                <Alert variant={alert.variant} renderCloseButtonLabel="Close">
+                <Alert variant={alert.variant}>
                   {alert.message}
                 </Alert>
               )}
