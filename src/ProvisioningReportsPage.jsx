@@ -60,14 +60,12 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
 
         return response.json();
       })
-      .then((data) => setReports(data|| [])) // Save the JSON reports into state
+      .then((data) => setReports(data || [])) // Save the JSON reports into state
       .catch((err) => {
         console.error("Fetch error (provisioning):", err);
         setAlert({
           variant: "warning",
-          message:
-            `Unable to fetch the list of reports: ` +
-            err.message,
+          message: `Unable to fetch the list of reports: ` + err.message,
         });
       });
   }, [token, currentPageUrl]);
@@ -79,8 +77,11 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
       </Heading>
 
       {/* Show error message if API call failed */}
-      {alert && <Alert variant={alert.variant} renderCloseButtonLabel="Close">{alert.message}</Alert>}
-
+      {alert && (
+        <Alert variant={alert.variant} renderCloseButtonLabel="Close">
+          {alert.message}
+        </Alert>
+      )}
 
       {/* Show spinner while loading, or message if empty */}
       {loading ? (
