@@ -67,9 +67,7 @@ function SisImportsPage({ token, server, accountId, handle40x }) {
         console.error("Fetch error (SIS):", err);
         setAlert({
           variant: "warning",
-          message:
-            `Unable to fetch the list of imports: ` +
-            err.message,
+          message: `Unable to fetch the list of imports: ` + err.message,
         });
       });
   }, [token, currentPageUrl]);
@@ -81,7 +79,11 @@ function SisImportsPage({ token, server, accountId, handle40x }) {
       </Heading>
 
       {/* Show error message if API call failed */}
-      {alert && <Alert variant={alert.variant} renderCloseButtonLabel="Close">{alert.message}</Alert>}
+      {alert && (
+        <Alert variant={alert.variant} renderCloseButtonLabel="Close">
+          {alert.message}
+        </Alert>
+      )}
 
       {/* Show spinner while loading, otherwise the list */}
       {loading ? (
