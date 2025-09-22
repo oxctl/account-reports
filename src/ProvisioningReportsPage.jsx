@@ -3,6 +3,7 @@ import { View } from "@instructure/ui-view";
 import { List } from "@instructure/ui-list";
 import { Heading } from "@instructure/ui-heading";
 import { Link } from "@instructure/ui-link";
+import { Alert } from "@instructure/ui-alerts";
 import { Text } from "@instructure/ui-text";
 
 import { parseLinkHeader } from "@web3-storage/parse-link-header";
@@ -25,7 +26,7 @@ import { Loading } from "./Loading";
 function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
   // State for reports, errors, pagination, and loading state
   const [reports, setReports] = useState([]);
-  const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [prevPageUrl, setPrevPageUrl] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -59,10 +60,15 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
 
         return response.json();
       })
-      .then(setReports) // Save the JSON reports into state
+      .then((data) => setReports(data)) // Save the JSON reports into state
       .catch((err) => {
         console.error("Fetch error (provisioning):", err);
-        setError(err.message);
+        setAlert({
+          variant: "warning",
+          message:
+            `Unable to fetch the list of reports: ` +
+            err.message,
+        });
       });
   }, [token, currentPageUrl]);
 
@@ -72,8 +78,9 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
         List of Provisioning Reports
       </Heading>
 
-      {/* Show error if fetch failed */}
-      {error && <Text color="danger">{error}</Text>}
+      {/* Show error message if API call failed */}
+      {alert && <Alert variant={alert.variant} renderCloseButtonLabel="Close">{alert.message}</Alert>}
+
 
       {/* Show spinner while loading, or message if empty */}
       {loading ? (
