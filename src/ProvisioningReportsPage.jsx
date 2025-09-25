@@ -124,8 +124,9 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               "Report with ID '" +
               id +
               "' not yet completed (created at " +
-              created_at ? new Date(created_at).toLocaleString() : "unknown" +
-              ").";
+              created_at
+                ? new Date(created_at).toLocaleString()
+                : "unknown" + ").";
           }
 
           return (
