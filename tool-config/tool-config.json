@@ -49,6 +49,8 @@
       "scopes": [
         "url:GET|/api/v1/accounts/:account_id/reports",     
         "url:GET|/api/v1/accounts/:account_id/reports/:report", 
+        "url:GET|/api/v1/accounts/:account_id/reports/:report/:id",
+        "url:POST|/api/v1/accounts/:account_id/reports/:report",
         "url:GET|/api/v1/accounts/:account_id/sis_imports/:id",      
         "url:GET|/api/v1/accounts/:account_id/sis_imports"
       ]

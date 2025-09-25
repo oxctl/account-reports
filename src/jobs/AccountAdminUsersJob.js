@@ -33,7 +33,6 @@ class AccountAdminUsersJob {
   constructor(host, token, options = {}) {
     this.host = host;
     this.token = token;
-    console.log("acc admin jobbie, token " + this.token.substring(1, 5));
     const mergedOptions = { ...AccountAdminUsersJob.defaultOpts, ...options };
     this.accountId = mergedOptions.accountId;
     this.statusUpdate = mergedOptions.statusUpdate;
