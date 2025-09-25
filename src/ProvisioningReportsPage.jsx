@@ -124,7 +124,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               "Report with ID '" +
               id +
               "' not yet completed (created at " +
-              created_at +
+              created_at ? new Date(created_at).toLocaleString() : "unknown" +
               ").";
           }
 
@@ -136,7 +136,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               </Link>
               <Text as="span">
                 {" "}
-                ({ended_at ? new Date(ended_at).toLocaleString() : "N/A"})
+                ({ended_at ? new Date(ended_at).toLocaleString() : ""})
               </Text>
             </List.Item>
           );
