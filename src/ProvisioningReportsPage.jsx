@@ -120,13 +120,12 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               " " +
               extraInfo;
           } else {
+	        const created = created_at ? new Date(created_at).toLocaleString() : "unknown"
             item =
               "Report with ID '" +
               id +
               "' not yet completed (created at " +
-              created_at
-                ? new Date(created_at).toLocaleString()
-                : "unknown" + ").";
+              created + ").";
           }
 
           return (
