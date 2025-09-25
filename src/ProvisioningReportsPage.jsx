@@ -101,7 +101,12 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
             attachment: { url = "" } = {},
           } = report;
 
-          let item = "";
+		  // title to display
+          let reportTitle = "";
+          
+          // when was it started or completed
+          let timingInfo = "";
+          
           if (extra_text) {
             // Extract main title (e.g., "Users", "Courses")
             const extraInfo =
@@ -111,7 +116,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
                 ?.replace("Term: ", "")
                 .replace(/; $/, "") || "") +
               ")";
-            item =
+            reportTitle =
               capitalizeFirstLetter(
                 extra_text
                   ?.match(/Reports.*$/)?.[0]
@@ -119,27 +124,31 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               ) +
               " " +
               extraInfo;
+              
+              // when did it end
+              timingInfo = "(ended at "+ended_at ? new Date(ended_at).toLocaleString() : ""+ ")"
           } else {
-            const created = created_at
+            timingInfo = "(created at " + created_at 
               ? new Date(created_at).toLocaleString()
-              : "unknown";
-            item =
+              : "unknown" + ")"
+            reportTitle =
               "Report with ID '" +
               id +
-              "' not yet completed (created at " +
-              created +
-              ").";
+              "' not yet completed"
+              
           }
+          
+          
 
           return (
             <List.Item key={id} margin="small 0">
               {/* Download link to CSV report */}
               <Link href={url} rel="noopener noreferrer">
-                <Text as="span">{item}</Text>
+                <Text as="span">{reportTitle}</Text>
               </Link>
               <Text as="span">
                 {" "}
-                ({ended_at ? new Date(ended_at).toLocaleString() : ""})
+                {timingInfo}
               </Text>
             </List.Item>
           );
