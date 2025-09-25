@@ -96,32 +96,28 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
           const {
             id,
             ended_at,
+            created_at,
             parameters: { extra_text } = {},
             attachment: { url = "" } = {},
           } = report;
 
-          let mainTitle = "";
+          let item = "";
           if (extra_text) {
             // Extract main title (e.g., "Users", "Courses")
-            mainTitle = capitalizeFirstLetter(
-              extra_text?.match(/Reports.*$/)?.[0]?.replace("Reports: ", "") ??
-                "",
-            );
+            const extraInfo = "(" + (extra_text?.match(/^(.*?)(?=Reports)/)?.[1]?.replace("Term: ", "").replace(/; $/, "") || "") + ")";
+            item = capitalizeFirstLetter(extra_text?.match(/Reports.*$/)?.[0]?.replace("Reports: ", "") ?? "") + " " + extraInfo;
+            
           } else {
-            mainTitle = "Report with ID '" + id + "' not yet completed.";
+            item = "Report with ID '" + id + "' not yet completed (created at "+created_at+").";
           }
 
-          // Extract optional extra info (like term)
-          let extraInfo = extra_text?.match(/^(.*?)(?=Reports)/)?.[1] || "";
-          extraInfo =
-            "(" + extraInfo.replace("Term: ", "").replace(/; $/, "") + ")";
 
           return (
             <List.Item key={id} margin="small 0">
               {/* Download link to CSV report */}
               <Link href={url} rel="noopener noreferrer">
                 <Text as="span">
-                  {mainTitle} {extraInfo}
+                  {item} 
                 </Text>
               </Link>
               <Text as="span">
