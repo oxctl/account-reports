@@ -101,12 +101,12 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
             attachment: { url = "" } = {},
           } = report;
 
-		  // title to display
+          // title to display
           let reportTitle = "";
-          
+
           // when was it started or completed
           let timingInfo = "";
-          
+
           if (extra_text) {
             // Extract main title (e.g., "Users", "Courses")
             const extraInfo =
@@ -124,21 +124,19 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               ) +
               " " +
               extraInfo;
-              
-              // when did it end
-              timingInfo = "(ended at "+ended_at ? new Date(ended_at).toLocaleString() : ""+ ")"
+
+            // when did it end
+            timingInfo =
+              "(ended at " + ended_at
+                ? new Date(ended_at).toLocaleString()
+                : "" + ")";
           } else {
-            timingInfo = "(created at " + created_at 
-              ? new Date(created_at).toLocaleString()
-              : "unknown" + ")"
-            reportTitle =
-              "Report with ID '" +
-              id +
-              "' not yet completed"
-              
+            timingInfo =
+              "(created at " + created_at
+                ? new Date(created_at).toLocaleString()
+                : "unknown" + ")";
+            reportTitle = "Report with ID '" + id + "' not yet completed";
           }
-          
-          
 
           return (
             <List.Item key={id} margin="small 0">
@@ -146,10 +144,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               <Link href={url} rel="noopener noreferrer">
                 <Text as="span">{reportTitle}</Text>
               </Link>
-              <Text as="span">
-                {" "}
-                {timingInfo}
-              </Text>
+              <Text as="span"> {timingInfo}</Text>
             </List.Item>
           );
         })}
