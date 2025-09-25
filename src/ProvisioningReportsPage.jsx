@@ -129,15 +129,13 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
             timingInfo =
               "(ended at " + ended_at
                 ? new Date(ended_at).toLocaleString()
-                : "" 
-                timingInfo =
-              "(ended at " +timingInfo+ ")";
+                : "";
+            timingInfo = "(ended at " + timingInfo + ")";
           } else {
-            timingInfo =
-              created_at
-                ? new Date(created_at).toLocaleString()
-                : "unknown"
-                timingInfo = "(created at " +  timingInfo  + ")";
+            timingInfo = created_at
+              ? new Date(created_at).toLocaleString()
+              : "unknown";
+            timingInfo = "(created at " + timingInfo + ")";
             reportTitle = "Report with ID '" + id + "' not yet completed";
           }
 
