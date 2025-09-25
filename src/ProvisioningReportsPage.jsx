@@ -126,8 +126,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               extraInfo;
 
             // when did it end
-            timingInfo =
-              "(ended at " + ended_at
+            timingInfo = ended_at
                 ? new Date(ended_at).toLocaleString()
                 : "";
             timingInfo = "(ended at " + timingInfo + ")";
