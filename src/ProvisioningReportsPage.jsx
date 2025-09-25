@@ -100,13 +100,15 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
             attachment: { url = "" } = {},
           } = report;
 
-          let mainTitle = ""
+          let mainTitle = "";
           if (extra_text) {
-          // Extract main title (e.g., "Users", "Courses")
-             mainTitle = capitalizeFirstLetter(extra_text?.match(/Reports.*$/)?.[0]?.replace("Reports: ", "") ?? "");
-          }
-          else {
-	         mainTitle = "Report with ID '"+id+"' not yet completed.";
+            // Extract main title (e.g., "Users", "Courses")
+            mainTitle = capitalizeFirstLetter(
+              extra_text?.match(/Reports.*$/)?.[0]?.replace("Reports: ", "") ??
+                "",
+            );
+          } else {
+            mainTitle = "Report with ID '" + id + "' not yet completed.";
           }
 
           // Extract optional extra info (like term)
