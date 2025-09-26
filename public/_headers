@@ -1,0 +1,11 @@
+# Cache most stuff as public for 1 week
+# We don't cache the HTML so that if it changes we revalidate (even if we don't transfer it)
+# It looks like CF pages supports the same syntax: https://developers.cloudflare.com/pages/platform/headers/
+/*.svg
+    Cache-Control: max-age=604800
+/*.ico
+    Cache-Control: max-age=604800
+/*.js
+    Cache-Control: max-age=604800
+/*.css
+    Cache-Control: max-age=604800
