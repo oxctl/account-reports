@@ -128,11 +128,10 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
 
             // when did it end
             if (status == "running") {
-				timingInfo = "(still running)"
-			}
-			else {
-        	   timingInfo = ended_at ? new Date(ended_at).toLocaleString() : "";
-         	   timingInfo = "(ended at " + timingInfo + ")";
+              timingInfo = "(still running)";
+            } else {
+              timingInfo = ended_at ? new Date(ended_at).toLocaleString() : "";
+              timingInfo = "(ended at " + timingInfo + ")";
             }
           } else {
             timingInfo = created_at
