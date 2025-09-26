@@ -95,6 +95,7 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
         {reports.map((report) => {
           const {
             id,
+            status,
             ended_at,
             created_at,
             parameters: { extra_text } = {},
@@ -126,8 +127,13 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               extraInfo;
 
             // when did it end
-            timingInfo = ended_at ? new Date(ended_at).toLocaleString() : "";
-            timingInfo = "(ended at " + timingInfo + ")";
+            if (status == "running") {
+				timingInfo = "(still running)"
+			}
+			else {
+        	   timingInfo = ended_at ? new Date(ended_at).toLocaleString() : "";
+         	   timingInfo = "(ended at " + timingInfo + ")";
+            }
           } else {
             timingInfo = created_at
               ? new Date(created_at).toLocaleString()
