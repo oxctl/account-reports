@@ -127,8 +127,8 @@ function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
               extraInfo;
 
             // when did it end
-            if (status == "running") {
-              timingInfo = "(still running)";
+            if (status == "running" || status == "queued") {
+              timingInfo = "("+status+")";
             } else {
               timingInfo = ended_at ? new Date(ended_at).toLocaleString() : "";
               timingInfo = "(ended at " + timingInfo + ")";
