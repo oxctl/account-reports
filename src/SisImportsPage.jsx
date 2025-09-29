@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { View } from "@instructure/ui-view";
 import { List } from "@instructure/ui-list";
 import { Heading } from "@instructure/ui-heading";
-import { Text } from "@instructure/ui-text";
+import { Alert } from "@instructure/ui-alerts";
 
 import { parseLinkHeader } from "@web3-storage/parse-link-header";
 
@@ -20,14 +20,14 @@ import { handleResponseFailure } from "./utils/handleResponseFailure";
  * @param {string} token - API token used for authenticating requests.
  * @param {string} server - Base server URL for the Canvas instance.
  * @param {string|number} accountId - The Canvas account ID to run the reports against.
- * @param {Function} handle403 - Callback to handle 403 (Forbidden) errors from the API - gets user to authenticate.
+ * @param {Function} handle40x - Callback to handle 40x (Forbidden) errors from the API - gets user to authenticate.
  * @returns {JSX.Element} The rendered Provisioning Reports page.
  */
-function SisImportsPage({ token, server, accountId, handle403 }) {
+function SisImportsPage({ token, server, accountId, handle40x }) {
   // State: list of SIS imports (default empty array inside object)
-  const [sisImports, setSisImports] = useState({ sis_imports: [] });
+  const [sisImports, setSisImports] = useState([]);
   // State: error message if request fails
-  const [sisError, setSisError] = useState(null);
+  const [alert, setAlert] = useState(null);
   // State: pagination links
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [prevPageUrl, setPrevPageUrl] = useState(null);
@@ -52,7 +52,7 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
 
         // Handle failed responses
         if (!response.ok) {
-          handleResponseFailure(response, handle403);
+          handleResponseFailure(response, handle40x);
         }
 
         // Parse pagination links from response headers
@@ -62,28 +62,35 @@ function SisImportsPage({ token, server, accountId, handle403 }) {
 
         return response.json();
       })
-      .then(setSisImports)
+      .then((data) => setSisImports(data.sis_imports || []))
       .catch((err) => {
         console.error("Fetch error (SIS):", err);
-        setSisError(err.message);
+        setAlert({
+          variant: "warning",
+          message: `Unable to fetch the list of imports: ` + err.message,
+        });
       });
   }, [token, currentPageUrl]);
 
   return (
     <View as="div" padding="large">
-      <Heading level="h1" as="h2">
+      <Heading variant="titleSection" level="h2">
         List of SIS Imports
       </Heading>
 
       {/* Show error message if API call failed */}
-      {sisError && <Text color="danger">{sisError}</Text>}
+      {alert && (
+        <Alert variant={alert.variant} renderCloseButtonLabel="Close">
+          {alert.message}
+        </Alert>
+      )}
 
       {/* Show spinner while loading, otherwise the list */}
       {loading ? (
         <Loading />
       ) : (
         <List>
-          {sisImports.sis_imports.map((sisImport) => (
+          {sisImports.map((sisImport) => (
             <SisImportListItem key={sisImport.id} sisImport={sisImport} />
           ))}
         </List>

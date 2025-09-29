@@ -1,0 +1,53 @@
+# This waits for the backend to be available and then performs the deployment tests.
+# The deployment tests are available in the 'deployment' folder in the root of the project.
+
+name: Test Deployment
+run-name: "Test deployment for the  ${{ inputs.execution-environment }} environment"
+
+on:
+  workflow_call:
+    inputs:
+      execution-environment:
+        description: "Environment"
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      execution-environment:
+        type: choice
+        description: "Environment"
+        required: true
+        default: 'BETA'
+        options:
+        - BETA
+        - PROD
+
+jobs:
+  deployment-tests:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    environment: ${{ inputs.execution-environment }}
+    env:
+      CANVAS_HOST: ${{ vars.CANVAS_HOST }}
+      OAUTH_TOKEN: ${{ secrets.DEPLOYMENT_TESTS_OAUTH_TOKEN }}
+      TOOL_ID: ${{ vars.TOOL_ID }}
+    defaults:
+      run:
+        working-directory: deployment
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: 'deployment/.nvmrc'
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+      - run: npm ci
+      - run: npm run install-browsers
+      - run: npm test
+      - name: Upload test-results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ${{ github.event.repository.name }}-test-results-${{ github.run_number }}-${{ github.run_attempt }}
+          path: ./deployment/playwright-report/
+          retention-days: 1

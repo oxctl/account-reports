@@ -3,6 +3,7 @@ import { View } from "@instructure/ui-view";
 import { List } from "@instructure/ui-list";
 import { Heading } from "@instructure/ui-heading";
 import { Link } from "@instructure/ui-link";
+import { Alert } from "@instructure/ui-alerts";
 import { Text } from "@instructure/ui-text";
 
 import { parseLinkHeader } from "@web3-storage/parse-link-header";
@@ -19,13 +20,13 @@ import { Loading } from "./Loading";
  * @param {string} token - Canvas API token used for authenticating requests.
  * @param {string} server - Base server URL for the Canvas instance.
  * @param {string|number} accountId - The Canvas account ID to run the reports against.
- * @param {Function} handle403 - Callback to handle 403 (Forbidden) errors from the API - gets user to authenticate.
+ * @param {Function} handle40x - Callback to handle 40x errors from the API - gets user to authenticate.
  * @returns {JSX.Element} The rendered Provisioning Reports page.
  */
-function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
+function ProvisioningReportsPage({ token, server, accountId, handle40x }) {
   // State for reports, errors, pagination, and loading state
   const [reports, setReports] = useState([]);
-  const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [nextPageUrl, setNextPageUrl] = useState(null);
   const [prevPageUrl, setPrevPageUrl] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -48,8 +49,8 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
         setLoading(false);
 
         if (!response.ok) {
-          // Handles 403 / authentication issues
-          handleResponseFailure(response, handle403);
+          // Handles 40x / authentication issues
+          handleResponseFailure(response, handle40x);
         }
 
         // Extract pagination links (next/prev) from HTTP headers
@@ -59,21 +60,28 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
 
         return response.json();
       })
-      .then(setReports) // Save the JSON reports into state
+      .then((data) => setReports(data || [])) // Save the JSON reports into state
       .catch((err) => {
         console.error("Fetch error (provisioning):", err);
-        setError(err.message);
+        setAlert({
+          variant: "warning",
+          message: `Unable to fetch the list of reports: ` + err.message,
+        });
       });
   }, [token, currentPageUrl]);
 
   return (
     <View as="div" padding="large">
-      <Heading level="h1" as="h2">
+      <Heading variant="titleSection" level="h2">
         List of Provisioning Reports
       </Heading>
 
-      {/* Show error if fetch failed */}
-      {error && <Text color="danger">{error}</Text>}
+      {/* Show error message if API call failed */}
+      {alert && (
+        <Alert variant={alert.variant} renderCloseButtonLabel="Close">
+          {alert.message}
+        </Alert>
+      )}
 
       {/* Show spinner while loading, or message if empty */}
       {loading ? (
@@ -87,32 +95,59 @@ function ProvisioningReportsPage({ token, server, accountId, handle403 }) {
         {reports.map((report) => {
           const {
             id,
+            status,
             ended_at,
+            created_at,
             parameters: { extra_text } = {},
             attachment: { url = "" } = {},
           } = report;
 
-          // Extract main title (e.g., "Users", "Courses")
-          let mainTitle = extra_text?.match(/Reports.*$/)?.[0] || "Pending";
-          mainTitle = capitalizeFirstLetter(mainTitle.replace("Reports: ", ""));
+          // title to display
+          let reportTitle = "";
 
-          // Extract optional extra info (like term)
-          let extraInfo = extra_text?.match(/^(.*?)(?=Reports)/)?.[1] || "";
-          extraInfo =
-            "(" + extraInfo.replace("Term: ", "").replace(/; $/, "") + ")";
+          // when was it started or completed
+          let timingInfo = "";
+
+          if (extra_text) {
+            // Extract main title (e.g., "Users", "Courses")
+            const extraInfo =
+              "(" +
+              (extra_text
+                ?.match(/^(.*?)(?=Reports)/)?.[1]
+                ?.replace("Term: ", "")
+                .replace(/; $/, "") || "") +
+              ")";
+            reportTitle =
+              capitalizeFirstLetter(
+                extra_text
+                  ?.match(/Reports.*$/)?.[0]
+                  ?.replace("Reports: ", "") ?? "",
+              ) +
+              " " +
+              extraInfo;
+
+            // when did it end
+            if (status == "running" || status == "queued") {
+              timingInfo = "(" + status + ")";
+            } else {
+              timingInfo = ended_at ? new Date(ended_at).toLocaleString() : "";
+              timingInfo = "(ended at " + timingInfo + ")";
+            }
+          } else {
+            timingInfo = created_at
+              ? new Date(created_at).toLocaleString()
+              : "unknown";
+            timingInfo = "(created at " + timingInfo + ")";
+            reportTitle = "Report with ID '" + id + "' not yet completed";
+          }
 
           return (
             <List.Item key={id} margin="small 0">
               {/* Download link to CSV report */}
               <Link href={url} rel="noopener noreferrer">
-                <Text as="span">
-                  {mainTitle} {extraInfo}
-                </Text>
+                <Text as="span">{reportTitle}</Text>
               </Link>
-              <Text as="span">
-                {" "}
-                ({ended_at ? new Date(ended_at).toLocaleString() : "N/A"})
-              </Text>
+              <Text as="span"> {timingInfo}</Text>
             </List.Item>
           );
         })}

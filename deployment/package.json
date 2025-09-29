@@ -1,0 +1,12 @@
+{
+  "name": "deployment",
+  "version": "1.0.0",
+  "scripts": {
+    "install-browsers": "npx playwright install",
+    "test": "npx playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.36.2",
+    "dotenv": "^16.3.1"
+  }
+}

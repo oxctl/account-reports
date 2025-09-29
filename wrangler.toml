@@ -7,11 +7,15 @@ name = "account-reports"
 pages_build_output_dir = "build"
 
 [env.preview.vars]
-# needs setting up in cloudflare VITE_SENTRY_DSN = 
+#                       **********
+# needs setting up as a * SECRET * in cloudflare VITE_SENTRY_DSN = 
+#                       **********
 VITE_SENTRY_ENV = "beta"
 VITE_SENTRY_TRACES_SAMPLE_RATE = "1.0"
 
 [env.production.vars]
-# needs setting up in cloudflare VITE_SENTRY_DSN = 
+#                       **********
+# needs setting up as a * SECRET * in cloudflare VITE_SENTRY_DSN = 
+#                       **********
 VITE_SENTRY_ENV = "prod"
 VITE_SENTRY_TRACES_SAMPLE_RATE = "1.0"

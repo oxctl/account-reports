@@ -12,6 +12,7 @@ import {
 import { jwtDecode } from "jwt-decode";
 import { View } from "@instructure/ui-view";
 import { Heading } from "@instructure/ui-heading";
+import { Alert } from "@instructure/ui-alerts";
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
 import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
@@ -28,6 +29,7 @@ import { ROOT_ACCOUNT_ID } from "./utils/constants";
 function App() {
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [token, setToken] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [needsToken, setNeedsToken] = useState(false);
   const [hasSisPermish, setHasSisPermish] = useState(false);
 
@@ -41,10 +43,10 @@ function App() {
 
   const [server, setServer] = useState(null);
 
-  const updateToken = (receivedToken, server) => {
+  const updateToken = (receivedToken, receivedServer) => {
     setToken(receivedToken);
 
-    setServer(server);
+    setServer(receivedServer);
 
     const decodedJwt = jwtDecode(receivedToken);
 
@@ -62,11 +64,40 @@ function App() {
 
     // check the user has sis_manage permission
     setHasSisPermish(jwtClaim.canvas_membership_permissions == "manage_sis");
+
+    checkAccess(receivedServer, receivedToken);
   };
 
   const handleTabChange = (event, { index }) => {
     setSelectedIndex(index);
   };
+
+  // Check token exists by call a tool suport endpoint => get 401 if user hasnt granted access then ask for it
+  function checkAccess(server, jwt) {
+    // check whether user has a Canvas Access Token ()dont rollow redirects)
+    fetch(server + "/tokens/refresh", {
+      headers: {
+        Authorization: `Bearer ${jwt}`,
+      },
+      redirect: "manual",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          // Handles 40x / authentication issues
+          setNeedsToken(true);
+        }
+      })
+      .then()
+      .catch((err) => {
+        console.error("Fetch error (App):", err);
+        setAlert({
+          variant: "error",
+          message:
+            `Unable to initialise the tool. Please contact support and report the problem: ` +
+            err.message,
+        });
+      });
+  }
 
   /*
    * We assume the user is authenticated and then handle the exception
@@ -86,9 +117,10 @@ function App() {
             promptUserLogin={() => setNeedsToken(false)}
           >
             <View as="div" padding="large">
-              <Heading level="h1" as="h2">
-                Account Reports
-              </Heading>
+              <Heading level="h1">Account Reports</Heading>
+
+              {/* Show alert if fetch failed */}
+              {alert && <Alert variant={alert.variant}>{alert.message}</Alert>}
 
               <Text>
                 There are a number of different reports which can be generated
@@ -111,7 +143,7 @@ function App() {
                     server={server}
                     accountId={accountId}
                     rootAccountId={ROOT_ACCOUNT_ID}
-                    handle403={() => setNeedsToken(true)}
+                    handle40x={() => setNeedsToken(true)}
                   />
                 </Tabs.Panel>
 
@@ -125,7 +157,7 @@ function App() {
                     token={token}
                     server={server}
                     accountId={accountId}
-                    handle403={() => setNeedsToken(true)}
+                    handle40x={() => setNeedsToken(true)}
                   />
                 </Tabs.Panel>
 
@@ -140,7 +172,7 @@ function App() {
                       token={token}
                       server={server}
                       accountId={accountId}
-                      handle403={() => setNeedsToken(true)}
+                      handle40x={() => setNeedsToken(true)}
                     />
                   </Tabs.Panel>
                 )}
@@ -156,7 +188,7 @@ function App() {
                       token={token}
                       server={server}
                       accountId={accountId}
-                      handle403={() => setNeedsToken(true)}
+                      handle40x={() => setNeedsToken(true)}
                     />
                   </Tabs.Panel>
                 )}

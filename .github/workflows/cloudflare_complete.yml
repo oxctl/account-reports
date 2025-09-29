@@ -1,0 +1,28 @@
+# runs when a Cloudflare deployment is successful
+name: Cloudflare Deploy Complete - Test Deployment
+run-name: "Cloudflare Deployment Tests - ${{ github.event.check_run.check_suite.head_branch }}"
+
+on:
+  check_run:
+    types: [completed]
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if branch is eligible
+        if: >
+          github.event.check_run.check_suite.head_branch != github.event.repository.default_branch &&
+          github.event.check_run.check_suite.head_branch != 'release'
+        run: |
+          echo "Branch is not eligible for deployment tests. Cancelling workflow..."
+          gh run cancel ${{ github.run_id }} --repo ${{ github.repository }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deployment-tests:
+    needs: check-branch
+    uses: ./.github/workflows/test_deployment.yml
+    with:
+      execution-environment: ${{ github.event.check_run.check_suite.head_branch == 'release' && 'PROD' || 'BETA' }}
+    secrets: inherit
