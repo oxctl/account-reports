@@ -56,7 +56,7 @@ These two environment variables also need setting (will be replaced v soon)
 The test:
 
  - check the tool loads
- - checks there are buttons on the fist page to run reports
+ - checks there are buttons on the first page to run reports
 
 ### Releasing
 
