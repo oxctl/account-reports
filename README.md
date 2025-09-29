@@ -43,6 +43,16 @@ npx @oxctl/lti-auto-configuration create
 
 The deploy to development is done automatically when a new commit is made to master.
 
+### Deployment Tests
+
+There is a simple deployment test that is run when the tool is deployed to Beta or Production. This test relies on the repository having access to the organisational 
+Github Actions Secret `DEPLOYMENT_TESTS_OAUTH_TOKEN`. Access must be granted on a repository by repository basis.
+
+The test:
+
+ - check the tool loads
+ - checks there are buttons on the fist page to run reports
+
 ### Releasing
 
 To release the latest code merge the master branch into the release branch Cloudflare will then deploy this to production.
