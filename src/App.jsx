@@ -62,7 +62,7 @@ function App() {
 
     // which subaccount are we in?
     setAccountId(jwtClaim.canvas_account_id);
-    
+
     // Which Canvas are we in?
     setCanvasBaseUrl(jwtClaim.canvas_api_base_url);
 
