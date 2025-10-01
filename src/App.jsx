@@ -42,12 +42,12 @@ function App() {
     useState(false);
   const [accountId, setAccountId] = useState(1);
 
-  const [proxyHostname, setProxyHostname] = useState(null);
+  const [proxyBaseUrl, setProxyBaseUrl] = useState(null);
 
-  const updateToken = (receivedToken, receivedProxyHostname) => {
+  const updateToken = (receivedToken, receivedProxyBaseUrl) => {
     setToken(receivedToken);
 
-    setProxyHostname(receivedProxyHostname);
+    setProxyBaseUrl(receivedProxyBaseUrl);
 
     const decodedJwt = jwtDecode(receivedToken);
 
@@ -69,7 +69,7 @@ function App() {
     // check the user has sis_manage permission
     setHasSisPermish(jwtClaim.canvas_membership_permissions == "manage_sis");
 
-    checkAccess(receivedProxyHostname, receivedToken);
+    checkAccess(receivedProxyBaseUrl, receivedToken);
   };
 
   const handleTabChange = (event, { index }) => {
@@ -77,9 +77,9 @@ function App() {
   };
 
   // Check token exists by call a tool suport endpoint => get 401 if user hasnt granted access then ask for it
-  function checkAccess(proxyHostname, jwt) {
+  function checkAccess(proxyBaseUrl, jwt) {
     // check whether user has a Canvas Access Token ()dont rollow redirects)
-    fetch(proxyHostname + "/tokens/refresh", {
+    fetch(proxyBaseUrl + "/tokens/refresh", {
       headers: {
         Authorization: `Bearer ${jwt}`,
       },
@@ -117,7 +117,7 @@ function App() {
           <LaunchOAuth
             promptLogin={needsToken}
             accessToken={token}
-            server={{ proxyServer: proxyHostname }}
+            server={{ proxyServer: proxyBaseUrl }}
             promptUserLogin={() => setNeedsToken(false)}
           >
             <View as="div" padding="large">
@@ -144,7 +144,8 @@ function App() {
                 >
                   <AccountReportsPage
                     token={token}
-                    server={proxyHostname}
+                    server={proxyBaseUrl}
+                    canvas={canvasBaseUrl}
                     accountId={accountId}
                     rootAccountId={ROOT_ACCOUNT_ID}
                     handle40x={() => setNeedsToken(true)}
@@ -159,7 +160,7 @@ function App() {
                 >
                   <ProvisioningReportsPage
                     token={token}
-                    server={proxyHostname}
+                    server={proxyBaseUrl}
                     accountId={accountId}
                     handle40x={() => setNeedsToken(true)}
                   />
@@ -174,7 +175,7 @@ function App() {
                   >
                     <SisImportsPage
                       token={token}
-                      server={proxyHostname}
+                      server={proxyBaseUrl}
                       accountId={accountId}
                       handle40x={() => setNeedsToken(true)}
                     />
@@ -190,7 +191,7 @@ function App() {
                   >
                     <SearchPage
                       token={token}
-                      server={proxyHostname}
+                      server={proxyBaseUrl}
                       accountId={accountId}
                       handle40x={() => setNeedsToken(true)}
                     />

@@ -15,7 +15,8 @@ import ReportAction from "./ReportAction";
  *
  * @function ProvisioningReportsPage
  * @param {string} token - API token used for authenticating requests.
- * @param {string} server - Base server URL for the Canvas instance.
+ * @param {string} server - Base server URL for the Canvas Proxy.
+ * @param {string} canvas - Base server URL for Canvas.
  * @param {string|number} accountId - The Canvas account ID to run the reports against.
  * @param {string|number} rootAccountId - The Canvas root account ID
  * @param {Function} handle40x - Callback to handle 40x errors from the API - gets user to authenticate.
@@ -24,6 +25,7 @@ import ReportAction from "./ReportAction";
 function AccountReportsPage({
   token,
   server,
+  canvas,
   accountId,
   rootAccountId,
   handle40x,
