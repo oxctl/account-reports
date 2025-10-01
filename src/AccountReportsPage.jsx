@@ -11,9 +11,9 @@ import SubaccountAdminsJob from "./jobs/SubaccountAdminsJob";
 import ReportAction from "./ReportAction";
 
 /**
- * Renders the Provisioning Reports page for a Canvas account.
+ * Renders the Account Reports page for a Canvas account.
  *
- * @function ProvisioningReportsPage
+ * @function AccountReportsPage
  * @param {string} token - API token used for authenticating requests.
  * @param {string} server - Base server URL for the Canvas Proxy.
  * @param {string} canvas - Base server URL for Canvas.
@@ -113,7 +113,7 @@ function AccountReportsPage({
     // Options passed to each job runner
     const options = {};
     if (accountId) options.accountId = accountId;
-    if (server) options.baseUrl = server + "/api/v1";
+    if (canvas) options.baseUrl = canvas;
     if (rootAccountId) options.rootAccountId = rootAccountId;
 
     // Render each report in a grid row with heading, description, and action button
