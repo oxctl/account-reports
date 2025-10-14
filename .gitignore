@@ -2,6 +2,7 @@ node_modules/
 tool-config/local-template.json
 __build__/
 build/
+.code-workspace
 .env*.local
 npm-debug.log
 yarn-error.log
