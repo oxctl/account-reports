@@ -1,5 +1,5 @@
 import ReportApi from "./ReportApi";
-import { stringify } from "csv-stringify/sync";
+import Papa from "papaparse";
 import { parse } from "csv-parse/sync";
 
 /**
@@ -67,7 +67,7 @@ class DuplicateLoginsJob {
     if (matching) {
       duplicates.push(previous);
     }
-    this.csv = stringify(duplicates, { header: true });
+  this.csv = Papa.unparse(duplicates, { header: true });
     this.statusUpdate("Written CSV");
   };
 

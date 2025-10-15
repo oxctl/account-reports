@@ -2,9 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
 
-import { NodeGlobalsPolyfillPlugin } from "@esbuild-plugins/node-globals-polyfill";
-import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
-import nodePolyfills from "rollup-plugin-polyfill-node";
+// Polyfills removed — modern browsers and bundler provide required globals.
 import { configDefaults } from "vitest/config";
 
 // https://vite.dev/config/
@@ -31,23 +29,12 @@ export default defineConfig({
       define: {
         global: "globalThis",
       },
-      // Enable esbuild polyfill plugins
-      plugins: [
-        NodeGlobalsPolyfillPlugin({
-          process: true,
-          buffer: true,
-        }),
-        NodeModulesPolyfillPlugin(),
-      ],
+      // Removed esbuild polyfill plugins — prefer native browser APIs.
     },
   },
   build: {
     rollupOptions: {
-      plugins: [
-        // Enable rollup polyfills plugin
-        // used during production bundling
-        nodePolyfills(),
-      ],
+      // Polyfill rollup plugin removed.
     },
     // This means we don't have to change the config in cloudflare.
     outDir: "build",

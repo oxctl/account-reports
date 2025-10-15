@@ -1,4 +1,4 @@
-import { stringify } from "csv-stringify/sync";
+import Papa from "papaparse";
 import { parse } from "csv-parse/sync";
 import moment from "moment-timezone";
 import "moment/locale/en-gb";
@@ -136,7 +136,9 @@ const JobsMixin = {
   },
 
   toCsv(output) {
-    return stringify(output, { header: true });
+    // Papaparse's unparse expects an array of objects or array of arrays.
+    // Use columns from object keys by passing header: true behaviour via header option.
+    return Papa.unparse(output, { header: true });
   },
 
   countAdminsForSubaccount(canvasAccountId) {

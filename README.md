@@ -80,3 +80,21 @@ should be set up by hand as a Cloudflare (or equivalent) environment Secret 'VIT
 There's no DSN for local development. 
 
 Sentry is setup as early as possible in the application to capture as many errors as possible.
+
+## Developer notes (CSV and polyfills)
+
+- The project previously used `csv-stringify` which required Node polyfills for browser bundling. It has been replaced with `papaparse` for CSV generation (using `Papa.unparse`) which is browser-friendly.
+- The Vite configuration has had bundler polyfill plugins removed to avoid shipping Node polyfills to the browser. If a dependency requires Node globals in the browser, re-introduce targeted polyfills instead of broad polyfilling.
+
+Quick local checks after pulling the branch:
+
+```bash
+# install deps
+npm install
+
+# run tests
+npx vitest run
+
+# build production bundle
+npm run build
+```
