@@ -2,7 +2,6 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import mkcert from "vite-plugin-mkcert";
 
-// Polyfills removed — modern browsers and bundler provide required globals.
 import { configDefaults } from "vitest/config";
 
 // https://vite.dev/config/
@@ -29,12 +28,10 @@ export default defineConfig({
       define: {
         global: "globalThis",
       },
-      // Removed esbuild polyfill plugins — prefer native browser APIs.
     },
   },
   build: {
     rollupOptions: {
-      // Polyfill rollup plugin removed.
     },
     // This means we don't have to change the config in cloudflare.
     outDir: "build",
