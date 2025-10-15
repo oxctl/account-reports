@@ -1,5 +1,4 @@
-import Papa from "papaparse";
-import { parse } from "csv-parse/sync";
+import * as Papa from "papaparse";
 import moment from "moment-timezone";
 import "moment/locale/en-gb";
 import { SUBACCOUNT_ADMIN_ROLES } from "../utils/constants";
@@ -128,11 +127,15 @@ const JobsMixin = {
   },
 
   async parseCsv(csv) {
-    return parse(csv, {
+    // Use PapaParse in the browser instead of the Node-oriented csv-parse
+    // to avoid references to Buffer and other Node globals.
+    const result = Papa.parse(csv, {
       delimiter: ",",
-      columns: (header) => header.map((column) => column.replace(/ /g, "_")),
-      relax_column_count: true,
+      header: true,
+      transformHeader: (header) => header.replace(/ /g, "_"),
+      skipEmptyLines: true,
     });
+    return result.data;
   },
 
   toCsv(output) {

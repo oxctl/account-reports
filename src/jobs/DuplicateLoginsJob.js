@@ -1,6 +1,5 @@
 import ReportApi from "./ReportApi";
-import Papa from "papaparse";
-import { parse } from "csv-parse/sync";
+import * as Papa from "papaparse";
 
 /**
  * This looks for user who have more than one login on the account.
@@ -40,10 +39,13 @@ class DuplicateLoginsJob {
     this.statusUpdate("Building CSV");
     const reportCsv = await attachment.text();
 
-    const rows = parse(reportCsv, {
+    const parsed = Papa.parse(reportCsv, {
       delimiter: ",",
-      columns: (header) => header.map((column) => column.replace(/ /g, "_")),
+      header: true,
+      transformHeader: (header) => header.replace(/ /g, "_"),
+      skipEmptyLines: true,
     });
+    const rows = parsed.data;
     // Better performance because of cached locale.
     const collator = new Intl.Collator();
     // We don't care about predicable order, just that the same IDs are next to each other.

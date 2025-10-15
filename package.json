@@ -48,8 +48,7 @@
     "@sentry/react": "^8.37.1",
     "@web3-storage/parse-link-header": "^3.1.0",
     "jwt-decode": "^4.0.0",
-    "csv-parse": "^5.5.5",
-  "papaparse": "^5.4.1",
+    "papaparse": "^5.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "uuid": "^8.0.0"
