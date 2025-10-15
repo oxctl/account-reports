@@ -1,5 +1,5 @@
 node_modules/
-tool-config/local-template.json
+tool-config/local*.json
 __build__/
 build/
 *.code-workspace
