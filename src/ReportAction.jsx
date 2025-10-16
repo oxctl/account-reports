@@ -12,52 +12,44 @@ import { Link } from "@instructure/ui-link";
  * @param {Function} addAlert - Callback to display status messages (e.g. success/error).
  * @returns {JSX.Element} The rendered report action buttons (Run + Download).
  */
-function ReportAction({ name, report, addAlert }) {
-  // Track whether the report is currently running
+function ReportAction({ name, report, addAlert, onRunStart }) {
   const [running, setRunning] = useState(false);
-  // Track whether the report finished successfully
   const [complete, setComplete] = useState(false);
-  // Keep a ref to the report object instance so we can call output() later
   const reportRef = useRef(null);
 
-  /**
-   * Run the report, update state, and handle success/failure.
-   */
   const run = async () => {
+    // notify parent that a run started; swallow errors from parent
+    try {
+      if (onRunStart) onRunStart();
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error("onRunStart callback error", err);
+    }
+
     try {
       setRunning(true);
       setComplete(false);
 
-      // Create the report instance and start it
       reportRef.current = report();
       await reportRef.current.run();
 
-      // Success!
       setComplete(true);
       addAlert({ variant: "success", message: `${name} report is complete.` });
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.error("Report run failed", e);
-      addAlert({
-        variant: "error",
-        message: `${name} report failed to complete.`,
-      });
+      addAlert({ variant: "error", message: `${name} report failed to complete.` });
     } finally {
       setRunning(false);
     }
   };
 
-  /**
-   * Generate a filename for the CSV download.
-   */
   const filename = () =>
     name.toLowerCase().replaceAll(" ", "_") +
     "-" +
     new Date().toJSON().slice(0, 16).replaceAll(":", "-") +
     ".csv";
 
-  /**
-   * Trigger a CSV download of the report output.
-   */
   const download = () => {
     const file = new Blob([reportRef.current.output()], { type: "text/csv" });
     const aTag = document.createElement("a");
@@ -68,16 +60,9 @@ function ReportAction({ name, report, addAlert }) {
 
   return (
     <>
-      {/* Run button (disabled if already running) */}
-      <Button
-        onClick={run}
-        interaction={running ? "disabled" : "enabled"}
-        margin="none small"
-      >
+      <Button onClick={run} interaction={running ? "disabled" : "enabled"} margin="none small">
         Run
       </Button>
-
-      {/* Show spinner if running, otherwise show Download link if complete */}
       {running ? (
         <Spinner size="x-small" renderTitle="running" />
       ) : (
