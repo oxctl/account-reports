@@ -8,8 +8,14 @@ import { Link } from "@instructure/ui-link";
  *
  * @component
  * @param {string} name - Short display name of the report.
- * @param {Function} report - Function that creates the report instance (must expose run() and output()).
+ * @param {Function} report - Function that creates the report instance. The returned
+ *   object must expose run() which performs the report and output() which returns
+ *   the CSV string for download.
  * @param {Function} addAlert - Callback to display status messages (e.g. success/error).
+ * @param {Function} [onRunStart] - Optional callback invoked when the Run action
+ *   begins. This can be used by the parent to show a persistent warning or update
+ *   UI state when background work starts. Errors thrown by this callback are
+ *   swallowed to avoid breaking the report run.
  * @returns {JSX.Element} The rendered report action buttons (Run + Download).
  */
 function ReportAction({ name, report, addAlert, onRunStart }) {
@@ -18,7 +24,10 @@ function ReportAction({ name, report, addAlert, onRunStart }) {
   const reportRef = useRef(null);
 
   const run = async () => {
-    // notify parent that a run started; swallow errors from parent
+    // Notify parent that a run started. The parent may show a persistent
+    // warning (for example: "do not change tabs until downloads complete").
+    // Swallow any errors from the parent callback so the report run still
+    // proceeds even if the parent's handler throws.
     try {
       if (onRunStart) onRunStart();
     } catch (err) {
@@ -27,15 +36,21 @@ function ReportAction({ name, report, addAlert, onRunStart }) {
     }
 
     try {
+      // Mark running state and clear any previous completion marker
       setRunning(true);
       setComplete(false);
 
+      // Create the report instance and run it. The report object is expected
+      // to implement a run() promise and an output() method that returns the
+      // final CSV content.
       reportRef.current = report();
       await reportRef.current.run();
 
+      // Mark complete and notify user via addAlert
       setComplete(true);
       addAlert({ variant: "success", message: `${name} report is complete.` });
     } catch (e) {
+      // Report run failed; log and surface an error alert
       // eslint-disable-next-line no-console
       console.error("Report run failed", e);
       addAlert({
@@ -47,12 +62,15 @@ function ReportAction({ name, report, addAlert, onRunStart }) {
     }
   };
 
+  // Generate a filename for the downloaded CSV. Example: multiple_login_users-2025-10-16T18-50.csv
   const filename = () =>
     name.toLowerCase().replaceAll(" ", "_") +
     "-" +
     new Date().toJSON().slice(0, 16).replaceAll(":", "-") +
     ".csv";
 
+  // Create a Blob from the report output and trigger a client-side download
+  // using an anchor element and URL.createObjectURL.
   const download = () => {
     const file = new Blob([reportRef.current.output()], { type: "text/csv" });
     const aTag = document.createElement("a");
