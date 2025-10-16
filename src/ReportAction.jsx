@@ -38,7 +38,10 @@ function ReportAction({ name, report, addAlert, onRunStart }) {
     } catch (e) {
       // eslint-disable-next-line no-console
       console.error("Report run failed", e);
-      addAlert({ variant: "error", message: `${name} report failed to complete.` });
+      addAlert({
+        variant: "error",
+        message: `${name} report failed to complete.`,
+      });
     } finally {
       setRunning(false);
     }
@@ -60,7 +63,11 @@ function ReportAction({ name, report, addAlert, onRunStart }) {
 
   return (
     <>
-      <Button onClick={run} interaction={running ? "disabled" : "enabled"} margin="none small">
+      <Button
+        onClick={run}
+        interaction={running ? "disabled" : "enabled"}
+        margin="none small"
+      >
         Run
       </Button>
       {running ? (
