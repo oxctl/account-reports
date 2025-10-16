@@ -80,3 +80,4 @@ should be set up by hand as a Cloudflare (or equivalent) environment Secret 'VIT
 There's no DSN for local development. 
 
 Sentry is setup as early as possible in the application to capture as many errors as possible.
+

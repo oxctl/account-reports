@@ -48,8 +48,7 @@
     "@sentry/react": "^8.37.1",
     "@web3-storage/parse-link-header": "^3.1.0",
     "jwt-decode": "^4.0.0",
-    "csv-parse": "^5.5.5",
-    "csv-stringify": "^6.4.6",
+    "papaparse": "^5.4.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "uuid": "^8.0.0"
@@ -63,15 +62,14 @@
     "vite-plugin-mkcert": "^1.17.8",    
     "@babel/preset-env": "^7.24.3",
     "@babel/preset-react": "^7.24.1",
-    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    
     "@instructure/ui-stylelint-config": "^8.54.0",
     "@instructure/ui-test-utils": "^8.54.0",
     "@instructure/ui-webpack-config": "^8.54.0",
     "babel-plugin-transform-vite-meta-env": "^1.0.3",
     "html-webpack-plugin": "^4",
     "jsdom": "^24.0.0",
-    "rollup-plugin-polyfill-node": "^0.13.0",
+    
     "vitest": "^3.0.7"
   }
 }
