@@ -26,8 +26,6 @@ function ReportAction({ name, report, addAlert, onRunStart }) {
       console.error("onRunStart callback error", err);
     }
 
-    
-
     try {
       setRunning(true);
       setComplete(false);
