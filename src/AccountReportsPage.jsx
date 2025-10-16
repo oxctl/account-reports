@@ -146,6 +146,11 @@ function AccountReportsPage({
     <>
       {renderAlerts()}
       <View as="div" padding="large">
+        {showRunWarning && (
+          <Alert variant="warning">
+            Do not change tabs on this page until you have downloaded all reports.
+          </Alert>
+        )}
         <Heading variant="titleSection" level="h2">
           User Reports
         </Heading>

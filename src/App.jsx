@@ -44,6 +44,8 @@ function App() {
 
   const [proxyBaseUrl, setProxyBaseUrl] = useState(null);
 
+  
+
   const updateToken = (receivedToken, receivedProxyBaseUrl) => {
     setToken(receivedToken);
 
