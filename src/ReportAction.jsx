@@ -19,10 +19,16 @@ import { Link } from "@instructure/ui-link";
  * @returns {JSX.Element} The rendered report action buttons (Run + Download).
  */
 function ReportAction({ name, report, addAlert, onRunStart }) {
+  // Track whether the report is currently running
   const [running, setRunning] = useState(false);
+  // Track whether the report finished successfully
   const [complete, setComplete] = useState(false);
+  // Keep a ref to the report object instance so we can call output() later
   const reportRef = useRef(null);
 
+  /**
+   * Run the report, update state, and handle success/failure.
+   */
   const run = async () => {
     // Notify parent that a run started. The parent may show a persistent
     // warning (for example: "do not change tabs until downloads complete").
@@ -62,15 +68,18 @@ function ReportAction({ name, report, addAlert, onRunStart }) {
     }
   };
 
-  // Generate a filename for the downloaded CSV. Example: multiple_login_users-2025-10-16T18-50.csv
+  /**
+   * Generate a filename for the CSV download.
+   */
   const filename = () =>
     name.toLowerCase().replaceAll(" ", "_") +
     "-" +
     new Date().toJSON().slice(0, 16).replaceAll(":", "-") +
     ".csv";
 
-  // Create a Blob from the report output and trigger a client-side download
-  // using an anchor element and URL.createObjectURL.
+  /**
+   * Trigger a CSV download of the report output.
+   */
   const download = () => {
     const file = new Blob([reportRef.current.output()], { type: "text/csv" });
     const aTag = document.createElement("a");
@@ -81,6 +90,7 @@ function ReportAction({ name, report, addAlert, onRunStart }) {
 
   return (
     <>
+      {/* Run button (disabled if already running) */}
       <Button
         onClick={run}
         interaction={running ? "disabled" : "enabled"}
@@ -88,6 +98,8 @@ function ReportAction({ name, report, addAlert, onRunStart }) {
       >
         Run
       </Button>
+
+      {/* Show spinner if running, otherwise show Download link if complete */}
       {running ? (
         <Spinner size="x-small" renderTitle="running" />
       ) : (
