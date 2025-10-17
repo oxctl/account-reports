@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { View } from "@instructure/ui-view";
 import { List } from "@instructure/ui-list";
 import { Heading } from "@instructure/ui-heading";
-import { DateTimeInput } from "@instructure/ui-datetime-input";
+import { DateTimeInput } from "@instructure/ui-date-time-input";
 import { ScreenReaderContent } from "@instructure/ui-a11y-content";
 import { IconXSolid } from "@instructure/ui-icons";
 import { Flex } from "@instructure/ui-flex";

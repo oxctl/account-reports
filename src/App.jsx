@@ -16,6 +16,7 @@ import { Alert } from "@instructure/ui-alerts";
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
 import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
+import DateFilterPage from "./DateFilterPage";
 import AccountReportsPage from "./AccountReportsPage";
 
 import { ROOT_ACCOUNT_ID } from "./utils/constants";
