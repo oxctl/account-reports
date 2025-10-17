@@ -85,6 +85,9 @@ function AccountReportsPage({
     setAlerts((prev) => [...prev, { ...alert, id: alertIdRef.current++ }]);
   }, []);
 
+  // Show a single non-dismissible run-warning when any report starts
+  const [showRunWarning, setShowRunWarning] = useState(false);
+
   // Remove a specific alert by ID
   const removeAlert = useCallback((removeId) => {
     setAlerts((prev) => prev.filter((alert) => alert.id !== removeId));
@@ -132,6 +135,7 @@ function AccountReportsPage({
             name={report.name}
             report={() => report.run(server, token, options)}
             addAlert={addAlert}
+            onRunStart={() => setShowRunWarning(true)}
           />
         </Grid.Col>
       </Grid.Row>
@@ -142,6 +146,12 @@ function AccountReportsPage({
     <>
       {renderAlerts()}
       <View as="div" padding="large">
+        {showRunWarning && (
+          <Alert variant="warning">
+            Download links will disappear if you change tabs - ensure you
+            download any reports you need before changing tabs.
+          </Alert>
+        )}
         <Heading variant="titleSection" level="h2">
           User Reports
         </Heading>
