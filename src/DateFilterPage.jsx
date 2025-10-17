@@ -131,7 +131,9 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
         <Flex>
           <Flex.Item shouldGrow>
             <DateTimeInput
-              renderLabel={<ScreenReaderContent>SIS imports before</ScreenReaderContent>}
+              renderLabel={
+                <ScreenReaderContent>SIS imports before</ScreenReaderContent>
+              }
               label="Before"
               description="Show SIS imports run before this date and time"
               datePlaceholder="Choose a date"
@@ -150,7 +152,9 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
 
           <Flex.Item shouldGrow>
             <DateTimeInput
-              renderLabel={<ScreenReaderContent>SIS imports after</ScreenReaderContent>}
+              renderLabel={
+                <ScreenReaderContent>SIS imports after</ScreenReaderContent>
+              }
               label="After"
               description="Show SIS imports run after this date and time"
               datePlaceholder="Choose a date"
