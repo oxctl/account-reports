@@ -179,4 +179,4 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   );
 }
 
-export default DateFilterPage
+export default DateFilterPage;

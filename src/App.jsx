@@ -198,7 +198,7 @@ function App() {
                   </Tabs.Panel>
                 )}
 
-                                {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
+                {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
                   <Tabs.Panel
                     id="sisImportDateFilter"
                     renderTitle="Show SIS Import between dates & times"
