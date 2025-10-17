@@ -148,8 +148,8 @@ function AccountReportsPage({
       <View as="div" padding="large">
         {showRunWarning && (
           <Alert variant="warning">
-            Do not change tabs on this page until you have downloaded all
-            reports.
+            Download links will disappear if you change 
+            tabs - ensure you download any reports you need before changing tabs.
           </Alert>
         )}
         <Heading variant="titleSection" level="h2">
