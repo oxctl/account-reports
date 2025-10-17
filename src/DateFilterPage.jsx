@@ -3,9 +3,9 @@ import React, { useEffect, useState, useRef } from "react";
 import { View } from "@instructure/ui-view";
 import { List } from "@instructure/ui-list";
 import { Heading } from "@instructure/ui-heading";
-import { TextInput } from "@instructure/ui-text-input";
+import { DateTimeInput } from "@instructure/ui-datetime-input";
 import { ScreenReaderContent } from "@instructure/ui-a11y-content";
-import { IconSearchLine, IconXSolid } from "@instructure/ui-icons";
+import { IconXSolid } from "@instructure/ui-icons";
 import { Flex } from "@instructure/ui-flex";
 import { IconButton, Button } from "@instructure/ui-buttons";
 
@@ -30,11 +30,13 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   const [sisImportUrl, setSisImportUrl] = useState();
   // Error message to display (if any)
   const [sisError, setSisError] = useState(null);
-  // The current input value (search text)
-  const [value, setValue] = useState("");
-  // Ref for focusing/clearing the input
-  const inputRef = useRef(null);
-  // Hide results when errors occur or input is cleared
+  // Date/time inputs for the filter range
+  const [before, setBefore] = useState("");
+  const [after, setAfter] = useState("");
+  // Ref for focusing controls
+  const beforeRef = useRef(null);
+  const afterRef = useRef(null);
+  // Hide results when errors occur or when inputs are cleared
   const [hideResults, setHideResults] = useState(false);
   // Whether the search is currently loading
   const [loading, setLoading] = useState(false);
@@ -76,60 +78,48 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
       });
   }, [token, sisImportUrl]);
 
-  // Timer used for throttling the search
-  let timeoutId = null;
-
-  /**
-   * Handle form submission (Enter or button click).
-   */
-  const handleSearch = (e) => {
-    e.preventDefault(); // Prevent page reload
-    setLoading(true);
-    setSisError(""); // Clear old errors
-    clearTimeout(timeoutId);
-
-    if (!value.length) return;
-
-    // Throttle: delay API call by 1 second
-    timeoutId = setTimeout(() => {
-      setSisImportUrl(
-        `${server}/api/v1/accounts/${accountId}/sis_imports/${value}`,
-      );
-    }, 1000);
+  // Validate that the before/after pair is chronological. If one is blank we
+  // treat it as now when building the query.
+  const isChronological = () => {
+    const now = new Date();
+    const beforeDate = before ? new Date(before) : now;
+    const afterDate = after ? new Date(after) : now;
+    return afterDate <= beforeDate;
   };
 
-  /**
-   * Update input value.
-   */
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-
-  /**
-   * Clear the input, error, and results.
-   */
   const handleClear = () => {
-    setValue("");
+    setBefore("");
+    setAfter("");
     setLoading(false);
     setSisError(null);
     setHideResults(true);
-    inputRef.current?.focus();
+    beforeRef.current?.focus();
   };
 
-  /**
-   * Renders a clear button inside the search box.
-   */
-  const renderClearButton = () =>
-    value ? (
-      <IconButton
-        onClick={handleClear}
-        screenReaderLabel="Clear search"
-        withBackground={false}
-        withBorder={false}
-      >
-        <IconXSolid />
-      </IconButton>
-    ) : null;
+  // Build the query and fetch results (first 100) when user submits
+  const handleFilter = (e) => {
+    e?.preventDefault();
+    setSisError(null);
+
+    if (!isChronological()) {
+      setSisError("Start time must be before end time");
+      setHideResults(true);
+      return;
+    }
+
+    setLoading(true);
+    setHideResults(true);
+
+    const nowIso = new Date().toISOString();
+    const created_since = after ? new Date(after).toISOString() : nowIso;
+    const created_until = before ? new Date(before).toISOString() : nowIso;
+
+    const url = `${server}/api/v1/accounts/${accountId}/sis_imports?per_page=100&created_since=${encodeURIComponent(
+      created_since,
+    )}&created_until=${encodeURIComponent(created_until)}`;
+
+    setSisImportUrl(url);
+  };
 
   return (
     <View as="div" padding="large">
@@ -137,28 +127,36 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
         Search for SIS Import
       </Heading>
 
-      <form name="getSisId" onSubmit={handleSearch} autoComplete="off">
+      <form name="dateFilter" onSubmit={handleFilter} autoComplete="off">
         <Flex>
           <Flex.Item shouldGrow>
-            <TextInput
-              renderLabel={
-                <ScreenReaderContent>Search SIS Imports</ScreenReaderContent>
-              }
-              placeholder="Enter a SIS Import ID ..."
-              value={value}
-              onChange={handleChange}
-              inputRef={(el) => {
-                inputRef.current = el;
-              }}
-              renderBeforeInput={<IconSearchLine inline={false} />}
-              renderAfterInput={renderClearButton()}
-              messages={missingImportMessage()}
-              shouldNotWrap
+            <DateTimeInput
+              renderLabel={<ScreenReaderContent>SIS imports before</ScreenReaderContent>}
+              label="Before"
+              value={before}
+              onChange={(value) => setBefore(value)}
+              inputRef={(el) => (beforeRef.current = el)}
+              messages={sisError ? [{ type: "newError", text: sisError }] : []}
             />
           </Flex.Item>
+
+          <Flex.Item shouldGrow>
+            <DateTimeInput
+              renderLabel={<ScreenReaderContent>SIS imports after</ScreenReaderContent>}
+              label="After"
+              value={after}
+              onChange={(value) => setAfter(value)}
+              inputRef={(el) => (afterRef.current = el)}
+              messages={sisError ? [{ type: "newError", text: sisError }] : []}
+            />
+          </Flex.Item>
+
           <Flex.Item>
-            <Button color="primary" margin="0 0 0 small" onClick={handleSearch}>
-              Search
+            <Button color="primary" margin="0 0 0 small" onClick={handleFilter}>
+              Filter
+            </Button>
+            <Button margin="0 0 0 small" onClick={handleClear}>
+              Clear
             </Button>
           </Flex.Item>
         </Flex>
