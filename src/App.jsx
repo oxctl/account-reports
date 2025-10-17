@@ -202,7 +202,7 @@ function App() {
                 {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
                   <Tabs.Panel
                     id="sisImportDateFilter"
-                    renderTitle="Show SIS Import between dates & times"
+                    renderTitle="Show SIS Imports"
                     padding="large"
                     isSelected={selectedIndex === 4}
                   >

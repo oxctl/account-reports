@@ -24,8 +24,8 @@ import { handleResponseFailure } from "./utils/handleResponseFailure";
  * @returns {JSX.Element} The rendered Provisioning Reports page.
  */
 function DateFilterPage({ token, server, accountId, handle40x }) {
-  // The SIS import object
-  const [sisImport, setSisImport] = useState(null);
+  // The SIS import results (array)
+  const [sisImports, setSisImports] = useState([]);
   // The API URL for the current search
   const [sisImportUrl, setSisImportUrl] = useState();
   // Error message to display (if any)
@@ -70,21 +70,23 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
         }
         return response.json();
       })
-      .then(setSisImport)
+      .then((data) => setSisImports(data.sis_imports || []))
       .catch((err) => {
         setLoading(false);
         setSisError(err.message + " There is no SIS Import with that ID ");
+        setSisImports([]);
         setHideResults(true);
       });
   }, [token, sisImportUrl]);
 
-  // Validate that the before/after pair is chronological. If one is blank we
-  // treat it as now when building the query.
+  // Validate that the before/after pair is chronological. Only validate when
+  // both values are provided; if one or both are blank we allow the filter to
+  // proceed and simply omit that parameter from the query string.
   const isChronological = () => {
-    const now = new Date();
-    const beforeDate = before ? new Date(before) : now;
-    const afterDate = after ? new Date(after) : now;
-    return afterDate <= beforeDate;
+    if (after && before) {
+      return new Date(after) <= new Date(before);
+    }
+    return true;
   };
 
   const handleClear = () => {
@@ -93,6 +95,14 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     setLoading(false);
     setSisError(null);
     setHideResults(true);
+    setSisImports([]);
+    beforeRef.current?.focus();
+  };
+
+  const handleSearchAgain = () => {
+    // Show the selectors again so the user can run a new search
+    setHideResults(true);
+    setSisError(null);
     beforeRef.current?.focus();
   };
 
@@ -110,82 +120,97 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     setLoading(true);
     setHideResults(true);
 
-    const nowIso = new Date().toISOString();
-    const created_since = after ? new Date(after).toISOString() : nowIso;
-    const created_until = before ? new Date(before).toISOString() : nowIso;
+    // Build query parameters and only include created_since / created_until
+    // when the corresponding input was filled. It's valid to include neither.
+    const params = new URLSearchParams();
+    params.set("per_page", "100");
+    if (after) {
+      params.set("created_since", new Date(after).toISOString());
+    }
+    if (before) {
+      params.set("created_until", new Date(before).toISOString());
+    }
 
-    const url = `${server}/api/v1/accounts/${accountId}/sis_imports?per_page=100&created_since=${encodeURIComponent(
-      created_since,
-    )}&created_until=${encodeURIComponent(created_until)}`;
-
+    const url = `${server}/api/v1/accounts/${accountId}/sis_imports?${params.toString()}`;
     setSisImportUrl(url);
   };
 
   return (
     <View as="div" padding="large">
       <Heading variant="titleSection" level="h2">
-        Search for SIS Import
+        Show SIS Imports
       </Heading>
 
       <form name="dateFilter" onSubmit={handleFilter} autoComplete="off">
-        <Flex>
-          <Flex.Item shouldGrow>
-            <DateTimeInput
-              renderLabel={<ScreenReaderContent>SIS imports before</ScreenReaderContent>}
-              label="Before"
-              description="Show SIS imports run before this date and time"
-              datePlaceholder="Choose a date"
-              dateRenderLabel="Date"
-              timeRenderLabel="Time"
-              invalidDateTimeMessage="Invalid date/time"
-              prevMonthLabel="Previous month"
-              nextMonthLabel="Next month"
-              layout="columns"
-              value={before}
-              onChange={(value) => setBefore(value)}
-              inputRef={(el) => (beforeRef.current = el)}
-              messages={sisError ? [{ type: "newError", text: sisError }] : []}
-            />
-          </Flex.Item>
-
-          <Flex.Item shouldGrow>
-            <DateTimeInput
-              renderLabel={<ScreenReaderContent>SIS imports after</ScreenReaderContent>}
-              label="After"
-              description="Show SIS imports run after this date and time"
-              datePlaceholder="Choose a date"
-              dateRenderLabel="Date"
-              timeRenderLabel="Time"
-              invalidDateTimeMessage="Invalid date/time"
-              prevMonthLabel="Previous month"
-              nextMonthLabel="Next month"
-              layout="columns"
-              value={after}
-              onChange={(value) => setAfter(value)}
-              inputRef={(el) => (afterRef.current = el)}
-              messages={sisError ? [{ type: "newError", text: sisError }] : []}
-            />
-          </Flex.Item>
-
-          <Flex.Item>
-            <Button color="primary" margin="0 0 0 small" onClick={handleFilter}>
-              Filter
+        {/* When results are showing, hide the selectors and show a Search Again button */}
+        {loading ? null : sisImports.length > 0 && !hideResults ? (
+          <View as="div" margin="small 0">
+            <Button color="primary" margin="0 0 0 small" onClick={handleSearchAgain}>
+              Search Again
             </Button>
-            <Button margin="0 0 0 small" onClick={handleClear}>
-              Clear
-            </Button>
-          </Flex.Item>
-        </Flex>
+          </View>
+        ) : (
+          <>
+            {/* Stack inputs vertically to avoid horizontal scrolling on small viewports */}
+            <View as="div" margin="small 0">
+              <DateTimeInput
+                renderLabel={<ScreenReaderContent>SIS imports after</ScreenReaderContent>}
+                label="After"
+                description="Show SIS imports run after this date and time"
+                datePlaceholder="Choose a date"
+                dateRenderLabel="Date"
+                timeRenderLabel="Time"
+                invalidDateTimeMessage="Invalid date/time"
+                prevMonthLabel="Previous month"
+                nextMonthLabel="Next month"
+                layout="columns"
+                value={after}
+                onChange={(value) => setAfter(value)}
+                inputRef={(el) => (afterRef.current = el)}
+                messages={sisError ? [{ type: "newError", text: sisError }] : []}
+              />
+            </View>
+
+            <View as="div" margin="small 0">
+              <DateTimeInput
+                renderLabel={<ScreenReaderContent>SIS imports before</ScreenReaderContent>}
+                label="Before"
+                description="Show SIS imports run before this date and time"
+                datePlaceholder="Choose a date"
+                dateRenderLabel="Date"
+                timeRenderLabel="Time"
+                invalidDateTimeMessage="Invalid date/time"
+                prevMonthLabel="Previous month"
+                nextMonthLabel="Next month"
+                layout="columns"
+                value={before}
+                onChange={(value) => setBefore(value)}
+                inputRef={(el) => (beforeRef.current = el)}
+                messages={sisError ? [{ type: "newError", text: sisError }] : []}
+              />
+            </View>
+
+            <View as="div" margin="small 0">
+              <Button color="primary" margin="0 0 0 small" onClick={handleFilter}>
+                Filter
+              </Button>
+              <Button margin="0 0 0 small" onClick={handleClear}>
+                Clear
+              </Button>
+            </View>
+          </>
+        )}
       </form>
 
       {/* Show loader, or results if available */}
       {loading ? (
         <Loading />
       ) : (
-        sisImport &&
-        !hideResults && (
+        sisImports.length > 0 && !hideResults && (
           <List>
-            <SisImportListItem key={sisImport.id} sisImport={sisImport} />
+            {sisImports.map((sisImport) => (
+              <SisImportListItem key={sisImport.id} sisImport={sisImport} />
+            ))}
           </List>
         )
       )}
