@@ -197,6 +197,22 @@ function App() {
                     />
                   </Tabs.Panel>
                 )}
+
+                                {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
+                  <Tabs.Panel
+                    id="sisImportDateFilter"
+                    renderTitle="Show SIS Import between dates & times"
+                    padding="large"
+                    isSelected={selectedIndex === 4}
+                  >
+                    <DateFilterPage
+                      token={token}
+                      server={proxyBaseUrl}
+                      accountId={accountId}
+                      handle40x={() => setNeedsToken(true)}
+                    />
+                  </Tabs.Panel>
+                )}
               </Tabs>
             </View>
           </LaunchOAuth>
