@@ -3,6 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { View } from "@instructure/ui-view";
 import { List } from "@instructure/ui-list";
 import { Heading } from "@instructure/ui-heading";
+import { Alert } from "@instructure/ui-alerts";
 import { DateTimeInput } from "@instructure/ui-date-time-input";
 import { ScreenReaderContent } from "@instructure/ui-a11y-content";
 import { IconXSolid } from "@instructure/ui-icons";
@@ -37,9 +38,11 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   const [prevPageUrl, setPrevPageUrl] = useState(null);
   // Error message to display (if any)
   const [sisError, setSisError] = useState(null);
-  // Date/time inputs for the filter range
-  const [before, setBefore] = useState("");
-  const [after, setAfter] = useState("");
+  // Date/time inputs for the filter range (track both iso and timestamps for robust comparisons)
+  const [beforeIso, setBeforeIso] = useState("");
+  const [afterIso, setAfterIso] = useState("");
+  const [beforeTs, setBeforeTs] = useState(null);
+  const [afterTs, setAfterTs] = useState(null);
   // Ref for focusing controls
   const beforeRef = useRef(null);
   const afterRef = useRef(null);
@@ -48,7 +51,20 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   // Whether the search is currently loading
   const [loading, setLoading] = useState(false);
   // Force remount of inputs when clearing to reset displayed values
-  const [inputResetKey, setInputResetKey] = useState(0);
+  const [afterResetKey, setAfterResetKey] = useState(0);
+  const [beforeResetKey, setBeforeResetKey] = useState(0);
+  const rangeErrorText = "Run before must be the same as or after Run after";
+  const invalidRange =
+    afterTs != null && beforeTs != null && Number(afterTs) > Number(beforeTs);
+
+  useEffect(() => {
+    if (invalidRange) {
+      setSisError(rangeErrorText);
+      setHideResults(true);
+    } else if (sisError === rangeErrorText) {
+      setSisError(null);
+    }
+  }, [invalidRange]);
 
   /**
    * Build the "error message" format for Instructure UI.
@@ -96,21 +112,26 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   // both values are provided; if one or both are blank we allow the filter to
   // proceed and simply omit that parameter from the query string.
   const isChronological = () => {
-    if (after && before) {
-      return new Date(after) <= new Date(before);
+    if (afterTs != null && beforeTs != null) {
+      return Number(afterTs) <= Number(beforeTs);
     }
     return true;
   };
 
-  const handleClear = () => {
-    setBefore("");
-    setAfter("");
-    setLoading(false);
-    setSisError(null);
-    setHideResults(true);
-    setSisImports([]);
-    setInputResetKey((k) => k + 1);
-    beforeRef.current?.focus();
+  // Global clear was removed per UX request; per-picker clears remain.
+
+  const clearAfter = () => {
+    setAfterIso("");
+    setAfterTs(null);
+    setAfterResetKey((k) => k + 1);
+    setTimeout(() => afterRef.current?.focus(), 0);
+  };
+
+  const clearBefore = () => {
+    setBeforeIso("");
+    setBeforeTs(null);
+    setBeforeResetKey((k) => k + 1);
+    setTimeout(() => beforeRef.current?.focus(), 0);
   };
 
   const handleSearchAgain = () => {
@@ -119,11 +140,14 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     setSisError(null);
     setSisImports([]);
     setCurrentPageUrl(undefined);
-    setBefore("");
-    setAfter("");
+  setBeforeIso("");
+  setAfterIso("");
+  setBeforeTs(null);
+  setAfterTs(null);
     setFiltersExpanded(false);
     setHideResults(true);
-    setInputResetKey((k) => k + 1);
+    setAfterResetKey((k) => k + 1);
+    setBeforeResetKey((k) => k + 1);
     beforeRef.current?.focus();
   };
 
@@ -133,7 +157,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     setSisError(null);
 
     if (!isChronological()) {
-      setSisError("Start time must be before end time");
+      setSisError(rangeErrorText);
       setHideResults(true);
       return;
     }
@@ -141,15 +165,17 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     setLoading(true);
     setHideResults(true);
 
-    // Build query parameters and only include created_since / created_until
+  // Build query parameters and only include created_since / created_before
     // when the corresponding input was filled. It's valid to include neither.
     const params = new URLSearchParams();
     params.set("per_page", "10");
-    if (after) {
-      params.set("created_since", new Date(after).toISOString());
+    if (afterIso || afterTs != null) {
+      const iso = afterIso || new Date(afterTs).toISOString();
+      params.set("created_since", iso);
     }
-    if (before) {
-      params.set("created_until", new Date(before).toISOString());
+    if (beforeIso || beforeTs != null) {
+      const iso = beforeIso || new Date(beforeTs).toISOString();
+      params.set("created_before", iso);
     }
 
     const url = `${server}/api/v1/accounts/${accountId}/sis_imports?${params.toString()}`;
@@ -162,12 +188,126 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
         Show SIS Imports
       </Heading>
 
-      {/* Show toggle group only when not loading and results are not visible */}
-      {!loading && (hideResults || sisImports.length === 0) && (
+      {sisError && (
+        <Alert variant="warning" margin="small 0">
+          {sisError}
+        </Alert>
+      )}
+
+      {/* Show toggle group only when not loading and before any search, or when results are intentionally hidden */}
+      {!loading && (!currentPageUrl || hideResults) && (
         <DateFilterPageToggleGroup
           expanded={filtersExpanded}
           setExpanded={setFiltersExpanded}
-        />
+        >
+          {/* Date pickers rendered inside the toggle group */}
+          <View as="div" margin="small 0">
+            <Flex direction="row" alignItems="end">
+              <Flex.Item shouldGrow shouldShrink>
+                <DateTimeInput
+                  key={`after-${afterResetKey}`}
+                  renderLabel={
+                    <ScreenReaderContent>
+                      SIS imports after
+                    </ScreenReaderContent>
+                  }
+                  label="After"
+                  description="Run after"
+                  datePlaceholder="Choose a date"
+                  dateRenderLabel="Date"
+                  timeRenderLabel="Time"
+                  invalidDateTimeMessage="Invalid date/time"
+                  prevMonthLabel="Previous month"
+                  nextMonthLabel="Next month"
+                  layout="columns"
+                  initialTimeForNewDate="00:00"
+                  onChange={(e, payload) => {
+                    // payload may be an object with { value, iso } on v10, or a string in older shapes
+                    const iso =
+                      typeof payload === "object" && payload
+                        ? payload.iso
+                        : undefined;
+                    const value =
+                      typeof payload === "object" && payload
+                        ? payload.value
+                        : payload;
+                    const ts = iso ? Date.parse(iso) : Date.parse(value || "");
+                    setAfterIso(iso || "");
+                    setAfterTs(Number.isNaN(ts) ? null : ts);
+                  }}
+                  inputRef={(el) => (afterRef.current = el)}
+                  messages={
+                    sisError ? [{ type: "newError", text: sisError }] : []
+                  }
+                />
+              </Flex.Item>
+              <Flex.Item margin="0 0 0 small">
+                <IconButton
+                  withBackground
+                  withBorder
+                  size="small"
+                  screenReaderLabel="Clear After"
+                  onClick={clearAfter}
+                >
+                  <IconXSolid />
+                </IconButton>
+              </Flex.Item>
+            </Flex>
+          </View>
+
+          <View as="div" margin="small 0">
+            <Flex direction="row" alignItems="end">
+              <Flex.Item shouldGrow shouldShrink>
+                <DateTimeInput
+                  key={`before-${beforeResetKey}`}
+                  renderLabel={
+                    <ScreenReaderContent>
+                      SIS imports before
+                    </ScreenReaderContent>
+                  }
+                  label="Before"
+                  description="Run before"
+                  datePlaceholder="Choose a date"
+                  dateRenderLabel="Date"
+                  timeRenderLabel="Time"
+                  invalidDateTimeMessage="Invalid date/time"
+                  prevMonthLabel="Previous month"
+                  nextMonthLabel="Next month"
+                  layout="columns"
+                  initialTimeForNewDate="23:59"
+                  onChange={(e, payload) => {
+                    const iso =
+                      typeof payload === "object" && payload
+                        ? payload.iso
+                        : undefined;
+                    const value =
+                      typeof payload === "object" && payload
+                        ? payload.value
+                        : payload;
+                    const ts = iso ? Date.parse(iso) : Date.parse(value || "");
+                    setBeforeIso(iso || "");
+                    setBeforeTs(Number.isNaN(ts) ? null : ts);
+                  }}
+                  inputRef={(el) => (beforeRef.current = el)}
+                  messages={
+                    sisError ? [{ type: "newError", text: sisError }] : []
+                  }
+                />
+              </Flex.Item>
+              <Flex.Item margin="0 0 0 small">
+                <IconButton
+                  withBackground
+                  withBorder
+                  size="small"
+                  screenReaderLabel="Clear Before"
+                  onClick={clearBefore}
+                >
+                  <IconXSolid />
+                </IconButton>
+              </Flex.Item>
+            </Flex>
+          </View>
+        </DateFilterPageToggleGroup>
       )}
 
       <form name="dateFilter" onSubmit={handleFilter} autoComplete="off">
@@ -184,76 +324,32 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
           </View>
         ) : (
           <>
-            {/* Search button outside of the toggle group so it's available even when filters are collapsed */}
-            <View as="div" margin="small 0">
-              <Button
-                color="primary"
-                margin="0 0 0 small"
-                onClick={handleFilter}
-              >
-                Search
-              </Button>
-            </View>
-
-            {filtersExpanded && (
+            {currentPageUrl && !hideResults && sisImports.length === 0 ? (
               <>
                 <View as="div" margin="small 0">
-                  <DateTimeInput
-                    key={`after-${inputResetKey}`}
-                    renderLabel={
-                      <ScreenReaderContent>
-                        SIS imports after
-                      </ScreenReaderContent>
-                    }
-                    label="After"
-                    description="Run after"
-                    datePlaceholder="Choose a date"
-                    dateRenderLabel="Date"
-                    timeRenderLabel="Time"
-                    invalidDateTimeMessage="Invalid date/time"
-                    prevMonthLabel="Previous month"
-                    nextMonthLabel="Next month"
-                    layout="columns"
-                    onChange={(e, { value, iso }) =>
-                      setAfter(iso || value || "")
-                    }
-                    inputRef={(el) => (afterRef.current = el)}
-                    messages={
-                      sisError ? [{ type: "newError", text: sisError }] : []
-                    }
-                  />
+                  No matching SIS Imports
                 </View>
-
                 <View as="div" margin="small 0">
-                  <DateTimeInput
-                    key={`before-${inputResetKey}`}
-                    renderLabel={
-                      <ScreenReaderContent>
-                        SIS imports before
-                      </ScreenReaderContent>
-                    }
-                    label="Before"
-                    description="Run before"
-                    datePlaceholder="Choose a date"
-                    dateRenderLabel="Date"
-                    timeRenderLabel="Time"
-                    invalidDateTimeMessage="Invalid date/time"
-                    prevMonthLabel="Previous month"
-                    nextMonthLabel="Next month"
-                    layout="columns"
-                    onChange={(e, { value, iso }) =>
-                      setBefore(iso || value || "")
-                    }
-                    inputRef={(el) => (beforeRef.current = el)}
-                    messages={
-                      sisError ? [{ type: "newError", text: sisError }] : []
-                    }
-                  />
+                  <Button
+                    color="primary"
+                    margin="0 0 0 small"
+                    onClick={handleSearchAgain}
+                  >
+                    Search Again
+                  </Button>
                 </View>
-
+              </>
+            ) : (
+              <>
+                {/* Search button outside of the toggle group (appears below it in layout) */}
                 <View as="div" margin="small 0">
-                  <Button margin="0 0 0 small" onClick={handleClear}>
-                    Clear
+                  <Button
+                    color="primary"
+                    margin="0 0 0 small"
+                    disabled={invalidRange}
+                    onClick={handleFilter}
+                  >
+                    Search
                   </Button>
                 </View>
               </>
