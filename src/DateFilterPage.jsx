@@ -126,7 +126,10 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
             window.scrollTo({ top: 0, behavior: "auto" });
           }
           // Focus an inert top anchor to prevent focus restoration
-          if (topAnchorRef.current && typeof topAnchorRef.current.focus === "function") {
+          if (
+            topAnchorRef.current &&
+            typeof topAnchorRef.current.focus === "function"
+          ) {
             topAnchorRef.current.focus({ preventScroll: true });
           }
         } catch (_) {
