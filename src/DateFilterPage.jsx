@@ -140,10 +140,10 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     setSisError(null);
     setSisImports([]);
     setCurrentPageUrl(undefined);
-  setBeforeIso("");
-  setAfterIso("");
-  setBeforeTs(null);
-  setAfterTs(null);
+    setBeforeIso("");
+    setAfterIso("");
+    setBeforeTs(null);
+    setAfterTs(null);
     setFiltersExpanded(false);
     setHideResults(true);
     setAfterResetKey((k) => k + 1);
@@ -165,7 +165,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     setLoading(true);
     setHideResults(true);
 
-  // Build query parameters and only include created_since / created_before
+    // Build query parameters and only include created_since / created_before
     // when the corresponding input was filled. It's valid to include neither.
     const params = new URLSearchParams();
     params.set("per_page", "10");
@@ -207,9 +207,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
                 <DateTimeInput
                   key={`after-${afterResetKey}`}
                   renderLabel={
-                    <ScreenReaderContent>
-                      SIS imports after
-                    </ScreenReaderContent>
+                    <ScreenReaderContent>SIS imports after</ScreenReaderContent>
                   }
                   label="After"
                   description="Run after"
