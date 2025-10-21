@@ -197,7 +197,6 @@ function App() {
                     />
                   </Tabs.Panel>
                 )}
-
               </Tabs>
             </View>
           </LaunchOAuth>
