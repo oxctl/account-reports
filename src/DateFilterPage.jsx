@@ -18,14 +18,14 @@ import { Loading } from "./Loading";
 import { handleResponseFailure } from "./utils/handleResponseFailure";
 
 /**
- * Renders the Provisioning Reports page for a Canvas account.
+ * Renders the SIS Imports date-filter page for a Canvas account.
  *
- * @function ProvisioningReportsPage
+ * @function DateFilterPage
  * @param {string} token - API token used for authenticating requests.
  * @param {string} server - Base server URL for the Canvas instance.
  * @param {string|number} accountId - The Canvas account ID to run the reports against.
  * @param {Function} handle40x - Callback to handle 40x (Forbidden) errors from the API - gets user to authenticate.
- * @returns {JSX.Element} The rendered Provisioning Reports page.
+ * @returns {JSX.Element} The rendered page.
  */
 function DateFilterPage({ token, server, accountId, handle40x }) {
   // Toggle for showing/hiding date pickers
@@ -66,13 +66,12 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     }
   }, [invalidRange]);
 
-  /**
-   * Build the "error message" format for Instructure UI.
-   */
-  const missingImportMessage = () => {
-    if (sisError) {
-      return [{ type: "newError", text: sisError }];
-    }
+  // Helper to normalize DateTimeInput payloads to { iso, ts }
+  const parsePayloadToIsoTs = (payload) => {
+    const iso = typeof payload === "object" && payload ? payload.iso : undefined;
+    const value = typeof payload === "object" && payload ? payload.value : payload;
+    const ts = iso ? Date.parse(iso) : Date.parse(value || "");
+    return { iso: iso || "", ts: Number.isNaN(ts) ? null : ts };
   };
 
   /**
@@ -118,7 +117,6 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     return true;
   };
 
-  // Global clear was removed per UX request; per-picker clears remain.
 
   const clearAfter = () => {
     setAfterIso("");
@@ -220,18 +218,9 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
                   layout="columns"
                   initialTimeForNewDate="00:00"
                   onChange={(e, payload) => {
-                    // payload may be an object with { value, iso } on v10, or a string in older shapes
-                    const iso =
-                      typeof payload === "object" && payload
-                        ? payload.iso
-                        : undefined;
-                    const value =
-                      typeof payload === "object" && payload
-                        ? payload.value
-                        : payload;
-                    const ts = iso ? Date.parse(iso) : Date.parse(value || "");
-                    setAfterIso(iso || "");
-                    setAfterTs(Number.isNaN(ts) ? null : ts);
+                    const { iso, ts } = parsePayloadToIsoTs(payload);
+                    setAfterIso(iso);
+                    setAfterTs(ts);
                   }}
                   inputRef={(el) => (afterRef.current = el)}
                   messages={
@@ -274,17 +263,9 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
                   layout="columns"
                   initialTimeForNewDate="23:59"
                   onChange={(e, payload) => {
-                    const iso =
-                      typeof payload === "object" && payload
-                        ? payload.iso
-                        : undefined;
-                    const value =
-                      typeof payload === "object" && payload
-                        ? payload.value
-                        : payload;
-                    const ts = iso ? Date.parse(iso) : Date.parse(value || "");
-                    setBeforeIso(iso || "");
-                    setBeforeTs(Number.isNaN(ts) ? null : ts);
+                    const { iso, ts } = parsePayloadToIsoTs(payload);
+                    setBeforeIso(iso);
+                    setBeforeTs(ts);
                   }}
                   inputRef={(el) => (beforeRef.current = el)}
                   messages={

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# prepare-commit-msg hook to prefix commit messages with branch name when it starts with AB#
+# Usage: prepare-commit-msg <commit-msg-file> <commit-source> <sha1>
+set -euo pipefail
+
+MSG_FILE="$1"
+SOURCE="${2-}"
+
+# Skip merge commits to avoid mangling auto-generated messages
+if [[ "$SOURCE" == "merge" ]]; then
+  exit 0
+fi
+
+# Get current branch name
+branch_name="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
+
+# Only act if on a branch and it starts with AB#
+if [[ -z "$branch_name" || "$branch_name" != AB#* ]]; then
+  exit 0
+fi
+
+# Read first non-empty line of the commit message
+first_line="$(grep -m1 -E '.*' "$MSG_FILE" | sed -e 's/^\s\+//' || true)"
+
+# If it already starts with the branch name, do nothing
+if [[ "$first_line" == "$branch_name"* ]]; then
+  exit 0
+fi
+
+# Prepend the branch name to the message
+# Preserve the original message exactly after the prefix
+{
+  printf '%s ' "$branch_name"
+  cat "$MSG_FILE"
+} >"$MSG_FILE.tmp"
+
+mv "$MSG_FILE.tmp" "$MSG_FILE"
