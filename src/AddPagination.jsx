@@ -31,9 +31,7 @@ export function AddPagination({ prevUrl, currUrl, nextUrl, setCurrUrl }) {
       )}
       <Pagination.Page>{pageNumber}</Pagination.Page>
       {nextUrl && (
-        <Pagination.Page onClick={() => onClick(nextUrl)}>
-          &gt;
-        </Pagination.Page>
+        <Pagination.Page onClick={() => onClick(nextUrl)}>&gt;</Pagination.Page>
       )}
     </Pagination>
   );
