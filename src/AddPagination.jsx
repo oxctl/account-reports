@@ -5,8 +5,18 @@ export function AddPagination({ prevUrl, currUrl, nextUrl, setCurrUrl }) {
     setCurrUrl(url);
   };
 
-  // extract the current page number from the current URL
-  const pageNumber = currUrl.replace(/^ht.*?page=/, "").replace(/&.*$/, "");
+  // Extract the current page number from the current URL (not per_page)
+  const pageNumber = (() => {
+    try {
+      const url = new URL(currUrl);
+      const page = url.searchParams.get("page");
+      return page || "1";
+    } catch (e) {
+      // Fallback parsing if URL constructor fails
+      const match = (currUrl || "").match(/[?&]page=(\d+)/);
+      return match ? match[1] : "1";
+    }
+  })();
 
   return (
     <Pagination

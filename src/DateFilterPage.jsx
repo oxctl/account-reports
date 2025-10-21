@@ -8,6 +8,9 @@ import { ScreenReaderContent } from "@instructure/ui-a11y-content";
 import { IconXSolid } from "@instructure/ui-icons";
 import { Flex } from "@instructure/ui-flex";
 import { IconButton, Button } from "@instructure/ui-buttons";
+import { parseLinkHeader } from "@web3-storage/parse-link-header";
+import { AddPagination } from "./AddPagination";
+import DateFilterPageToggleGroup from "./DateFilterPageToggleGroup";
 
 import { SisImportListItem } from "./SisImportListItem";
 import { Loading } from "./Loading";
@@ -24,10 +27,14 @@ import { handleResponseFailure } from "./utils/handleResponseFailure";
  * @returns {JSX.Element} The rendered Provisioning Reports page.
  */
 function DateFilterPage({ token, server, accountId, handle40x }) {
+  // Toggle for showing/hiding date pickers
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
   // The SIS import results (array)
   const [sisImports, setSisImports] = useState([]);
-  // The API URL for the current search
-  const [sisImportUrl, setSisImportUrl] = useState();
+  // Pagination state
+  const [currentPageUrl, setCurrentPageUrl] = useState();
+  const [nextPageUrl, setNextPageUrl] = useState(null);
+  const [prevPageUrl, setPrevPageUrl] = useState(null);
   // Error message to display (if any)
   const [sisError, setSisError] = useState(null);
   // Date/time inputs for the filter range
@@ -40,6 +47,8 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   const [hideResults, setHideResults] = useState(false);
   // Whether the search is currently loading
   const [loading, setLoading] = useState(false);
+  // Force remount of inputs when clearing to reset displayed values
+  const [inputResetKey, setInputResetKey] = useState(0);
 
   /**
    * Build the "error message" format for Instructure UI.
@@ -51,12 +60,13 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   };
 
   /**
-   * When `sisImportUrl` changes, fetch the data.
+   * When `currentPageUrl` changes, fetch the data and update pagination links.
    */
   useEffect(() => {
-    if (!token || !sisImportUrl) return;
+    if (!token || !currentPageUrl) return;
 
-    fetch(sisImportUrl, {
+    setLoading(true);
+    fetch(currentPageUrl, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((response) => {
@@ -68,6 +78,9 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
         } else {
           setHideResults(false);
         }
+        const links = parseLinkHeader(response.headers.get("Link"));
+        setNextPageUrl(links?.next?.url || null);
+        setPrevPageUrl(links?.prev?.url || null);
         return response.json();
       })
       .then((data) => setSisImports(data.sis_imports || []))
@@ -77,7 +90,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
         setSisImports([]);
         setHideResults(true);
       });
-  }, [token, sisImportUrl]);
+  }, [token, currentPageUrl]);
 
   // Validate that the before/after pair is chronological. Only validate when
   // both values are provided; if one or both are blank we allow the filter to
@@ -96,13 +109,21 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     setSisError(null);
     setHideResults(true);
     setSisImports([]);
+    setInputResetKey((k) => k + 1);
     beforeRef.current?.focus();
   };
 
   const handleSearchAgain = () => {
-    // Show the selectors again so the user can run a new search
-    setHideResults(true);
+    // Reset to initial state to effectively reload the tab
+    setLoading(false);
     setSisError(null);
+    setSisImports([]);
+    setCurrentPageUrl(undefined);
+    setBefore("");
+    setAfter("");
+    setFiltersExpanded(false);
+    setHideResults(true);
+    setInputResetKey((k) => k + 1);
     beforeRef.current?.focus();
   };
 
@@ -123,7 +144,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     // Build query parameters and only include created_since / created_until
     // when the corresponding input was filled. It's valid to include neither.
     const params = new URLSearchParams();
-    params.set("per_page", "100");
+    params.set("per_page", "10");
     if (after) {
       params.set("created_since", new Date(after).toISOString());
     }
@@ -132,7 +153,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     }
 
     const url = `${server}/api/v1/accounts/${accountId}/sis_imports?${params.toString()}`;
-    setSisImportUrl(url);
+    setCurrentPageUrl(url);
   };
 
   return (
@@ -140,6 +161,14 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
       <Heading variant="titleSection" level="h2">
         Show SIS Imports
       </Heading>
+
+      {/* Show toggle group only when not loading and results are not visible */}
+      {!loading && (hideResults || sisImports.length === 0) && (
+        <DateFilterPageToggleGroup
+          expanded={filtersExpanded}
+          setExpanded={setFiltersExpanded}
+        />
+      )}
 
       <form name="dateFilter" onSubmit={handleFilter} autoComplete="off">
         {/* When results are showing, hide the selectors and show a Search Again button */}
@@ -151,53 +180,60 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
           </View>
         ) : (
           <>
-            {/* Stack inputs vertically to avoid horizontal scrolling on small viewports */}
-            <View as="div" margin="small 0">
-              <DateTimeInput
-                renderLabel={<ScreenReaderContent>SIS imports after</ScreenReaderContent>}
-                label="After"
-                description="Show SIS imports run after this date and time"
-                datePlaceholder="Choose a date"
-                dateRenderLabel="Date"
-                timeRenderLabel="Time"
-                invalidDateTimeMessage="Invalid date/time"
-                prevMonthLabel="Previous month"
-                nextMonthLabel="Next month"
-                layout="columns"
-                value={after}
-                onChange={(value) => setAfter(value)}
-                inputRef={(el) => (afterRef.current = el)}
-                messages={sisError ? [{ type: "newError", text: sisError }] : []}
-              />
-            </View>
-
-            <View as="div" margin="small 0">
-              <DateTimeInput
-                renderLabel={<ScreenReaderContent>SIS imports before</ScreenReaderContent>}
-                label="Before"
-                description="Show SIS imports run before this date and time"
-                datePlaceholder="Choose a date"
-                dateRenderLabel="Date"
-                timeRenderLabel="Time"
-                invalidDateTimeMessage="Invalid date/time"
-                prevMonthLabel="Previous month"
-                nextMonthLabel="Next month"
-                layout="columns"
-                value={before}
-                onChange={(value) => setBefore(value)}
-                inputRef={(el) => (beforeRef.current = el)}
-                messages={sisError ? [{ type: "newError", text: sisError }] : []}
-              />
-            </View>
-
+            {/* Search button outside of the toggle group so it's available even when filters are collapsed */}
             <View as="div" margin="small 0">
               <Button color="primary" margin="0 0 0 small" onClick={handleFilter}>
-                Filter
-              </Button>
-              <Button margin="0 0 0 small" onClick={handleClear}>
-                Clear
+                Search
               </Button>
             </View>
+
+            {filtersExpanded && (
+              <>
+                <View as="div" margin="small 0">
+                  <DateTimeInput
+                    key={`after-${inputResetKey}`}
+                    renderLabel={<ScreenReaderContent>SIS imports after</ScreenReaderContent>}
+                    label="After"
+                    description="Run after"
+                    datePlaceholder="Choose a date"
+                    dateRenderLabel="Date"
+                    timeRenderLabel="Time"
+                    invalidDateTimeMessage="Invalid date/time"
+                    prevMonthLabel="Previous month"
+                    nextMonthLabel="Next month"
+                    layout="columns"
+                    onChange={(e, { value, iso }) => setAfter(iso || value || "")}
+                    inputRef={(el) => (afterRef.current = el)}
+                    messages={sisError ? [{ type: "newError", text: sisError }] : []}
+                  />
+                </View>
+
+                <View as="div" margin="small 0">
+                  <DateTimeInput
+                    key={`before-${inputResetKey}`}
+                    renderLabel={<ScreenReaderContent>SIS imports before</ScreenReaderContent>}
+                    label="Before"
+                    description="Run before"
+                    datePlaceholder="Choose a date"
+                    dateRenderLabel="Date"
+                    timeRenderLabel="Time"
+                    invalidDateTimeMessage="Invalid date/time"
+                    prevMonthLabel="Previous month"
+                    nextMonthLabel="Next month"
+                    layout="columns"
+                    onChange={(e, { value, iso }) => setBefore(iso || value || "")}
+                    inputRef={(el) => (beforeRef.current = el)}
+                    messages={sisError ? [{ type: "newError", text: sisError }] : []}
+                  />
+                </View>
+
+                <View as="div" margin="small 0">
+                  <Button margin="0 0 0 small" onClick={handleClear}>
+                    Clear
+                  </Button>
+                </View>
+              </>
+            )}
           </>
         )}
       </form>
@@ -213,6 +249,16 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
             ))}
           </List>
         )
+      )}
+
+      {/* Pagination controls (only show when we have results) */}
+      {!loading && sisImports.length > 0 && !hideResults && (
+        <AddPagination
+          prevUrl={prevPageUrl}
+          currUrl={currentPageUrl}
+          nextUrl={nextPageUrl}
+          setCurrUrl={setCurrentPageUrl}
+        />
       )}
     </View>
   );
