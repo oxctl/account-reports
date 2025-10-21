@@ -174,7 +174,11 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
         {/* When results are showing, hide the selectors and show a Search Again button */}
         {loading ? null : sisImports.length > 0 && !hideResults ? (
           <View as="div" margin="small 0">
-            <Button color="primary" margin="0 0 0 small" onClick={handleSearchAgain}>
+            <Button
+              color="primary"
+              margin="0 0 0 small"
+              onClick={handleSearchAgain}
+            >
               Search Again
             </Button>
           </View>
@@ -182,7 +186,11 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
           <>
             {/* Search button outside of the toggle group so it's available even when filters are collapsed */}
             <View as="div" margin="small 0">
-              <Button color="primary" margin="0 0 0 small" onClick={handleFilter}>
+              <Button
+                color="primary"
+                margin="0 0 0 small"
+                onClick={handleFilter}
+              >
                 Search
               </Button>
             </View>
@@ -192,7 +200,11 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
                 <View as="div" margin="small 0">
                   <DateTimeInput
                     key={`after-${inputResetKey}`}
-                    renderLabel={<ScreenReaderContent>SIS imports after</ScreenReaderContent>}
+                    renderLabel={
+                      <ScreenReaderContent>
+                        SIS imports after
+                      </ScreenReaderContent>
+                    }
                     label="After"
                     description="Run after"
                     datePlaceholder="Choose a date"
@@ -202,16 +214,24 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
                     prevMonthLabel="Previous month"
                     nextMonthLabel="Next month"
                     layout="columns"
-                    onChange={(e, { value, iso }) => setAfter(iso || value || "")}
+                    onChange={(e, { value, iso }) =>
+                      setAfter(iso || value || "")
+                    }
                     inputRef={(el) => (afterRef.current = el)}
-                    messages={sisError ? [{ type: "newError", text: sisError }] : []}
+                    messages={
+                      sisError ? [{ type: "newError", text: sisError }] : []
+                    }
                   />
                 </View>
 
                 <View as="div" margin="small 0">
                   <DateTimeInput
                     key={`before-${inputResetKey}`}
-                    renderLabel={<ScreenReaderContent>SIS imports before</ScreenReaderContent>}
+                    renderLabel={
+                      <ScreenReaderContent>
+                        SIS imports before
+                      </ScreenReaderContent>
+                    }
                     label="Before"
                     description="Run before"
                     datePlaceholder="Choose a date"
@@ -221,9 +241,13 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
                     prevMonthLabel="Previous month"
                     nextMonthLabel="Next month"
                     layout="columns"
-                    onChange={(e, { value, iso }) => setBefore(iso || value || "")}
+                    onChange={(e, { value, iso }) =>
+                      setBefore(iso || value || "")
+                    }
                     inputRef={(el) => (beforeRef.current = el)}
-                    messages={sisError ? [{ type: "newError", text: sisError }] : []}
+                    messages={
+                      sisError ? [{ type: "newError", text: sisError }] : []
+                    }
                   />
                 </View>
 
@@ -242,7 +266,8 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
       {loading ? (
         <Loading />
       ) : (
-        sisImports.length > 0 && !hideResults && (
+        sisImports.length > 0 &&
+        !hideResults && (
           <List>
             {sisImports.map((sisImport) => (
               <SisImportListItem key={sisImport.id} sisImport={sisImport} />
