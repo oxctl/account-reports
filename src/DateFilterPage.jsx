@@ -46,8 +46,6 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   // Ref for focusing controls
   const beforeRef = useRef(null);
   const afterRef = useRef(null);
-  const topRef = useRef(null);
-  const topAnchorRef = useRef(null);
   // Hide results when errors occur or when inputs are cleared
   const [hideResults, setHideResults] = useState(false);
   // Whether the search is currently loading
@@ -111,38 +109,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
       });
   }, [token, currentPageUrl]);
 
-  // After loading completes for a given page/search, scroll to the top to keep context consistent
-  useEffect(() => {
-    if (!loading && currentPageUrl) {
-      // Run after layout settles to avoid jump-back
-      const doScroll = () => {
-        try {
-          // Blur any focused control (e.g., pagination button)
-          if (typeof document !== "undefined" && document.activeElement) {
-            document.activeElement.blur();
-          }
-          // Hard scroll to top to override browser focus keep-alive
-          if (typeof window !== "undefined" && window.scrollTo) {
-            window.scrollTo({ top: 0, behavior: "auto" });
-          }
-          // Focus an inert top anchor to prevent focus restoration
-          if (
-            topAnchorRef.current &&
-            typeof topAnchorRef.current.focus === "function"
-          ) {
-            topAnchorRef.current.focus({ preventScroll: true });
-          }
-        } catch (_) {
-          // no-op
-        }
-      };
-      if (typeof requestAnimationFrame === "function") {
-        requestAnimationFrame(() => requestAnimationFrame(doScroll));
-      } else {
-        setTimeout(doScroll, 0);
-      }
-    }
-  }, [loading, currentPageUrl, sisImports.length]);
+  // Scroll-to-top behavior removed (not reliable across environments)
 
   // Validate that the before/after pair is chronological. Only validate when
   // both values are provided; if one or both are blank we allow the filter to
@@ -217,9 +184,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   };
 
   return (
-    <View as="div" padding="large" elementRef={(el) => (topRef.current = el)}>
-      {/* Programmatic focus anchor to stabilize scroll position after pagination */}
-      <div ref={topAnchorRef} tabIndex="-1" aria-hidden="true" />
+    <View as="div" padding="large">
       <Heading variant="titleSection" level="h2">
         Show SIS Imports
       </Heading>
