@@ -109,7 +109,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
       });
   }, [token, currentPageUrl]);
 
-  // Scroll-to-top behavior removed (not reliable across environments)
+  // Scroll-to-top behavior removed
 
   // Validate that the before/after pair is chronological. Only validate when
   // both values are provided; if one or both are blank we allow the filter to
