@@ -46,6 +46,8 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   // Ref for focusing controls
   const beforeRef = useRef(null);
   const afterRef = useRef(null);
+  const topRef = useRef(null);
+  const headingRef = useRef(null);
   // Hide results when errors occur or when inputs are cleared
   const [hideResults, setHideResults] = useState(false);
   // Whether the search is currently loading
@@ -108,6 +110,22 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
         setHideResults(true);
       });
   }, [token, currentPageUrl]);
+
+  // After loading completes for a given page/search, scroll to the top to keep context consistent
+  useEffect(() => {
+    if (!loading && currentPageUrl) {
+      try {
+        if (typeof document !== "undefined" && document.activeElement) {
+          document.activeElement.blur();
+        }
+        if (topRef.current && topRef.current.scrollIntoView) {
+          topRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      } catch (e) {
+        // no-op
+      }
+    }
+  }, [loading, currentPageUrl]);
 
   // Validate that the before/after pair is chronological. Only validate when
   // both values are provided; if one or both are blank we allow the filter to
@@ -182,8 +200,12 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
   };
 
   return (
-    <View as="div" padding="large">
-      <Heading variant="titleSection" level="h2">
+    <View as="div" padding="large" elementRef={(el) => (topRef.current = el)}>
+      <Heading
+        variant="titleSection"
+        level="h2"
+        elementRef={(el) => (headingRef.current = el)}
+      >
         Show SIS Imports
       </Heading>
 
