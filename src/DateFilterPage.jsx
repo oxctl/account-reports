@@ -150,7 +150,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     beforeRef.current?.focus();
   };
 
-  // Build the query and fetch results (first 100) when user submits
+  // Build the query and fetch the first page of results (per_page=10) when the user submits
   const handleFilter = (e) => {
     e?.preventDefault();
     setSisError(null);
