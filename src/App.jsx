@@ -14,7 +14,6 @@ import { View } from "@instructure/ui-view";
 import { Heading } from "@instructure/ui-heading";
 import { Alert } from "@instructure/ui-alerts";
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
-import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
 import DateFilterPage from "./DateFilterPage";
 import AccountReportsPage from "./AccountReportsPage";
@@ -169,12 +168,12 @@ function App() {
 
                 {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
                   <Tabs.Panel
-                    id="sisImports"
+                    id="sisImportDateFilter"
                     renderTitle="SIS Imports"
                     padding="large"
                     isSelected={selectedIndex === 2}
                   >
-                    <SisImportsPage
+                    <DateFilterPage
                       token={token}
                       server={proxyBaseUrl}
                       accountId={accountId}
@@ -199,21 +198,6 @@ function App() {
                   </Tabs.Panel>
                 )}
 
-                {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
-                  <Tabs.Panel
-                    id="sisImportDateFilter"
-                    renderTitle="Show SIS Imports"
-                    padding="large"
-                    isSelected={selectedIndex === 4}
-                  >
-                    <DateFilterPage
-                      token={token}
-                      server={proxyBaseUrl}
-                      accountId={accountId}
-                      handle40x={() => setNeedsToken(true)}
-                    />
-                  </Tabs.Panel>
-                )}
               </Tabs>
             </View>
           </LaunchOAuth>
