@@ -1,7 +1,12 @@
 #!/usr/bin/env bash
-# prepare-commit-msg hook to prefix commit messages with branch name when it starts with AB#
+# prepare-commit-msg hook to prefix commit messages with branch name when it starts with AB# (case-insensitive)
 # Usage: prepare-commit-msg <commit-msg-file> <commit-source> <sha1>
 set -euo pipefail
+
+# Portable uppercase helper (avoid bash 4+ ^^ expansion for macOS bash 3.x compatibility)
+to_upper() {
+  LC_ALL=C tr '[:lower:]' '[:upper:]' <<<"$1"
+}
 
 MSG_FILE="$1"
 SOURCE="${2-}"
@@ -14,21 +19,28 @@ fi
 # Get current branch name
 branch_name="$(git symbolic-ref --quiet --short HEAD 2>/dev/null || true)"
 
-# Only act if on a branch and it starts with AB#
-if [[ -z "$branch_name" || "$branch_name" != AB#* ]]; then
+# Only act if on a branch and it starts with AB# (case-insensitive)
+if [[ -z "$branch_name" ]]; then
   exit 0
 fi
+
+branch_upper="$(to_upper "$branch_name")"
+case "$branch_upper" in
+  AB#*) ;;
+  *) exit 0 ;;
+esac
 
 # Read first non-empty line of the commit message
-first_line="$(grep -m1 -E '.*' "$MSG_FILE" | sed -e 's/^\s\+//' || true)"
+# Use a more robust way to get the first non-empty line
+first_line="$(awk 'NF {print; exit}' "$MSG_FILE" | sed -e 's/^[[:space:]]\+//')"
 
-# If it already starts with the branch name, do nothing
-if [[ "$first_line" == "$branch_name"* ]]; then
+# Case-insensitive check whether the commit message already starts with the branch prefix
+first_line_upper="$(to_upper "$first_line")"
+if [[ "$first_line_upper" == "$branch_upper"* ]]; then
   exit 0
 fi
 
-# Prepend the branch name to the message
-# Preserve the original message exactly after the prefix
+# Prepend the branch name to the message (preserve original branch casing)
 {
   printf '%s ' "$branch_name"
   cat "$MSG_FILE"
