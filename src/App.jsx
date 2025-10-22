@@ -14,8 +14,8 @@ import { View } from "@instructure/ui-view";
 import { Heading } from "@instructure/ui-heading";
 import { Alert } from "@instructure/ui-alerts";
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
-import SisImportsPage from "./SisImportsPage";
 import SearchPage from "./SearchPage";
+import DateFilterPage from "./DateFilterPage";
 import AccountReportsPage from "./AccountReportsPage";
 
 import { ROOT_ACCOUNT_ID } from "./utils/constants";
@@ -168,12 +168,12 @@ function App() {
 
                 {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
                   <Tabs.Panel
-                    id="sisImports"
+                    id="sisImportDateFilter"
                     renderTitle="SIS Imports"
                     padding="large"
                     isSelected={selectedIndex === 2}
                   >
-                    <SisImportsPage
+                    <DateFilterPage
                       token={token}
                       server={proxyBaseUrl}
                       accountId={accountId}
