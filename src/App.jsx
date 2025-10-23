@@ -43,7 +43,8 @@ function App() {
     setProxyBaseUrl(receivedProxyBaseUrl);
 
     const decodedJwt = jwtDecode(receivedToken);
-    const jwtClaim = decodedJwt["https://purl.imsglobal.org/spec/lti/claim/custom"];
+    const jwtClaim =
+      decodedJwt["https://purl.imsglobal.org/spec/lti/claim/custom"];
 
     // which subaccount are we in?
     setAccountId(jwtClaim.canvas_account_id);
