@@ -24,6 +24,7 @@
   "dependencies": {
     "@instructure/ui-a11y-content": "^10.20.1",
     "@instructure/ui-tabs": "^10.20.1",
+    "@instructure/ui-list": "^10.20.1",
     "@instructure/ui-buttons": "^10.20.1",
     "@instructure/ui-drilldown": "^10.20.1",
     "@instructure/ui-flex": "^10.20.1",
@@ -46,6 +47,8 @@
     "@instructure/ui-view": "^10.20.1",
     "@instructure/ui-toggle-details": "^10.20.1",
     "@instructure/ui-date-time-input": "^10.20.1",
+    "@instructure/ui-text-input": "^10.20.1",
+    "@instructure/ui-pagination": "^10.20.1",
     "@oxctl/ui-lti": "^10.3.0",
     "@sentry/react": "^8.37.1",
     "@web3-storage/parse-link-header": "^3.1.0",
