@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 
 import { Tabs } from "@instructure/ui-tabs";
 import { Text } from "@instructure/ui-text";
@@ -39,33 +39,8 @@ function App() {
 
   const [proxyBaseUrl, setProxyBaseUrl] = useState(null);
 
-  const updateToken = (receivedToken, receivedProxyBaseUrl) => {
-    setToken(receivedToken);
-    setProxyBaseUrl(receivedProxyBaseUrl);
-
-    const decodedJwt = jwtDecode(receivedToken);
-    const jwtClaim =
-      decodedJwt["https://purl.imsglobal.org/spec/lti/claim/custom"];
-
-    // which subaccount are we in?
-    setAccountId(jwtClaim.canvas_account_id);
-
-    // Which Canvas are we in?
-    setCanvasBaseUrl(jwtClaim.canvas_api_base_url);
-
-    // check the user has sis_manage permission
-    setHasSisPermish(jwtClaim.canvas_membership_permissions == "manage_sis");
-
-    checkAccess(receivedProxyBaseUrl, receivedToken);
-  };
-
-  const handleTabChange = (event, { index }) => {
-    setSelectedIndex(index);
-  };
-
-  // Check token exists by call a tool suport endpoint => get 401 if user hasnt granted access then ask for it
-  function checkAccess(proxyBaseUrl, jwt) {
-    // check whether user has a Canvas Access Token ()dont rollow redirects)
+  // Stable callback: check whether user has a Canvas Access Token (don't follow redirects)
+  const checkAccess = useCallback((proxyBaseUrl, jwt) => {
     fetch(proxyBaseUrl + "/tokens/refresh", {
       headers: {
         Authorization: `Bearer ${jwt}`,
@@ -88,7 +63,39 @@ function App() {
             err.message,
         });
       });
-  }
+  }, []);
+
+  // Stable callback: avoid recreating handleJwt on every render
+  const updateToken = useCallback(
+    (receivedToken, receivedProxyBaseUrl) => {
+      setToken(receivedToken);
+      setProxyBaseUrl(receivedProxyBaseUrl);
+
+      const decodedJwt = jwtDecode(receivedToken);
+      const jwtClaim =
+        decodedJwt["https://purl.imsglobal.org/spec/lti/claim/custom"];
+
+      // which subaccount are we in?
+      setAccountId(jwtClaim.canvas_account_id);
+
+      // Which Canvas are we in?
+      setCanvasBaseUrl(jwtClaim.canvas_api_base_url);
+
+      // check the user has sis_manage permission
+      setHasSisPermish(
+        jwtClaim.canvas_membership_permissions == "manage_sis"
+      );
+
+      checkAccess(receivedProxyBaseUrl, receivedToken);
+    },
+    [checkAccess]
+  );
+
+  const handleTabChange = (event, { index }) => {
+    setSelectedIndex(index);
+  };
+
+  // Check token exists by call a tool support endpoint => get 401 if user hasn't granted access then ask for it
 
   /*
    * We assume the user is authenticated and then handle the exception
