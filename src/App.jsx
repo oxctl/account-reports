@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Tabs } from "@instructure/ui-tabs";
 import { Text } from "@instructure/ui-text";
 import {
-  LtiApplyTheme,
+  LtiPageSettings,
   LtiTokenRetriever,
   LaunchOAuth,
   LtiHeightLimit,
@@ -34,31 +34,16 @@ function App() {
   const [needsToken, setNeedsToken] = useState(false);
   const [hasSisPermish, setHasSisPermish] = useState(false);
 
-  const [
-    comInstructureBrandConfigJsonUrl,
-    setComInstructureBrandConfigJsonUrl,
-  ] = useState(null);
-  const [canvasUserPrefersHighContrast, setCanvasUserPrefersHighContrast] =
-    useState(false);
   const [accountId, setAccountId] = useState(1);
 
   const [proxyBaseUrl, setProxyBaseUrl] = useState(null);
 
   const updateToken = (receivedToken, receivedProxyBaseUrl) => {
     setToken(receivedToken);
-
     setProxyBaseUrl(receivedProxyBaseUrl);
 
     const decodedJwt = jwtDecode(receivedToken);
-
-    const jwtClaim =
-      decodedJwt["https://purl.imsglobal.org/spec/lti/claim/custom"];
-    setComInstructureBrandConfigJsonUrl(
-      jwtClaim.com_instructure_brand_config_json_url,
-    );
-    setCanvasUserPrefersHighContrast(
-      jwtClaim.canvas_user_prefers_high_contrast === "true",
-    );
+    const jwtClaim = decodedJwt["https://purl.imsglobal.org/spec/lti/claim/custom"];
 
     // which subaccount are we in?
     setAccountId(jwtClaim.canvas_account_id);
@@ -109,10 +94,7 @@ function App() {
    */
   return (
     <LtiTokenRetriever handleJwt={updateToken}>
-      <LtiApplyTheme
-        url={comInstructureBrandConfigJsonUrl}
-        highContrast={canvasUserPrefersHighContrast}
-      >
+      <LtiPageSettings>
         <LtiHeightLimit>
           <LaunchOAuth
             promptLogin={needsToken}
@@ -201,7 +183,7 @@ function App() {
             </View>
           </LaunchOAuth>
         </LtiHeightLimit>
-      </LtiApplyTheme>
+      </LtiPageSettings>
     </LtiTokenRetriever>
   );
 }
