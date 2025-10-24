@@ -37,7 +37,8 @@ function App() {
 
   const [accountId, setAccountId] = useState(1);
 
-  const [proxyBaseUrl, setProxyBaseUrl] = useState(null);
+  // Keep as a string so LaunchOAuth never receives a null server prop
+  const [proxyBaseUrl, setProxyBaseUrl] = useState("");
 
   // Stable callback: check whether user has a Canvas Access Token (don't follow redirects)
   const checkAccess = useCallback((proxyBaseUrl, jwt) => {
@@ -108,7 +109,7 @@ function App() {
           <LaunchOAuth
             promptLogin={needsToken}
             accessToken={token}
-            server={proxyBaseUrl}
+            server={{ proxyServer: proxyBaseUrl }}
             promptUserLogin={() => setNeedsToken(false)}
           >
             <View as="div" padding="large">

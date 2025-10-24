@@ -6,7 +6,7 @@ function DateFilterPageToggleGroup({ expanded, setExpanded, children }) {
       toggleLabel="Show or hide filter controls"
       summary="Apply Filters"
       background="transparent"
-      transition
+      transition="true"
       themeOverride={{ borderColor: "transparent", borderWidth: "0" }}
       expanded={expanded}
       onToggle={() => setExpanded(!expanded)}
