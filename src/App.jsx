@@ -109,7 +109,7 @@ function App() {
           <LaunchOAuth
             promptLogin={needsToken}
             accessToken={token}
-            server={{ proxyServer: proxyBaseUrl }}
+            server={proxyBaseUrl}
             promptUserLogin={() => setNeedsToken(false)}
           >
             <View as="div" padding="large">
