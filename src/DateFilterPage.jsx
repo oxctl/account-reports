@@ -68,10 +68,8 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
 
   // Helper to normalize DateTimeInput payloads to { iso, ts }
   const parsePayloadToIsoTs = (payload) => {
-    const iso =
-      typeof payload === "object" && payload ? payload.iso : undefined;
-    const value =
-      typeof payload === "object" && payload ? payload.value : payload;
+    const iso = typeof payload === "object" && payload ? payload.iso : undefined;
+    const value = typeof payload === "object" && payload ? payload.value : payload;
     const ts = iso ? Date.parse(iso) : Date.parse(value || "");
     return { iso: iso || "", ts: Number.isNaN(ts) ? null : ts };
   };
@@ -118,6 +116,7 @@ function DateFilterPage({ token, server, accountId, handle40x }) {
     }
     return true;
   };
+
 
   const clearAfter = () => {
     setAfterIso("");

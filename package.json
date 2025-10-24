@@ -49,7 +49,7 @@
     "@instructure/ui-date-time-input": "^10.20.1",
     "@instructure/ui-text-input": "^10.20.1",
     "@instructure/ui-pagination": "^10.20.1",
-    "@oxctl/ui-lti": "^10.3.0",
+    "@oxctl/ui-lti": "^10.4.1",
     "@sentry/react": "^8.37.1",
     "@web3-storage/parse-link-header": "^3.1.0",
     "jwt-decode": "^4.0.0",
