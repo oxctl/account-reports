@@ -5,16 +5,6 @@ export function AddPagination({ prevUrl, currUrl, nextUrl, setCurrUrl }) {
     setCurrUrl(url);
   };
 
-  const scrollToTop = () => {
-    try {
-      if (typeof window !== "undefined" && window.scrollTo) {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      }
-    } catch (e) {
-      // no-op if scrolling fails for any reason
-    }
-  };
-
   // Extract the current page number from the current URL (not per_page)
   const pageNumber = (() => {
     try {
@@ -41,14 +31,7 @@ export function AddPagination({ prevUrl, currUrl, nextUrl, setCurrUrl }) {
       )}
       <Pagination.Page>{pageNumber}</Pagination.Page>
       {nextUrl && (
-        <Pagination.Page
-          onClick={() => {
-            onClick(nextUrl);
-            scrollToTop();
-          }}
-        >
-          &gt;
-        </Pagination.Page>
+        <Pagination.Page onClick={() => onClick(nextUrl)}>&gt;</Pagination.Page>
       )}
     </Pagination>
   );
