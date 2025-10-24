@@ -33,7 +33,7 @@ function App() {
   const [canvasBaseUrl, setCanvasBaseUrl] = useState(null);
   const [alert, setAlert] = useState(null);
   const [needsToken, setNeedsToken] = useState(false);
-  const [hasSisPermish, setHasSisPermish] = useState(false);
+  const [hasSisPermission, setHasSisPermission] = useState(false);
 
   const [accountId, setAccountId] = useState(1);
 
@@ -83,7 +83,7 @@ function App() {
       setCanvasBaseUrl(jwtClaim.canvas_api_base_url);
 
       // check the user has sis_manage permission
-      setHasSisPermish(
+      setHasSisPermission(
         jwtClaim.canvas_membership_permissions == "manage_sis"
       );
 
@@ -158,7 +158,7 @@ function App() {
                   />
                 </Tabs.Panel>
 
-                {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
+                {accountId == ROOT_ACCOUNT_ID && hasSisPermission && (
                   <Tabs.Panel
                     id="sisImportDateFilter"
                     renderTitle="SIS Imports"
@@ -174,7 +174,7 @@ function App() {
                   </Tabs.Panel>
                 )}
 
-                {accountId == ROOT_ACCOUNT_ID && hasSisPermish && (
+                {accountId == ROOT_ACCOUNT_ID && hasSisPermission && (
                   <Tabs.Panel
                     id="sisImportSearch"
                     renderTitle="Search for SIS Import"
