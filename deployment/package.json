@@ -1,11 +1,14 @@
 {
   "name": "deployment",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
     "install-browsers": "npx playwright install",
-    "test": "npx playwright test"
+    "test": "npx playwright test",
+    "test:ci": "CI=true npx playwright test"
   },
   "devDependencies": {
+    "@oxctl/deployment-test-utils": "1.0.1",
     "@playwright/test": "^1.36.2",
     "dotenv": "^16.3.1"
   }
