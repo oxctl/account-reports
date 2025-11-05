@@ -28,7 +28,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
         #  escape JSON, inject front end, back end & canvas provider into template file
-      - run: jq '.frontend_url="https://" + $ENV.FRONTEND_DOMAIN | .backend_url="https://" + $ENV.BACKEND_DOMAIN | .canvas_provider_url=$ENV.CANVAS_HOST' tool-config/${{ inputs.env_type }}-template.json > tool-config/default.json
+      - run: cat tool-config/${{ inputs.env_type }}-template.json > tool-config/default.json
         # This sets up the configuration for the tool config update
       - run: |
           mkdir -p ~/.tool-config
