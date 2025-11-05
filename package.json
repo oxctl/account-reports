@@ -49,7 +49,6 @@
     "@instructure/ui-themes": "^10.20.1",
     "@instructure/ui-toggle-details": "^10.20.1",
     "@instructure/ui-view": "^10.20.1",
-    "@oxctl/deployment-test-utils": "^1.0.1",
     "@oxctl/ui-lti": "^10.4.1",
     "@sentry/react": "^8.37.1",
     "@web3-storage/parse-link-header": "^3.1.0",
