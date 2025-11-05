@@ -1,3 +1,3 @@
-# Deployment Tests
+# Account Reports Deployment Tests
 
-Automated smoke tests run with Playwright. Tests results are uploaded as an artifact and in the event of failures there will be video under the failed tests.
+The deployment tests check that the title "Account Reports" appears on the page.
