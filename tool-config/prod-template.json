@@ -2,6 +2,5 @@
   "title_suffix": "",
   "frontend_url": "account-reports.pages.dev",
   "backend_url": "unused",
-  "canvas_provider_url": "https://canvas.ox.ac.uk/",
   "lti_registration_id": "universityofoxford-account-reports"
 }
