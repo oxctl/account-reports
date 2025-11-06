@@ -2,6 +2,5 @@
   "title_suffix": "",
   "frontend_url": "set at runtime",
   "backend_url": "set at runtime",
-  "canvas_provider_url": "https://canvas.ox.ac.uk/",
   "lti_registration_id": "universityofoxford-account-reports"
 }

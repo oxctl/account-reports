@@ -2,6 +2,5 @@
   "title_suffix": " (dev)",
   "frontend_url": "set at runtime",
   "backend_url": "set at runtime",
-  "canvas_provider_url": "https://universityofoxford.beta.instructure.com/",
   "lti_registration_id": "universityofoxford-account-reports-dev"
 }
