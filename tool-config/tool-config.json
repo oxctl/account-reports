@@ -8,8 +8,8 @@
         "title": "Account Tools (New)$TITLE_SUFFIX",
         "description": "Presents links to useful Canvas reports: account reports, provisioning and SIS imports.",
         "target_link_uri": "$TOOL_URL",
-  "oidc_initiation_url": "$TOOL_SUPPORT_URL/lti/login_initiation/",
-  "public_jwk_url": "$TOOL_SUPPORT_URL/.well-known/jwks.json",
+        "oidc_initiation_url": "$TOOL_SUPPORT_URL/lti/login_initiation/",
+        "public_jwk_url": "$TOOL_SUPPORT_URL/.well-known/jwks.json",
         "scopes": [],
         "extensions": [
           {
