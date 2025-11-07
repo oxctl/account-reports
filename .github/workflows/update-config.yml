@@ -28,7 +28,7 @@ jobs:
       # This sets up the configuration for the tool config update
       - run: |
           mkdir -p ~/.tool-config
-          jq -n '{"setup": {"canvas_url": $ENV.CANVAS_HOST, "tool_support_url": $ENV.TOOL_SUPPORT_URL }, "secrets": { "canvas_token": $ENV.CANVAS_TOKEN, "tool_support_username": $ENV.TOOL_SUPPORT_USERNAME, "tool_support_password": $ENV.TOOL_SUPPORT_PASSWORD } }' > ~/.tool-config/default.json
+          jq -n '{"setup": {"canvas_url": $ENV.CANVAS_HOST, "tools_server_url": $ENV.TOOL_SUPPORT_URL }, "secrets": { "canvas_token": $ENV.CANVAS_TOKEN, "tool_support_username": $ENV.TOOL_SUPPORT_USERNAME, "tool_support_password": $ENV.TOOL_SUPPORT_PASSWORD } }' > ~/.tool-config/default.json
         env:
           CANVAS_HOST: ${{ vars.CANVAS_HOST }}
           TOOL_SUPPORT_URL: ${{ vars.TOOL_SUPPORT_URL }}
