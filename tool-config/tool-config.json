@@ -43,7 +43,7 @@
     "developer_key": {
       "name": "Account Tools (New) API$TITLE_SUFFIX",
       "require_scopes": true,
-  "redirect_uris" : "$TOOL_SUPPORT_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
+      "redirect_uris" : "$TOOL_SUPPORT_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
       "scopes": [
         "url:GET|/api/v1/accounts/:account_id/reports",     
         "url:GET|/api/v1/accounts/:account_id/reports/:report", 
