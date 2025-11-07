@@ -31,7 +31,8 @@ jobs:
         run: |
           ENV_TYPE_LOWER=$(echo "${{ inputs.env_type }}" | tr '[:upper:]' '[:lower:]')
           cat "tool-config/${ENV_TYPE_LOWER}-template.json" > tool-config/default.json
-        # This sets up the configuration for the tool config update
+
+      # This sets up the configuration for the tool config update
       - run: |
           mkdir -p ~/.tool-config
           jq -n '{"setup": {"canvas_url": $ENV.CANVAS_HOST, "tool_support_url": $ENV.TOOL_SUPPORT_URL }, "secrets": { "canvas_token": $ENV.CANVAS_TOKEN, "tool_support_username": $ENV.TOOL_SUPPORT_USERNAME, "tool_support_password": $ENV.TOOL_SUPPORT_PASSWORD } }' > ~/.tool-config/default.json
