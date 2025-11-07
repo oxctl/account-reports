@@ -104,7 +104,7 @@
       "$TOOL_URL"
     ],
     "secret": null,
-  "issuer": "$TOOL_SUPPORT_URL",
+    "issuer": "$TOOL_SUPPORT_URL",
     "nrpsAllowedRoles": []
   }
 }
