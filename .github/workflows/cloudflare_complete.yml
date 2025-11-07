@@ -20,6 +20,14 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  update-config:
+    needs: check-branch
+    uses: ./.github/workflows/update-config.yml
+    with:
+      env_type: ${{ github.event.check_run.check_suite.head_branch == 'release' && 'PROD' || 'BETA' }}
+
+    secrets: inherit
+
   deployment-tests:
     needs: check-branch
     uses: ./.github/workflows/test_deployment.yml
