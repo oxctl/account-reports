@@ -27,11 +27,7 @@ jobs:
         with:
           node-version-file: '.nvmrc'
       # escape JSON, inject front end, back end & canvas provider into template file
-      - name: Select environment template
-        run: |
-          ENV_TYPE_LOWER=$(echo "${{ inputs.env_type }}" | tr '[:upper:]' '[:lower:]')
-          cat "tool-config/${ENV_TYPE_LOWER}-template.json" > tool-config/default.json
-
+      - run: cat tool-config/${{ inputs.env_type }}-template.json > tool-config/default.json
       # This sets up the configuration for the tool config update
       - run: |
           mkdir -p ~/.tool-config
@@ -50,7 +46,5 @@ jobs:
           else
             npx @oxctl/lti-auto-configuration create
           fi
-      - name: Export LTI client ID
-        run: |
-          echo "TOOL_LTI_CLIENT_ID=$(jq -r '.toolReg.lti.clientId' tool-config/default.json)" >> "$GITHUB_ENV"
+      - run: jq -r .toolReg.lti.clientId)" | tee -a $GITHUB_ENV
       
