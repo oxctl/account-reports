@@ -1,6 +1,5 @@
 {
   "title_suffix": " (dev)",
-  "frontend_url": "main.account-reports.pages.dev",
-  "backend_url": "unused",
+  "tool_url": "main.account-reports.pages.dev",
   "lti_registration_id": "universityofoxford-account-reports-dev"
 }
