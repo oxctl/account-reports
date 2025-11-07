@@ -46,6 +46,5 @@ jobs:
           else
             npx @oxctl/lti-auto-configuration create
           fi
-      - name: Export LTI client ID
-        run: echo "TOOL_LTI_CLIENT_ID=$(jq -r .toolReg.lti.clientId tool-config/default.json)" | tee -a $GITHUB_ENV
+      - run: jq -r .toolReg.lti.clientId)" | tee -a $GITHUB_ENV
       
