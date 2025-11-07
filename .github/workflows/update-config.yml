@@ -47,5 +47,5 @@ jobs:
           else
             npx @oxctl/lti-auto-configuration create
           fi
-      - run: echo CLIENT_ID="$(npx @oxctl/lti-auto-configuration export | jq -r .toolReg.lti.clientId)" | tee -a $GITHUB_ENV
+      - run: jq -r .toolReg.lti.clientId)" | tee -a $GITHUB_ENV
       
