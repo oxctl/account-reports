@@ -11,14 +11,11 @@ on:
       env_type:
         description: 'The environment type, e.g. test, beta, prod'
         type: string
-      github_env:
-        description: 'The GitHub environment'
-        type: string
         
 jobs:
   update:
     runs-on: ubuntu-latest
-    environment: ${{ inputs.github_env }}
+    environment: ${{ inputs.env_type }}
     permissions:
       contents: read
     steps:
@@ -46,5 +43,4 @@ jobs:
           else
             npx @oxctl/lti-auto-configuration create
           fi
-      - run: jq -r .toolReg.lti.clientId)" | tee -a $GITHUB_ENV
       
