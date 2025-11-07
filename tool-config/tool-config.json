@@ -35,7 +35,7 @@
     },
     "developer_key": {
       "name": "Account Tools (New)$TITLE_SUFFIX",
-  "redirect_uris": "$TOOL_SUPPORT_URL/lti/login",
+      "redirect_uris": "$TOOL_SUPPORT_URL/lti/login",
       "scopes": []
     }
   },
