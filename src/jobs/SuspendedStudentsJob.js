@@ -42,37 +42,37 @@ class SuspendedStudentsJob {
     this.statusUpdate("Building CSV");
     const reportCsv = await attachment.text();
 
+    // Parse without headers so we can inspect columns by index.
     const parsed = Papa.parse(reportCsv, {
       delimiter: ",",
-      header: true,
-      transformHeader: (header) => header.replace(/ /g, "_"),
+      header: false,
       skipEmptyLines: true,
     });
-    const rows = parsed.data;
-    // Better performance because of cached locale.
-    const collator = new Intl.Collator();
-    // We don't care about predicable order, just that the same IDs are next to each other.
-    rows.sort((a, b) => collator.compare(a.canvas_user_id, b.canvas_user_id));
-    let previous = {};
-    const duplicates = [];
-    let matching = false;
-    for (const row of Object.values(rows)) {
-      if (row.canvas_user_id === previous.canvas_user_id) {
-        matching = true;
-        duplicates.push(previous);
-      } else {
-        if (matching) {
-          duplicates.push(previous);
-          matching = false;
-        }
+
+    const data = parsed.data || [];
+    if (data.length === 0) {
+      this.csv = "";
+      this.statusUpdate("No data in CSV");
+      return;
+    }
+
+    // Keep the original header row as the first row in the output
+    const headerRow = data[0];
+    const matches = [headerRow];
+
+    // Find rows where the 6th column (index 5) equals '129'
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      // row may be shorter; guard against that
+      const col6 = row && row.length > 5 ? String(row[5]).trim() : "";
+      if (col6 === "129") {
+        matches.push(row);
       }
-      previous = row;
     }
-    // Check for last row match
-    if (matching) {
-      duplicates.push(previous);
-    }
-    this.csv = Papa.unparse(duplicates, { header: true });
+
+    // Unparse the selected rows back to CSV. We supply header: false because
+    // we've manually included the header row as the first entry.
+    this.csv = Papa.unparse(matches, { header: false });
     this.statusUpdate("Written CSV");
   };
 
