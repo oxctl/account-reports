@@ -34,7 +34,7 @@ class SuspendedStudentsJob {
     this.statusUpdate("Running suspended students report");
     const report = await reportApi.runReport(
       "provisioning_csv",
-      { users: "true" },
+      { enrollments: "true" },
       { account: this.accountId },
     );
     this.statusUpdate("Downloading report");
