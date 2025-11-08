@@ -91,8 +91,22 @@ class SuspendedStudentsJob {
       }
     }
 
-    // Unparse unique rows back to CSV. header:false because header row is included.
-    this.csv = Papa.unparse(unique, { header: false });
+    // Transform the first column for each data row to include the host/course path
+    // and append /users. Preserve header as-is.
+    const hostBase = (this.host || "").replace(/\/$/, "");
+    const transformed = unique.map((row, idx) => {
+      // header row (idx 0) should be left unchanged
+      if (idx === 0) return row;
+      // row is an array; ensure we have at least one column
+      const courseId = row && row.length > 0 ? String(row[0]).trim() : "";
+      const newFirst = courseId ? `${hostBase}/courses/${courseId}/users` : "";
+      const newRow = Array.isArray(row) ? [...row] : [row];
+      newRow[0] = newFirst;
+      return newRow;
+    });
+
+    // Unparse transformed rows back to CSV. header:false because header row is included.
+    this.csv = Papa.unparse(transformed, { header: false });
     this.statusUpdate("Written CSV");
   };
 
