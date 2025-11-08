@@ -27,6 +27,8 @@ class SuspendedStudentsJob {
     const mergedOptions = { ...SuspendedStudentsJob.defaultOpts, ...options };
     this.accountId = mergedOptions.accountId;
     this.statusUpdate = mergedOptions.statusUpdate;
+    // Capture the Canvas API base URL (passed in via options.baseUrl from App)
+    this.canvasBaseUrl = mergedOptions.baseUrl || null;
   }
 
   run = async () => {
@@ -91,12 +93,12 @@ class SuspendedStudentsJob {
       }
     }
 
-    // Prepend host/courses/ to the first column for each data row (leave header unchanged)
-    const hostBase = (this.host || "").replace(/\/$/, "");
+    // Prepend canvasBaseUrl/courses/ to the first column for each data row (leave header unchanged)
+    const hostBase = (this.canvasBaseUrl || "").replace(/\/$/, "");
     const withHost = unique.map((row, idx) => {
       if (idx === 0) return row;
       const id = row && row.length > 0 ? String(row[0]).trim() : "";
-  const newFirst = id ? `${hostBase}/courses/${id}/users` : "";
+      const newFirst = id ? `${hostBase}/courses/${id}/users` : "";
       const newRow = Array.isArray(row) ? [...row] : [row];
       newRow[0] = newFirst;
       return newRow;
