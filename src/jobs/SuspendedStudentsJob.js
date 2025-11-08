@@ -61,11 +61,14 @@ class SuspendedStudentsJob {
     const matches = [headerRow];
 
     // Find rows where the 5th column (index 4) equals 'Suspended Student'
+    // AND the 8th column (index 7) equals 'active'. If either condition
+    // fails for a row, it will be ignored.
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       // row may be shorter; guard against that
       const col5 = row && row.length > 4 ? String(row[4]).trim() : "";
-      if (col5 === "Suspended Student") {
+      const col8 = row && row.length > 7 ? String(row[7]).trim() : "";
+      if (col5 === "Suspended Student" && col8 === "active") {
         matches.push(row);
       }
     }
