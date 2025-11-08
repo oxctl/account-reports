@@ -96,7 +96,7 @@ class SuspendedStudentsJob {
     const withHost = unique.map((row, idx) => {
       if (idx === 0) return row;
       const id = row && row.length > 0 ? String(row[0]).trim() : "";
-      const newFirst = id ? `${hostBase}/courses/${id}` : "";
+  const newFirst = id ? `${hostBase}/courses/${id}/users` : "";
       const newRow = Array.isArray(row) ? [...row] : [row];
       newRow[0] = newFirst;
       return newRow;
