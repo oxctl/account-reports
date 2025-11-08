@@ -70,9 +70,26 @@ class SuspendedStudentsJob {
       }
     }
 
-    // Unparse the selected rows back to CSV. We supply header: false because
-    // we've manually included the header row as the first entry.
-    this.csv = Papa.unparse(matches, { header: false });
+    // Keep only the first 5 columns, then remove duplicate rows while
+    // preserving the original header as the first row.
+    const trimmed = matches.map((r) => (Array.isArray(r) ? r.slice(0, 5) : r));
+
+    const seen = new Set();
+    const unique = [];
+    if (trimmed.length > 0) {
+      unique.push(trimmed[0]); // header
+    }
+    for (let i = 1; i < trimmed.length; i++) {
+      const row = trimmed[i];
+      const key = JSON.stringify(row);
+      if (!seen.has(key)) {
+        seen.add(key);
+        unique.push(row);
+      }
+    }
+
+    // Unparse unique rows back to CSV. header:false because header row is included.
+    this.csv = Papa.unparse(unique, { header: false });
     this.statusUpdate("Written CSV");
   };
 
