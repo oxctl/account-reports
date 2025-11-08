@@ -60,12 +60,12 @@ class SuspendedStudentsJob {
     const headerRow = data[0];
     const matches = [headerRow];
 
-    // Find rows where the 6th column (index 5) equals '129'
+    // Find rows where the 5th column (index 4) equals 'Suspended Student'
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       // row may be shorter; guard against that
-      const col6 = row && row.length > 5 ? String(row[5]).trim() : "";
-      if (col6 === "129") {
+      const col5 = row && row.length > 4 ? String(row[4]).trim() : "";
+      if (col5 === "Suspended Student") {
         matches.push(row);
       }
     }
