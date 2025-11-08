@@ -104,8 +104,20 @@ class SuspendedStudentsJob {
       return newRow;
     });
 
-    // Unparse transformed rows back to CSV. header:false because header row is included.
-    this.csv = Papa.unparse(withHost, { header: false });
+    // Build final output with only two columns: Canvas Course URL (A) and User ID (D).
+    // Replace the header row with the desired headings.
+    const finalRows = [];
+    finalRows.push(["Canvas Course URL", "User ID"]);
+    for (let i = 1; i < withHost.length; i++) {
+      const row = withHost[i];
+      const courseUrl = row && row.length > 0 ? String(row[0]).trim() : "";
+      // Original D column is index 3 in the trimmed rows
+      const userId = row && row.length > 3 ? String(row[3]).trim() : "";
+      finalRows.push([courseUrl, userId]);
+    }
+
+    // Unparse final rows back to CSV. header:false because we include the header manually.
+    this.csv = Papa.unparse(finalRows, { header: false });
     this.statusUpdate("Written CSV");
   };
 
