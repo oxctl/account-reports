@@ -67,8 +67,8 @@ class SuspendedStudentsJob {
       const row = data[i];
       // row may be shorter; guard against that
       const col5 = row && row.length > 4 ? String(row[4]).trim() : "";
-      const col8 = row && row.length > 7 ? String(row[7]).trim() : "";
-      if (col5 === "Suspended Student" && col8 === "active") {
+      const col9 = row && row.length > 8 ? String(row[8]).trim() : "";
+      if (col5 === "Suspended Student" && col9 === "active") {
         matches.push(row);
       }
     }
