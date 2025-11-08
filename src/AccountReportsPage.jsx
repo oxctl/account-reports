@@ -3,6 +3,7 @@ import { Grid } from "@instructure/ui-grid";
 import { Text } from "@instructure/ui-text";
 import { Heading } from "@instructure/ui-heading";
 import DuplicateLoginsJob from "./jobs/DuplicateLoginsJob";
+import SuspendedStudentsJob from "./jobs/SuspendedStudentsJob";
 import { View } from "@instructure/ui-view";
 import { Alert } from "@instructure/ui-alerts";
 import AccountAdminUsersJob from "./jobs/AccountAdminUsersJob";
@@ -73,6 +74,13 @@ function AccountReportsPage({
         description: "A list of all users who have more than one login.",
         run: (server, token, options) =>
           new DuplicateLoginsJob(server, token, options),
+        showOnSubaccount: true,
+      },
+      {
+        name: "Suspended Students",
+        description: "A list of suspended students in the account.",
+        run: (server, token, options) =>
+          new SuspendedStudentsJob(server, token, options),
         showOnSubaccount: true,
       },
     ],
