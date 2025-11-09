@@ -1,10 +1,18 @@
 // reports variables
+// Support both VITE_ and legacy VITE_APP_ prefixes. Prefer VITE_ (required for
+// Vite production builds) but fall back to older keys for local/dev ease.
 export const SUBACCOUNT_ADMIN_ROLES = JSON.parse(
-  import.meta.env.VITE_APP_SUBACCOUNT_ADMIN_ROLES,
+  import.meta.env.VITE_SUBACCOUNT_ADMIN_ROLES ||
+    import.meta.env.VITE_APP_SUBACCOUNT_ADMIN_ROLES ||
+    import.meta.env.SUBACCOUNT_ADMIN_ROLES ||
+    "[]",
 ).map(String);
 
-export const ROOT_ACCOUNT_ID = JSON.parse(
-  import.meta.env.VITE_APP_ROOT_ACCOUNT_ID,
+export const ROOT_ACCOUNT_ID = Number(
+  import.meta.env.VITE_ROOT_ACCOUNT_ID ||
+    import.meta.env.VITE_APP_ROOT_ACCOUNT_ID ||
+    import.meta.env.ROOT_ACCOUNT_ID ||
+    1,
 );
 
 
