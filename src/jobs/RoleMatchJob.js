@@ -137,8 +137,9 @@ class RoleMatchJob {
       }
     }
 
-    // Keep only the first 5 columns, then remove duplicate rows while
-    // preserving the original header as the first row.
+    // Keep only the first 5 columns temporarily; later, only 3 columns
+    // (Canvas Course URL, User ID, and Role) will be included in the final output.
+    // Remove duplicate rows while preserving the original header as the first row.
     const trimmed = matches.map((r) => (Array.isArray(r) ? r.slice(0, 5) : []));
 
     const seen = new Set();
