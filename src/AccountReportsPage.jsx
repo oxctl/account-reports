@@ -107,7 +107,7 @@ function AccountReportsPage({
         showOnSubaccount: true,
       },
       {
-        name: "Suspended Students",
+        name: suspendedReportName,
         description: "A contextual list of people with this role",
         run: (server, token, options) =>
           new SuspendedStudentsJob(server, token, options),
