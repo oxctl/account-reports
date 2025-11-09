@@ -72,7 +72,7 @@ class SuspendedStudentsJob {
         rawId = process.env.ENROL_REPORT_ID_1;
       } else {
         try {
-          rawId = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_ID_1 || import.meta.env.VITE_ENROL_REPORT_ID_1)) || null;
+          rawId = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_ID_1 || import.meta.env.VITE_ENROL_REPORT_ID_1 || import.meta.env.VITE_APP_ENROL_REPORT_ID_1)) || null;
         } catch (e) {
           rawId = null;
         }
@@ -88,7 +88,7 @@ class SuspendedStudentsJob {
 
     // If we couldn't determine an expected role id, stop and log
     if (!expectedRoleId) {
-      console.error("no role ID set");
+      console.error("no role ID set in .env");
       this.csv = "";
       this.statusUpdate("No role ID set");
       return;

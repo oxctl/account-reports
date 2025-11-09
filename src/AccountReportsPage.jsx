@@ -39,7 +39,7 @@ function AccountReportsPage({
         raw = process.env.ENROL_REPORT_NAME_1;
       } else {
         try {
-          raw = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_NAME_1 || import.meta.env.VITE_ENROL_REPORT_NAME_1)) || null;
+                raw = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_NAME_1 || import.meta.env.VITE_ENROL_REPORT_NAME_1 || import.meta.env.VITE_APP_ENROL_REPORT_NAME_1)) || null;
         } catch (e) {
           raw = null;
         }
