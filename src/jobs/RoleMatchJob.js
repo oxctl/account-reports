@@ -8,7 +8,7 @@ const PROVISIONING_CACHE_TTL_MS = 360 * 60 * 1000;
  * RoleMatchJob
  *
  * Generic job that finds rows in the provisioning CSV that match a given
- * role id in column F and outputs a CSV of Canvas Course URL + User ID + Role.
+ * role id in column F (6th column, index 5) and outputs a CSV of Canvas Course URL + User ID + Role.
  */
 class RoleMatchJob {
   // The account ID to run the report against.
