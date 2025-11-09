@@ -62,15 +62,15 @@ class SuspendedStudentsJob {
     const headerRow = data[0];
     const matches = [headerRow];
 
-    // Find rows where the 5th column (index 4) equals 'Suspended Student'
-    // AND the 8th column (index 7) equals 'active'. If either condition
+    // Find rows where the F column (index 5) equals '129'
+    // AND the 9th column (index 8) equals 'active'. If either condition
     // fails for a row, it will be ignored.
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       // row may be shorter; guard against that
-      const col5 = row && row.length > 4 ? String(row[4]).trim() : "";
+      const colF = row && row.length > 5 ? String(row[5]).trim() : "";
       const col9 = row && row.length > 8 ? String(row[8]).trim() : "";
-      if (col5 === "Suspended Student" && col9 === "active") {
+      if (colF === "129" && col9 === "active") {
         matches.push(row);
       }
     }
@@ -104,16 +104,18 @@ class SuspendedStudentsJob {
       return newRow;
     });
 
-    // Build final output with only two columns: Canvas Course URL (A) and User ID (D).
+    // Build final output with three columns: Canvas Course URL (A), User ID (D), and Role (E).
     // Replace the header row with the desired headings.
     const finalRows = [];
-    finalRows.push(["Canvas Course URL", "User ID"]);
+    finalRows.push(["Canvas Course URL", "User ID", "Role"]);
     for (let i = 1; i < withHost.length; i++) {
       const row = withHost[i];
       const courseUrl = row && row.length > 0 ? String(row[0]).trim() : "";
       // Original D column is index 3 in the trimmed rows
       const userId = row && row.length > 3 ? String(row[3]).trim() : "";
-      finalRows.push([courseUrl, userId]);
+      // Original E column (Role) is index 4 in the trimmed rows
+      const role = row && row.length > 4 ? String(row[4]).trim() : "";
+      finalRows.push([courseUrl, userId, role]);
     }
 
     // Unparse final rows back to CSV. header:false because we include the header manually.
