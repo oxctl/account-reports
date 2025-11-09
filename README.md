@@ -20,8 +20,8 @@ The tool does not have a back-end, it is a JavaScript Vite application. The easi
 
 The `.env` (environment) file must specify
 
- - the ID of the root account (`VITE_APP_ROOT_ACCOUNT_ID`) which is often `1`
- - an array containing a list of IDs whose corresponding role is considered to be a sub-account administrator (`VITE_APP_SUBACCOUNT_ADMIN_ROLES`)
+ - the ID of the root account (`VITE_ROOT_ACCOUNT_ID`) which is often `1`
+ - an array containing a list of IDs whose corresponding role is considered to be a sub-account administrator (`VITE_SUBACCOUNT_ADMIN_ROLES`)
 
 ### Enrolment Reports
 
