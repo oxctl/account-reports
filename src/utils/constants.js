@@ -18,7 +18,7 @@ export const ROOT_ACCOUNT_ID = Number(
 
 // Number of enrolment reports (support VITE_ and VITE_APP_ prefixes)
 export const NUMBER_ENROL_REPORTS = Number(
-  import.meta.env.VITE_NUMBER_ENROL_REPORTS || import.meta.env.VITE_APP_NUMBER_ENROL_REPORTS || import.meta.env.NUMBER_ENROL_REPORTS || 0,
+  import.meta.env.VITE_NUMBER_ENROL_REPORTS || import.meta.env.VITE_APP_NUMBER_ENROL_REPORTS || 0,
 );
 
 // Build an array of enrolment report configs from env. Keys follow the
