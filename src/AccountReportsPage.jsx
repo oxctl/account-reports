@@ -31,6 +31,36 @@ function AccountReportsPage({
   rootAccountId,
   handle40x,
 }) {
+  // Resolve the configured enrolment report name from env (ENROL_REPORT_1)
+  const resolveEnrolReportName = () => {
+    try {
+      let raw = null;
+      if (typeof process !== "undefined" && process.env && process.env.ENROL_REPORT_1) {
+        raw = process.env.ENROL_REPORT_1;
+      } else {
+        try {
+          raw = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_1 || import.meta.env.VITE_ENROL_REPORT_1)) || null;
+        } catch (e) {
+          raw = null;
+        }
+      }
+      if (!raw) return "Suspended Students";
+      let parsed = null;
+      try {
+        parsed = JSON.parse(raw);
+      } catch (e) {
+        // fallback: try to extract first quoted string
+        const m = String(raw).match(/\[\s*['"]([^'"]+)['"]/);
+        if (m && m[1]) return m[1];
+        return String(raw);
+      }
+      if (Array.isArray(parsed) && parsed.length > 0) return String(parsed[0]);
+      return "Suspended Students";
+    } catch (e) {
+      return "Suspended Students";
+    }
+  };
+  const suspendedReportName = resolveEnrolReportName();
   // Track all alert messages shown to the user (e.g., success/error notices)
   const [alerts, setAlerts] = useState([]);
 
@@ -78,7 +108,7 @@ function AccountReportsPage({
       },
       {
         name: "Suspended Students",
-        description: "A list of suspended students in the account.",
+        description: "A contextual list of people with this role",
         run: (server, token, options) =>
           new SuspendedStudentsJob(server, token, options),
         showOnSubaccount: true,
