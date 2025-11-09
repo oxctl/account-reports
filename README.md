@@ -28,7 +28,7 @@ The `.env` (environment) file must specify
 ### Enrolment Reports
 
 
-To allow for the generation of role reports, the variables are needed:
+To allow for the generation of role reports, the following variables are needed:
 
 - `VITE_NUMBER_ENROL_REPORTS`
 	- The number of enrolment reports to configure (integer). If zero or absent, no enrolment report buttons will be created.
