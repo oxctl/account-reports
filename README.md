@@ -80,12 +80,16 @@ There is a simple deployment test that is run when the tool is deployed to Beta 
 Github Actions Secret `DEPLOYMENT_TESTS_OAUTH_TOKEN`. Access must be granted on a repository by repository basis.
 
 These two environment variables also need setting (will be replaced v soon)
-
  - `CANVAS_HOST`
- - `TOOL_ID`
 
 The test:
 
+`VITE_NUMBER_ENROL_REPORTS`
+	- The number of enrolment reports to configure (integer). If zero or absent, no enrolment report buttons will be created.
+`VITE_ENROL_REPORT_NAME_{i}` and `VITE_ENROL_REPORT_ID_{i}`
+	- Provide one pair per report where `{i}` is 1..`VITE_NUMBER_ENROL_REPORTS`.
+	- `VITE_ENROL_REPORT_NAME_{i}` is the display name of the report.
+	- `VITE_ENROL_REPORT_ID_{i}` is the numeric role id the report should match (the job will search for this role id in the provisioning CSV).
  - check the tool loads
  - checks there are buttons on the first page to run reports
 
@@ -99,8 +103,6 @@ Alternatively to do this locally run checkout the release branch, fetch the late
 ```shell
 git merge origin/master
 ```
-
-To see what is about to go into a release you can preview the changes between [master and release](https://github.com/oxctl/account-reports/compare/release...master), 
 then to double check a PR can be created to merge the changes, reviewed and merged (at which point the release branch is built and deployed).
 
 ## Sentry
