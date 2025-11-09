@@ -148,7 +148,8 @@ class RoleMatchJob {
     }
     for (let i = 1; i < trimmed.length; i++) {
       const row = trimmed[i];
-      const key = JSON.stringify(row);
+      // Use a simple join for dedupe keys which is faster than JSON.stringify
+      const key = Array.isArray(row) ? row.join("|") : String(row);
       if (!seen.has(key)) {
         seen.add(key);
         unique.push(row);
