@@ -25,7 +25,7 @@ The `.env` (environment) file must specify
 
 ### Enrolment Reports
 
-This project can be configured to expose one or more enrolment report buttons in the UI. These are configured using environment variables. At build time Vite only exposes variables prefixed with `VITE_`. For enrolment report configuration this tool supports only the `VITE_` and legacy `VITE_APP_` prefixes — unprefixed variables are not supported and will not be read by the client in production builds. Using the `VITE_` prefix is recommended for production.
+This project can be configured to expose one or more enrolment report buttons in the UI. These are configured using environment variables. At build time Vite only exposes variables prefixed with `VITE_`. For enrolment report configuration this tool supports ONLY the `VITE_` prefix — legacy `VITE_APP_` or unprefixed variables are not read by the client in production builds. Using the `VITE_` prefix is required for production.
 
 The variables are:
 
