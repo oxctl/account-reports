@@ -25,7 +25,7 @@ The `.env` (environment) file must specify
 
 ### Enrolment Reports
 
-This project can be configured to expose one or more enrolment report buttons in the UI. These are configured using environment variables. At build time Vite only exposes variables prefixed with `VITE_`; this tool supports `VITE_` variables and will also accept `VITE_APP_` or non-prefixed variables for development convenience, but using the `VITE_` prefix is recommended for production builds.
+This project can be configured to expose one or more enrolment report buttons in the UI. These are configured using environment variables. At build time Vite only exposes variables prefixed with `VITE_`. For enrolment report configuration this tool supports only the `VITE_` and legacy `VITE_APP_` prefixes — unprefixed variables are not supported and will not be read by the client in production builds. Using the `VITE_` prefix is recommended for production.
 
 The variables are:
 
@@ -46,8 +46,8 @@ VITE_ENROL_REPORT_NAME_2="Captioner"
 VITE_ENROL_REPORT_ID_2=255
 ```
 
-Notes
-- The application will read `VITE_` prefixed variables first (as required by Vite). If you use `VITE_APP_` or unprefixed variables during local development, the app will also accept them as fallbacks, but those will not be available in a Vite production build unless you rename them to `VITE_`.
+- Notes
+- The application will read `VITE_` prefixed variables first (as required by Vite). The tool also supports `VITE_APP_` as a legacy fallback for local development. Unprefixed variables are not supported for enrolment report configuration and may not be available in production builds.
 - The configured `ENROL_REPORT_ID` is passed into the job and must be a valid numeric role id.
 
 
