@@ -31,31 +31,30 @@ function AccountReportsPage({
   rootAccountId,
   handle40x,
 }) {
-  // Resolve the configured enrolment report name from env (ENROL_REPORT_1)
+  // Resolve the configured enrolment report name from env (ENROL_REPORT_NAME_1)
   const resolveEnrolReportName = () => {
     try {
       let raw = null;
-      if (typeof process !== "undefined" && process.env && process.env.ENROL_REPORT_1) {
-        raw = process.env.ENROL_REPORT_1;
+      if (typeof process !== "undefined" && process.env && process.env.ENROL_REPORT_NAME_1) {
+        raw = process.env.ENROL_REPORT_NAME_1;
       } else {
         try {
-          raw = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_1 || import.meta.env.VITE_ENROL_REPORT_1)) || null;
+          raw = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_NAME_1 || import.meta.env.VITE_ENROL_REPORT_NAME_1)) || null;
         } catch (e) {
           raw = null;
         }
       }
-  if (!raw) return "Unknown Role";
-      let parsed = null;
+      if (!raw) return "Unknown Role";
+      // If the value looks like a JSON string, try parsing; otherwise return raw
       try {
-        parsed = JSON.parse(raw);
+        const parsed = JSON.parse(String(raw));
+        if (typeof parsed === "string" && parsed.length > 0) return parsed;
+        // If someone put an array, take the first element
+        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]) return String(parsed[0]);
       } catch (e) {
-        // fallback: try to extract first quoted string
-        const m = String(raw).match(/\[\s*['"]([^'"]+)['"]/);
-        if (m && m[1]) return m[1];
-        return String(raw);
+        // not JSON — return trimmed raw string
       }
-  if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]) return String(parsed[0]);
-  return "Unknown Role";
+      return String(raw).trim();
     } catch (e) {
       return "Unknown Role";
     }
