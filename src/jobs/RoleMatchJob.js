@@ -140,7 +140,7 @@ class RoleMatchJob {
 
     // Keep only the first 5 columns, then remove duplicate rows while
     // preserving the original header as the first row.
-    const trimmed = matches.map((r) => (Array.isArray(r) ? r.slice(0, 5) : r));
+    const trimmed = matches.map((r) => (Array.isArray(r) ? r.slice(0, 5) : []));
 
     const seen = new Set();
     const unique = [];
