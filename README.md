@@ -33,7 +33,7 @@ The variables are:
 	- The number of enrolment reports to configure (integer). If zero or absent, no enrolment report buttons will be created.
 - `ENROL_REPORT_NAME_{i}` and `ENROL_REPORT_ID_{i}` (or `VITE_ENROL_REPORT_NAME_{i}` / `VITE_APP_ENROL_REPORT_NAME_{i}`, `VITE_ENROL_REPORT_ID_{i}` / `VITE_APP_ENROL_REPORT_ID_{i}`)
 	- Provide one pair per report where `{i}` is 1..`NUMBER_ENROL_REPORTS`.
-	- `ENROL_REPORT_NAME_{i}` is the display name for the report.
+	- `ENROL_REPORT_NAME_{i}` is the display name of the report.
 	- `ENROL_REPORT_ID_{i}` is the numeric role id the report should match (the job will search for this role id in the provisioning CSV).
 
 Example `.env` entries (recommended with `VITE_` prefix):
