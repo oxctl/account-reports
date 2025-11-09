@@ -72,7 +72,7 @@ class RoleMatchJob {
       return;
     }
 
-    // Find rows where the F column (index 5) equals the expected role id
+    // Find rows where the 6th column (index 5) equals the expected role id
     // AND the 9th column (index 8) equals 'active'. If either condition
     // fails for a row, it will be ignored.
     for (let i = 1; i < data.length; i++) {
