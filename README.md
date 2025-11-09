@@ -76,13 +76,12 @@ The deploy to development is done automatically when a new commit is made to mas
 
 ### Deployment Tests
 
-There is a simple deployment test that is run when the tool is deployed to Beta or Production. This test relies on the repository having access to the organisational 
+There is a simple deployment test that is run when the tool is deployed to Beta or Production - we check thatthe page loads and has the expected title. This test relies on the repository having access to the organisational 
 Github Actions Secret `DEPLOYMENT_TESTS_OAUTH_TOKEN`. Access must be granted on a repository by repository basis.
 
-These two environment variables also need setting (will be replaced v soon)
+This variables also needs setting 
  - `CANVAS_HOST`
 
-The test:
 
 The deployment test checks that:
  - the tool loads successfully
