@@ -29,6 +29,8 @@ class SuspendedStudentsJob {
     this.statusUpdate = mergedOptions.statusUpdate;
     // Capture the Canvas API base URL (passed in via options.baseUrl from App)
     this.canvasBaseUrl = mergedOptions.baseUrl || null;
+    // Role id may be passed in via options when multiple reports are configured
+    this.roleId = mergedOptions.roleId || null;
   }
 
   run = async () => {
@@ -62,33 +64,10 @@ class SuspendedStudentsJob {
     const headerRow = data[0];
     const matches = [headerRow];
 
-    // Determine expected role id from environment: ENROL_REPORT_ID_1.
-    // Support process.env and import.meta.env / VITE_ variants.
-    // If not present, do not continue — log and stop.
-    let expectedRoleId = null;
-    try {
-      let rawId = null;
-      if (typeof process !== "undefined" && process.env && process.env.ENROL_REPORT_ID_1) {
-        rawId = process.env.ENROL_REPORT_ID_1;
-      } else {
-        try {
-          rawId = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_ID_1 || import.meta.env.VITE_ENROL_REPORT_ID_1 || import.meta.env.VITE_APP_ENROL_REPORT_ID_1)) || null;
-        } catch (e) {
-          rawId = null;
-        }
-      }
-      if (rawId !== null && typeof rawId !== "undefined") {
-        // strip non-digits just in case and use the remaining as the id
-        const digits = String(rawId).trim().match(/\d+/);
-        if (digits) expectedRoleId = String(digits[0]);
-      }
-    } catch (e) {
-      // fall through to missing handling below
-    }
-
-    // If we couldn't determine an expected role id, stop and log
+    // Use role id passed via options (this.roleId). If absent, stop early.
+    const expectedRoleId = this.roleId ? String(this.roleId) : null;
     if (!expectedRoleId) {
-      console.error("no role ID set in .env");
+      console.error("no role ID set");
       this.csv = "";
       this.statusUpdate("No role ID set");
       return;

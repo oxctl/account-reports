@@ -4,6 +4,7 @@ import { Text } from "@instructure/ui-text";
 import { Heading } from "@instructure/ui-heading";
 import DuplicateLoginsJob from "./jobs/DuplicateLoginsJob";
 import SuspendedStudentsJob from "./jobs/SuspendedStudentsJob";
+import { ENROL_REPORTS } from "./utils/constants";
 import { View } from "@instructure/ui-view";
 import { Alert } from "@instructure/ui-alerts";
 import AccountAdminUsersJob from "./jobs/AccountAdminUsersJob";
@@ -31,35 +32,8 @@ function AccountReportsPage({
   rootAccountId,
   handle40x,
 }) {
-  // Resolve the configured enrolment report name from env (ENROL_REPORT_NAME_1)
-  const resolveEnrolReportName = () => {
-    try {
-      let raw = null;
-      if (typeof process !== "undefined" && process.env && process.env.ENROL_REPORT_NAME_1) {
-        raw = process.env.ENROL_REPORT_NAME_1;
-      } else {
-        try {
-                raw = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_NAME_1 || import.meta.env.VITE_ENROL_REPORT_NAME_1 || import.meta.env.VITE_APP_ENROL_REPORT_NAME_1)) || null;
-        } catch (e) {
-          raw = null;
-        }
-      }
-      if (!raw) return "Unknown Role";
-      // If the value looks like a JSON string, try parsing; otherwise return raw
-      try {
-        const parsed = JSON.parse(String(raw));
-        if (typeof parsed === "string" && parsed.length > 0) return parsed;
-        // If someone put an array, take the first element
-        if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]) return String(parsed[0]);
-      } catch (e) {
-        // not JSON — return trimmed raw string
-      }
-      return String(raw).trim();
-    } catch (e) {
-      return "Unknown Role";
-    }
-  };
-  const suspendedReportName = resolveEnrolReportName();
+  // ENROL_REPORTS is an array built from env (see src/utils/constants.js).
+  // We'll render one report entry per configured enrolment report.
   // Track all alert messages shown to the user (e.g., success/error notices)
   const [alerts, setAlerts] = useState([]);
 
@@ -105,13 +79,14 @@ function AccountReportsPage({
           new DuplicateLoginsJob(server, token, options),
         showOnSubaccount: true,
       },
-      {
-        name: suspendedReportName,
-        description: "A contextual list of people with this role ",
+      // Expand configured enrolment reports into report entries
+      ...ENROL_REPORTS.map((r) => ({
+        name: r.name,
+        description: "A contextual list of people with this role",
         run: (server, token, options) =>
-          new SuspendedStudentsJob(server, token, options),
+          new SuspendedStudentsJob(server, token, { ...options, roleId: r.id }),
         showOnSubaccount: true,
-      },
+      })),
     ],
     [],
   );
