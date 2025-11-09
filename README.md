@@ -42,7 +42,7 @@ Example `.env` entries (recommended with `VITE_` prefix):
 VITE_NUMBER_ENROL_REPORTS=2
 VITE_ENROL_REPORT_NAME_1="Suspended Students"
 VITE_ENROL_REPORT_ID_1=129
-VITE_ENROL_REPORT_NAME_2="Captioner"
+VITE_ENROL_REPORT_NAME_2="Captioners"
 VITE_ENROL_REPORT_ID_2=255
 ```
 
