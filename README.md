@@ -32,7 +32,7 @@ To allow for the generation of role reports, the variables are needed:
 
 - `VITE_NUMBER_ENROL_REPORTS`
 	- The number of enrolment reports to configure (integer). If zero or absent, no enrolment report buttons will be created.
-- ``VITE_ENROL_REPORT_NAME_{i}`, `VITE_ENROL_REPORT_ID_{i}`
+- `VITE_ENROL_REPORT_NAME_{i}`, `VITE_ENROL_REPORT_ID_{i}`
 	- Provide one pair per report where `{i}` is 1..`VITE_NUMBER_ENROL_REPORTS`.
 	- `VITE_ENROL_REPORT_NAME_{i}` is the display name of the report.
 	- `VITE_ENROL_REPORT_ID_{i}` is the numeric role id the report should match (the job will search for this role id in the provisioning CSV).
