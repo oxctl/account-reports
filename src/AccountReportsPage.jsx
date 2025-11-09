@@ -44,7 +44,7 @@ function AccountReportsPage({
           raw = null;
         }
       }
-      if (!raw) return "Suspended Students";
+  if (!raw) return "Unknown Role";
       let parsed = null;
       try {
         parsed = JSON.parse(raw);
@@ -54,10 +54,10 @@ function AccountReportsPage({
         if (m && m[1]) return m[1];
         return String(raw);
       }
-      if (Array.isArray(parsed) && parsed.length > 0) return String(parsed[0]);
-      return "Suspended Students";
+  if (Array.isArray(parsed) && parsed.length > 0 && parsed[0]) return String(parsed[0]);
+  return "Unknown Role";
     } catch (e) {
-      return "Suspended Students";
+      return "Unknown Role";
     }
   };
   const suspendedReportName = resolveEnrolReportName();
@@ -108,7 +108,7 @@ function AccountReportsPage({
       },
       {
         name: suspendedReportName,
-        description: "A contextual list of people with this role",
+        description: "A contextual list of people with this role ",
         run: (server, token, options) =>
           new SuspendedStudentsJob(server, token, options),
         showOnSubaccount: true,
