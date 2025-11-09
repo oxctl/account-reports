@@ -88,7 +88,7 @@ function AccountReportsPage({
         showOnSubaccount: true,
       })),
     ],
-    [],
+    [ENROL_REPORTS],
   );
 
   // --- Alert handling ---
