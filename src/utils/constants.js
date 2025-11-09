@@ -30,12 +30,10 @@ export const ENROL_REPORTS = (() => {
     const name =
       import.meta.env[`VITE_ENROL_REPORT_NAME_${i}`] ||
       import.meta.env[`VITE_APP_ENROL_REPORT_NAME_${i}`] ||
-      import.meta.env[`ENROL_REPORT_NAME_${i}`] ||
       "";
     const idRaw =
       import.meta.env[`VITE_ENROL_REPORT_ID_${i}`] ||
       import.meta.env[`VITE_APP_ENROL_REPORT_ID_${i}`] ||
-      import.meta.env[`ENROL_REPORT_ID_${i}`] ||
       "";
     const idMatch = String(idRaw).trim().match(/\d+/);
     const id = idMatch ? String(idMatch[0]) : "";
