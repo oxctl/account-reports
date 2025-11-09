@@ -70,7 +70,10 @@ class RoleMatchJob {
         this.statusUpdate("Building CSV");
         const text = await attachment.text();
         return text;
-      })();
+      })().catch(err => {
+        RoleMatchJob._provisioningCache.delete(cacheKey);
+        throw err;
+      });
 
       entry = { promise: csvPromise, ts: now };
       try {
