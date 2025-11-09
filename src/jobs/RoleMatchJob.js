@@ -35,15 +35,29 @@ class RoleMatchJob {
   run = async () => {
     const reportApi = new ReportApi(this.host, this.token);
     this.statusUpdate("Running role match report");
-    const report = await reportApi.runReport(
-      "provisioning_csv",
-      { enrollments: "true" },
-      { account: this.accountId },
-    );
-    this.statusUpdate("Downloading report");
-    const attachment = await reportApi.fetchReport(report);
-    this.statusUpdate("Building CSV");
-    const reportCsv = await attachment.text();
+    // Try to reuse a cached provisioning CSV for this host/account/token
+    const cacheKey = `${this.host}::${this.accountId}::${this.token || ""}`;
+    let reportCsv = null;
+    if (RoleMatchJob._provisioningCache && RoleMatchJob._provisioningCache.has(cacheKey)) {
+      reportCsv = RoleMatchJob._provisioningCache.get(cacheKey);
+      this.statusUpdate("Using cached provisioning CSV");
+    } else {
+      const report = await reportApi.runReport(
+        "provisioning_csv",
+        { enrollments: "true" },
+        { account: this.accountId },
+      );
+      this.statusUpdate("Downloading report");
+      const attachment = await reportApi.fetchReport(report);
+      this.statusUpdate("Building CSV");
+      reportCsv = await attachment.text();
+      try {
+        if (!RoleMatchJob._provisioningCache) RoleMatchJob._provisioningCache = new Map();
+        RoleMatchJob._provisioningCache.set(cacheKey, reportCsv);
+      } catch (e) {
+        // ignore cache failures
+      }
+    }
 
     // Parse without headers so we can inspect columns by index.
     const parsed = Papa.parse(reportCsv, {
