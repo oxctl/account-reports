@@ -1,6 +1,9 @@
 import ReportApi from "./ReportApi";
 import * as Papa from "papaparse";
 
+// TTL for cached provisioning CSVs: 360 minutes (6 hours)
+const PROVISIONING_CACHE_TTL_MS = 360 * 60 * 1000;
+
 /**
  * RoleMatchJob
  *
@@ -36,15 +39,27 @@ class RoleMatchJob {
     const reportApi = new ReportApi(this.host, this.token);
     this.statusUpdate("Running role match report");
     // Try to reuse a cached provisioning CSV for this host/account/token.
-    // Use a promise-based cache so concurrent runs wait on the same in-flight fetch
-    // instead of issuing duplicate downloads.
+    // Use a promise-based cache with a TTL so concurrent runs wait on the
+    // same in-flight fetch and cached entries older than TTL are refreshed.
     const cacheKey = `${this.host}::${this.accountId}::${this.token || ""}`;
     if (!RoleMatchJob._provisioningCache) RoleMatchJob._provisioningCache = new Map();
 
-    let csvPromise = RoleMatchJob._provisioningCache.get(cacheKey);
-    if (!csvPromise) {
-      // create and store the promise immediately so other instances can wait on it
-      csvPromise = (async () => {
+    // Stored entry shape: { promise: Promise<string>, ts: number }
+    let entry = RoleMatchJob._provisioningCache.get(cacheKey);
+    const now = Date.now();
+    if (entry && entry.ts && now - entry.ts > PROVISIONING_CACHE_TTL_MS) {
+      // expired
+      try {
+        RoleMatchJob._provisioningCache.delete(cacheKey);
+      } catch (e) {
+        // ignore
+      }
+      entry = null;
+    }
+
+    if (!entry) {
+      // create and store the promise entry immediately so other instances can wait on it
+      const csvPromise = (async () => {
         const report = await reportApi.runReport(
           "provisioning_csv",
           { enrollments: "true" },
@@ -57,8 +72,9 @@ class RoleMatchJob {
         return text;
       })();
 
+      entry = { promise: csvPromise, ts: now };
       try {
-        RoleMatchJob._provisioningCache.set(cacheKey, csvPromise);
+        RoleMatchJob._provisioningCache.set(cacheKey, entry);
       } catch (e) {
         // ignore cache set failures
       }
@@ -68,7 +84,7 @@ class RoleMatchJob {
 
     let reportCsv = null;
     try {
-      reportCsv = await csvPromise;
+      reportCsv = await entry.promise;
     } catch (e) {
       // If the fetch failed, remove the cache entry so future attempts can retry
       try {
