@@ -35,28 +35,48 @@ class RoleMatchJob {
   run = async () => {
     const reportApi = new ReportApi(this.host, this.token);
     this.statusUpdate("Running role match report");
-    // Try to reuse a cached provisioning CSV for this host/account/token
+    // Try to reuse a cached provisioning CSV for this host/account/token.
+    // Use a promise-based cache so concurrent runs wait on the same in-flight fetch
+    // instead of issuing duplicate downloads.
     const cacheKey = `${this.host}::${this.accountId}::${this.token || ""}`;
-    let reportCsv = null;
-    if (RoleMatchJob._provisioningCache && RoleMatchJob._provisioningCache.has(cacheKey)) {
-      reportCsv = RoleMatchJob._provisioningCache.get(cacheKey);
-      this.statusUpdate("Using cached provisioning CSV");
-    } else {
-      const report = await reportApi.runReport(
-        "provisioning_csv",
-        { enrollments: "true" },
-        { account: this.accountId },
-      );
-      this.statusUpdate("Downloading report");
-      const attachment = await reportApi.fetchReport(report);
-      this.statusUpdate("Building CSV");
-      reportCsv = await attachment.text();
+    if (!RoleMatchJob._provisioningCache) RoleMatchJob._provisioningCache = new Map();
+
+    let csvPromise = RoleMatchJob._provisioningCache.get(cacheKey);
+    if (!csvPromise) {
+      // create and store the promise immediately so other instances can wait on it
+      csvPromise = (async () => {
+        const report = await reportApi.runReport(
+          "provisioning_csv",
+          { enrollments: "true" },
+          { account: this.accountId },
+        );
+        this.statusUpdate("Downloading report");
+        const attachment = await reportApi.fetchReport(report);
+        this.statusUpdate("Building CSV");
+        const text = await attachment.text();
+        return text;
+      })();
+
       try {
-        if (!RoleMatchJob._provisioningCache) RoleMatchJob._provisioningCache = new Map();
-        RoleMatchJob._provisioningCache.set(cacheKey, reportCsv);
+        RoleMatchJob._provisioningCache.set(cacheKey, csvPromise);
       } catch (e) {
-        // ignore cache failures
+        // ignore cache set failures
       }
+    } else {
+      this.statusUpdate("Waiting for cached provisioning CSV");
+    }
+
+    let reportCsv = null;
+    try {
+      reportCsv = await csvPromise;
+    } catch (e) {
+      // If the fetch failed, remove the cache entry so future attempts can retry
+      try {
+        RoleMatchJob._provisioningCache.delete(cacheKey);
+      } catch (e2) {
+        // ignore
+      }
+      throw e;
     }
 
     // Parse without headers so we can inspect columns by index.
