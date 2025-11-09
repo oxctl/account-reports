@@ -84,14 +84,10 @@ These two environment variables also need setting (will be replaced v soon)
 
 The test:
 
-`VITE_NUMBER_ENROL_REPORTS`
-	- The number of enrolment reports to configure (integer). If zero or absent, no enrolment report buttons will be created.
-`VITE_ENROL_REPORT_NAME_{i}` and `VITE_ENROL_REPORT_ID_{i}`
-	- Provide one pair per report where `{i}` is 1..`VITE_NUMBER_ENROL_REPORTS`.
-	- `VITE_ENROL_REPORT_NAME_{i}` is the display name of the report.
-	- `VITE_ENROL_REPORT_ID_{i}` is the numeric role id the report should match (the job will search for this role id in the provisioning CSV).
- - check the tool loads
- - checks there are buttons on the first page to run reports
+The deployment test checks that:
+ - the tool loads successfully
+ - the required environment variables (such as `CANVAS_HOST`) are set
+ - report buttons appear on the first page, indicating enrolment reports are configured correctly
 
 ### Releasing
 
