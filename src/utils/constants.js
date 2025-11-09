@@ -24,7 +24,7 @@ export const NUMBER_ENROL_REPORTS = Number(
 // Build an array of enrolment report configs from env. Keys follow the
 // pattern ENROL_REPORT_NAME_{i} and ENROL_REPORT_ID_{i} (or VITE_/VITE_APP_ prefixed).
 export const ENROL_REPORTS = (() => {
-  const n = Number(NUMBER_ENROL_REPORTS) || 0;
+  const n = NUMBER_ENROL_REPORTS || 0;
   const out = [];
   for (let i = 1; i <= n; i++) {
     const name =
