@@ -62,15 +62,59 @@ class SuspendedStudentsJob {
     const headerRow = data[0];
     const matches = [headerRow];
 
-    // Find rows where the F column (index 5) equals '129'
+    // Determine expected role id from environment (ENROL_REPORT_1 is expected
+    // to be an array like ["Suspended Students", 129]). We support several
+    // env locations so this works both in local env files and when built.
+    let expectedRoleId = "111"; // fallback
+    try {
+      let rawEnv = null;
+      if (typeof process !== "undefined" && process.env && process.env.ENROL_REPORT_1) {
+        rawEnv = process.env.ENROL_REPORT_1;
+      } else {
+        try {
+          // import.meta.env is available in Vite-built code. Access it inside a try
+          // block so environments that don't support import.meta won't throw at parse time.
+          rawEnv = (import.meta && import.meta.env && (import.meta.env.ENROL_REPORT_1 || import.meta.env.VITE_ENROL_REPORT_1)) || null;
+        } catch (e) {
+          rawEnv = null;
+        }
+      }
+      if (rawEnv) {
+        // rawEnv may be a JSON-like string (e.g. '["Suspended Students",129]')
+        let parsed = null;
+        try {
+          parsed = JSON.parse(rawEnv);
+        } catch (e) {
+          // Try to coerce an unquoted number or similar into JSON by string replacement
+          try {
+            const cleaned = String(rawEnv).replace(/'/g, '"');
+            parsed = JSON.parse(cleaned);
+          } catch (e2) {
+            // last resort: attempt to eval the array form safely by extracting numbers
+            const nums = String(rawEnv).match(/\d+/g);
+            if (nums && nums.length >= 1) {
+              // assume the second numeric value is the role id
+              parsed = [null, Number(nums[nums.length - 1])];
+            }
+          }
+        }
+        if (parsed && Array.isArray(parsed) && parsed.length > 1) {
+          expectedRoleId = String(parsed[1]);
+        }
+      }
+    } catch (e) {
+      // keep fallback
+    }
+
+    // Find rows where the F column (index 5) equals the expected role id
     // AND the 9th column (index 8) equals 'active'. If either condition
     // fails for a row, it will be ignored.
     for (let i = 1; i < data.length; i++) {
       const row = data[i];
       // row may be shorter; guard against that
-      const colF = row && row.length > 5 ? String(row[5]).trim() : "";
+      const col6 = row && row.length > 5 ? String(row[5]).trim() : "";
       const col9 = row && row.length > 8 ? String(row[8]).trim() : "";
-      if (colF === "129" && col9 === "active") {
+      if (col6 === expectedRoleId && col9 === "active") {
         matches.push(row);
       }
     }
