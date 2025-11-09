@@ -63,9 +63,9 @@ class SuspendedStudentsJob {
     const matches = [headerRow];
 
     // Determine expected role id from environment: ENROL_REPORT_ID_1.
-    // Support process.env and import.meta.env / VITE_ variants. Fallback to
-    // "111" if not present.
-    let expectedRoleId = "111"; // fallback
+    // Support process.env and import.meta.env / VITE_ variants.
+    // If not present, do not continue — log and stop.
+    let expectedRoleId = null;
     try {
       let rawId = null;
       if (typeof process !== "undefined" && process.env && process.env.ENROL_REPORT_ID_1) {
@@ -83,7 +83,15 @@ class SuspendedStudentsJob {
         if (digits) expectedRoleId = String(digits[0]);
       }
     } catch (e) {
-      // keep fallback
+      // fall through to missing handling below
+    }
+
+    // If we couldn't determine an expected role id, stop and log
+    if (!expectedRoleId) {
+      console.error("no role ID set");
+      this.csv = "";
+      this.statusUpdate("No role ID set");
+      return;
     }
 
     // Find rows where the F column (index 5) equals the expected role id
