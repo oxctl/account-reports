@@ -157,7 +157,7 @@ class RoleMatchJob {
       }
     }
 
-    // Prepend canvasBaseUrl/courses/ to the first column for each data row (leave header unchanged)
+    // Prepend canvasBaseUrl/courses/ to the first column for each data row (leave header unchanged) append /users.
     const hostBase = (this.canvasBaseUrl || "").replace(/\/$/, "");
     const withHost = unique.map((row, idx) => {
       if (idx === 0) return row;
