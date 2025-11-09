@@ -14,12 +14,42 @@ The tool does not have a back-end, it is a JavaScript Vite application. The easi
  - Root directory:
  - Build comments: `Enabled`
  
-## Configure
+## Configuration
+
+### Account Admin Users
 
 The `.env` (environment) file must specify
 
  - the ID of the root account (`VITE_APP_ROOT_ACCOUNT_ID`) which is often `1`
  - an array containing a list of IDs whose corresponding role is considered to be a sub-account administrator (`VITE_APP_SUBACCOUNT_ADMIN_ROLES`)
+
+### Enrolment Reports
+
+This project can be configured to expose one or more enrolment report buttons in the UI. These are configured using environment variables. At build time Vite only exposes variables prefixed with `VITE_`; this tool supports `VITE_` variables and will also accept `VITE_APP_` or non-prefixed variables for development convenience, but using the `VITE_` prefix is recommended for production builds.
+
+The variables are:
+
+- `NUMBER_ENROL_REPORTS` (or `VITE_NUMBER_ENROL_REPORTS` / `VITE_APP_NUMBER_ENROL_REPORTS`)
+	- The number of enrolment reports to configure (integer). If zero or absent, no enrolment report buttons will be created.
+- `ENROL_REPORT_NAME_{i}` and `ENROL_REPORT_ID_{i}` (or `VITE_ENROL_REPORT_NAME_{i}` / `VITE_APP_ENROL_REPORT_NAME_{i}`, `VITE_ENROL_REPORT_ID_{i}` / `VITE_APP_ENROL_REPORT_ID_{i}`)
+	- Provide one pair per report where `{i}` is 1..`NUMBER_ENROL_REPORTS`.
+	- `ENROL_REPORT_NAME_{i}` is the display name for the button.
+	- `ENROL_REPORT_ID_{i}` is the numeric role id the report should match (the job will search for this role id in the provisioning CSV).
+
+Example `.env` entries (recommended with `VITE_` prefix):
+
+```env
+VITE_NUMBER_ENROL_REPORTS=2
+VITE_ENROL_REPORT_NAME_1="Suspended students"
+VITE_ENROL_REPORT_ID_1=129
+VITE_ENROL_REPORT_NAME_2="Captioner"
+VITE_ENROL_REPORT_ID_2=255
+```
+
+Notes
+- The application will read `VITE_` prefixed variables first (as required by Vite). If you use `VITE_APP_` or unprefixed variables during local development, the app will also accept them as fallbacks, but those will not be available in a Vite production build unless you rename them to `VITE_`.
+- The configured `ENROL_REPORT_ID` is passed into the job and must be a valid numeric role id.
+
 
 ## Installing the tool
 
