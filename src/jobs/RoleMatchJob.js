@@ -119,7 +119,6 @@ class RoleMatchJob {
     // Use role id passed via options (this.roleId). If absent, stop early.
     const expectedRoleId = this.roleId ? String(this.roleId) : null;
     if (!expectedRoleId) {
-      console.error("no role ID set");
       this.csv = "";
       this.statusUpdate("No role ID set");
       return;
