@@ -16,6 +16,8 @@ The tool does not have a back-end, it is a JavaScript Vite application. The easi
  
 ## Configuration
 
+The application reads ONLY `VITE_` prefixed variables for enrolment report configuration. `VITE_APP_` or unprefixed variables are not supported and will not be available in production builds.
+
 ### Account Admin Users
 
 The `.env` (environment) file must specify
@@ -47,7 +49,6 @@ VITE_ENROL_REPORT_ID_2=255
 
 Notes
 
-- The application reads ONLY `VITE_` prefixed variables for enrolment report configuration. `VITE_APP_` or unprefixed variables are not supported and will not be available in production builds.
 - The configured `VITE_ENROL_REPORT_ID` is passed into the job and must be a valid numeric role id.
 
 
