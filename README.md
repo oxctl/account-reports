@@ -29,9 +29,9 @@ This project can be configured to expose one or more enrolment report buttons in
 
 The variables are:
 
-- `NUMBER_ENROL_REPORTS` (or `VITE_NUMBER_ENROL_REPORTS` / `VITE_APP_NUMBER_ENROL_REPORTS`)
+- `NUMBER_ENROL_REPORTS` (or `VITE_NUMBER_ENROL_REPORTS`)
 	- The number of enrolment reports to configure (integer). If zero or absent, no enrolment report buttons will be created.
-- `ENROL_REPORT_NAME_{i}` and `ENROL_REPORT_ID_{i}` (or `VITE_ENROL_REPORT_NAME_{i}` / `VITE_APP_ENROL_REPORT_NAME_{i}`, `VITE_ENROL_REPORT_ID_{i}` / `VITE_APP_ENROL_REPORT_ID_{i}`)
+- `ENROL_REPORT_NAME_{i}` and `ENROL_REPORT_ID_{i}` (or `VITE_ENROL_REPORT_NAME_{i}`, `VITE_ENROL_REPORT_ID_{i}`)
 	- Provide one pair per report where `{i}` is 1..`NUMBER_ENROL_REPORTS`.
 	- `ENROL_REPORT_NAME_{i}` is the display name of the report.
 	- `ENROL_REPORT_ID_{i}` is the numeric role id the report should match (the job will search for this role id in the provisioning CSV).
@@ -46,8 +46,9 @@ VITE_ENROL_REPORT_NAME_2="Captioners"
 VITE_ENROL_REPORT_ID_2=255
 ```
 
-- Notes
-- The application will read `VITE_` prefixed variables first (as required by Vite). The tool also supports `VITE_APP_` as a legacy fallback for local development. Unprefixed variables are not supported for enrolment report configuration and may not be available in production builds.
+Notes
+
+- The application reads ONLY `VITE_` prefixed variables for enrolment report configuration. `VITE_APP_` or unprefixed variables are not supported and will not be available in production builds.
 - The configured `ENROL_REPORT_ID` is passed into the job and must be a valid numeric role id.
 
 
