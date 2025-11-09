@@ -160,12 +160,16 @@ class RoleMatchJob {
     const hostBase = (this.canvasBaseUrl || "").replace(/\/$/, "");
     const withHost = unique.map((row, idx) => {
       if (idx === 0) return row;
-      const id = row && row.length > 0 ? String(row[0]).trim() : "";
+      if (!Array.isArray(row)) {
+        // Skip non-array rows (return null, will be filtered out)
+        return null;
+      }
+      const id = row.length > 0 ? String(row[0]).trim() : "";
       const newFirst = id ? `${hostBase}/courses/${id}/users` : "";
-      const newRow = Array.isArray(row) ? [...row] : [row];
+      const newRow = [...row];
       newRow[0] = newFirst;
       return newRow;
-    });
+    }).filter(row => row !== null);
 
     // Build final output with three columns: Canvas Course URL (A), User ID (D), and Role (E).
     // Replace the header row with the desired headings.
