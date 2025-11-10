@@ -36,19 +36,15 @@ class RoleMatchJob {
     const reportApi = new ReportApi(this.host, this.token);
     this.statusUpdate("Running role match report");
     let reportCsv = null;
-    try {
-      const report = await reportApi.runReport(
-        "provisioning_csv",
-        { enrollments: "true" },
-        { account: this.accountId },
-      );
-      this.statusUpdate("Downloading report");
-      const attachment = await reportApi.fetchReport(report);
-      this.statusUpdate("Building CSV");
-      reportCsv = await attachment.text();
-    } catch (e) {
-      throw e;
-    }
+    const report = await reportApi.runReport(
+      "provisioning_csv",
+      { enrollments: "true" },
+      { account: this.accountId },
+    );
+    this.statusUpdate("Downloading report");
+    const attachment = await reportApi.fetchReport(report);
+    this.statusUpdate("Building CSV");
+    reportCsv = await attachment.text();
 
     // Parse without headers so we can inspect columns by index.
     const parsed = Papa.parse(reportCsv, {
