@@ -1,9 +1,6 @@
 import ReportApi from "./ReportApi";
 import * as Papa from "papaparse";
 
-// TTL for cached provisioning CSVs: 360 minutes (6 hours)
-const PROVISIONING_CACHE_TTL_MS = 360 * 60 * 1000;
-
 /**
  * RoleMatchJob
  *
@@ -38,63 +35,18 @@ class RoleMatchJob {
   run = async () => {
     const reportApi = new ReportApi(this.host, this.token);
     this.statusUpdate("Running role match report");
-    // Try to reuse a cached provisioning CSV for this host/account/token.
-    // Use a promise-based cache with a TTL so concurrent runs wait on the
-    // same in-flight fetch and cached entries older than TTL are refreshed.
-    const cacheKey = `${this.host}::${this.accountId}::${this.token || ""}`;
-    if (!RoleMatchJob._provisioningCache) RoleMatchJob._provisioningCache = new Map();
-
-    // Stored entry shape: { promise: Promise<string>, ts: number }
-    let entry = RoleMatchJob._provisioningCache.get(cacheKey);
-    const now = Date.now();
-    if (entry && entry.ts && now - entry.ts > PROVISIONING_CACHE_TTL_MS) {
-      // expired
-      try {
-        RoleMatchJob._provisioningCache.delete(cacheKey);
-      } catch (e) {
-        // ignore
-      }
-      entry = null;
-    }
-
-    if (!entry) {
-      // create and store the promise entry immediately so other instances can wait on it
-      const csvPromise = (async () => {
-        const report = await reportApi.runReport(
-          "provisioning_csv",
-          { enrollments: "true" },
-          { account: this.accountId },
-        );
-        this.statusUpdate("Downloading report");
-        const attachment = await reportApi.fetchReport(report);
-        this.statusUpdate("Building CSV");
-        const text = await attachment.text();
-        return text;
-      })().catch(err => {
-        RoleMatchJob._provisioningCache.delete(cacheKey);
-        throw err;
-      });
-
-      entry = { promise: csvPromise, ts: now };
-      try {
-        RoleMatchJob._provisioningCache.set(cacheKey, entry);
-      } catch (e) {
-        // ignore cache set failures
-      }
-    } else {
-      this.statusUpdate("Waiting for cached provisioning CSV");
-    }
-
     let reportCsv = null;
     try {
-      reportCsv = await entry.promise;
+      const report = await reportApi.runReport(
+        "provisioning_csv",
+        { enrollments: "true" },
+        { account: this.accountId },
+      );
+      this.statusUpdate("Downloading report");
+      const attachment = await reportApi.fetchReport(report);
+      this.statusUpdate("Building CSV");
+      reportCsv = await attachment.text();
     } catch (e) {
-      // If the fetch failed, remove the cache entry so future attempts can retry
-      try {
-        RoleMatchJob._provisioningCache.delete(cacheKey);
-      } catch (e2) {
-        // ignore
-      }
       throw e;
     }
 
