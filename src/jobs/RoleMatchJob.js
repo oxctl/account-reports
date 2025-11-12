@@ -23,19 +23,21 @@ class RoleMatchJob {
   constructor(host, token, options = {}) {
     this.host = host;
     this.token = token;
-    const mergedOptions = { ...RoleMatchJob.defaultOpts, ...options };
-    this.accountId = mergedOptions.accountId;
-    this.statusUpdate = mergedOptions.statusUpdate;
+    const { accountId, statusUpdate, baseUrl, roleId } = {
+      ...RoleMatchJob.defaultOpts,
+      ...options,
+    };
+    this.accountId = accountId;
+    this.statusUpdate = statusUpdate;
     // Capture the Canvas API base URL (passed in via options.baseUrl from App)
-    this.canvasBaseUrl = mergedOptions.baseUrl || null;
+    this.canvasBaseUrl = baseUrl || null;
     // Role id may be passed in via options when multiple reports are configured
-    this.roleId = mergedOptions.roleId || null;
+    this.roleId = roleId || null;
   }
 
   run = async () => {
     const reportApi = new ReportApi(this.host, this.token);
     this.statusUpdate("Running role match report");
-    let reportCsv = null;
     const report = await reportApi.runReport(
       "provisioning_csv",
       { enrollments: "true" },
@@ -44,7 +46,7 @@ class RoleMatchJob {
     this.statusUpdate("Downloading report");
     const attachment = await reportApi.fetchReport(report);
     this.statusUpdate("Building CSV");
-    reportCsv = await attachment.text();
+    const reportCsv = await attachment.text();
 
     // Parse without headers so we can inspect columns by index.
     const parsed = Papa.parse(reportCsv, {
