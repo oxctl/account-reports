@@ -14,12 +14,43 @@ The tool does not have a back-end, it is a JavaScript Vite application. The easi
  - Root directory:
  - Build comments: `Enabled`
  
-## Configure
+## Configuration
+
+The application reads ONLY `VITE_` prefixed variables for enrolment report configuration. `VITE_APP_` or unprefixed variables are not supported and will not be available in production builds.
+
+### Account Admin Users
 
 The `.env` (environment) file must specify
 
- - the ID of the root account (`VITE_APP_ROOT_ACCOUNT_ID`) which is often `1`
- - an array containing a list of IDs whose corresponding role is considered to be a sub-account administrator (`VITE_APP_SUBACCOUNT_ADMIN_ROLES`)
+ - the ID of the root account (`VITE_ROOT_ACCOUNT_ID`) which is often `1`
+ - an array containing a list of IDs whose corresponding role is considered to be a sub-account administrator (`VITE_SUBACCOUNT_ADMIN_ROLES`)
+
+### Enrolment Reports
+
+
+To allow for the generation of role reports, the following variables are needed:
+
+- `VITE_NUMBER_ENROL_REPORTS`
+	- The number of enrolment reports to configure (integer). If zero or absent, no enrolment report buttons will be created.
+- `VITE_ENROL_REPORT_NAME_{i}`, `VITE_ENROL_REPORT_ID_{i}`
+	- Provide one pair per report where `{i}` is 1..`VITE_NUMBER_ENROL_REPORTS`.
+	- `VITE_ENROL_REPORT_NAME_{i}` is the display name of the report.
+	- `VITE_ENROL_REPORT_ID_{i}` is the numeric role id the report should match (the job will search for this role id in the provisioning CSV).
+
+Example `.env` entries (recommended with `VITE_` prefix):
+
+```env
+VITE_NUMBER_ENROL_REPORTS=2
+VITE_ENROL_REPORT_NAME_1="Suspended Students"
+VITE_ENROL_REPORT_ID_1=129
+VITE_ENROL_REPORT_NAME_2="Captioners"
+VITE_ENROL_REPORT_ID_2=255
+```
+
+Notes
+
+- The configured `VITE_ENROL_REPORT_ID` is passed into the job and must be a valid numeric role id.
+
 
 ## Installing the tool
 
@@ -45,18 +76,12 @@ The deploy to development is done automatically when a new commit is made to mas
 
 ### Deployment Tests
 
-There is a simple deployment test that is run when the tool is deployed to Beta or Production. This test relies on the repository having access to the organisational 
+There is a simple deployment test that is run when the tool is deployed to Beta or Production - we check that the page loads and has the expected title. This test relies on the repository having access to the organisational 
 Github Actions Secret `DEPLOYMENT_TESTS_OAUTH_TOKEN`. Access must be granted on a repository by repository basis.
 
-These two environment variables also need setting (will be replaced v soon)
-
+This variable needs setting:
  - `CANVAS_HOST`
- - `TOOL_ID`
 
-The test:
-
- - check the tool loads
- - checks there are buttons on the first page to run reports
 
 ### Releasing
 

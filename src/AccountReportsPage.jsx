@@ -3,6 +3,8 @@ import { Grid } from "@instructure/ui-grid";
 import { Text } from "@instructure/ui-text";
 import { Heading } from "@instructure/ui-heading";
 import DuplicateLoginsJob from "./jobs/DuplicateLoginsJob";
+import RoleMatchJob from "./jobs/RoleMatchJob";
+import { ENROL_REPORTS } from "./utils/constants";
 import { View } from "@instructure/ui-view";
 import { Alert } from "@instructure/ui-alerts";
 import AccountAdminUsersJob from "./jobs/AccountAdminUsersJob";
@@ -30,6 +32,8 @@ function AccountReportsPage({
   rootAccountId,
   handle40x,
 }) {
+  // ENROL_REPORTS is an array built from env (see src/utils/constants.js).
+  // We'll render one report entry per configured enrolment report.
   // Track all alert messages shown to the user (e.g., success/error notices)
   const [alerts, setAlerts] = useState([]);
 
@@ -75,8 +79,16 @@ function AccountReportsPage({
           new DuplicateLoginsJob(server, token, options),
         showOnSubaccount: true,
       },
+      // Expand configured enrolment reports into report entries
+      ...ENROL_REPORTS.map((r) => ({
+        name: r.name,
+        description: "A contextual list of people with this role",
+        run: (server, token, options) =>
+          new RoleMatchJob(server, token, { ...options, roleId: r.id }),
+        showOnSubaccount: true,
+      })),
     ],
-    [],
+    [ENROL_REPORTS],
   );
 
   // --- Alert handling ---
