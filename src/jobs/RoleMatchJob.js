@@ -95,24 +95,20 @@ class RoleMatchJob {
 
     // Prepend canvasBaseUrl/courses/ to the first column for each data row (leave header unchanged) append /users.
     const hostBase = (this.canvasBaseUrl || "").replace(/\/$/, "");
-    const withHost = unique.map((row, idx) => {
-      if (idx === 0) return row;
-      if (!Array.isArray(row)) {
-        // Skip non-array rows (return null, will be filtered out)
-        return null;
-      }
-      const id = row.length > 0 ? String(row[0]).trim() : "";
-      const newFirst = id ? `${hostBase}/courses/${id}/users` : "";
-      const newRow = [...row];
-      newRow[0] = newFirst;
-      return newRow;
-    }).filter(row => row !== null);
+    const withHost = unique
+      .filter((row) => Array.isArray(row))
+      .map((row) => {
+        const id = row.length > 0 ? String(row[0]).trim() : "";
+        const newFirst = id ? `${hostBase}/courses/${id}/users` : "";
+        const newRow = [...row];
+        newRow[0] = newFirst;
+        return newRow;
+      });
 
     // Build final output with three columns: Canvas Course URL (A), User ID (D), and Role (E).
     // Replace the header row with the desired headings.
-    const finalRows = [];
-    finalRows.push(["Canvas Course URL", "User ID", "Role"]);
-    for (let i = 1; i < withHost.length; i++) {
+    const finalRows = [["Canvas Course URL", "User ID", "Role"]];
+    for (let i = 0; i < withHost.length; i++) {
       const row = withHost[i];
       const courseUrl = row && row.length > 0 ? String(row[0]).trim() : "";
       // Original D column is index 3 in the trimmed rows
