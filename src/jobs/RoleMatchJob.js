@@ -49,14 +49,13 @@ class RoleMatchJob {
     const reportCsv = await attachment.text();
 
     // Parse without headers so we can inspect columns by index.
-    const parsed = Papa.parse(reportCsv, {
+    const { data } = Papa.parse(reportCsv, {
       delimiter: ",",
       header: false,
       skipEmptyLines: true,
     });
 
-    const data = parsed.data || [];
-    if (data.length === 0) {
+    if (!data || data.length === 0) {
       this.csv = "";
       this.statusUpdate("No data in CSV");
       return;
