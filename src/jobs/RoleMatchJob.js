@@ -61,10 +61,6 @@ class RoleMatchJob {
       return;
     }
 
-    // Keep the original header row as the first row in the output
-    const headerRow = data[0];
-    const matches = [headerRow];
-
     // Use role id passed via options (this.roleId). If absent, stop early.
     const expectedRoleId = this.roleId ? String(this.roleId) : null;
     if (!expectedRoleId) {
@@ -73,38 +69,29 @@ class RoleMatchJob {
       return;
     }
 
-    // Find rows where the 6th column (index 5) equals the expected role id
-    // AND the 9th column (index 8) equals 'active'. If either condition
-    // fails for a row, it will be ignored.
-    for (let i = 1; i < data.length; i++) {
-      const row = data[i];
-      // row may be shorter; guard against that
-      const col6 = row && row.length > 5 ? String(row[5]).trim() : "";
-      const col9 = row && row.length > 8 ? String(row[8]).trim() : "";
-      if (col6 === String(expectedRoleId) && col9 === "active") {
-        matches.push(row);
-      }
-    }
+    // Process rows (skip header at index 0):
+    // 1) filter rows by role id (col 6) and active status (col 9)
+    // 2) trim to first 5 columns
+    // 3) deduplicate while preserving order
+    const rows = (data || []).slice(1);
 
-    // Keep only the first 5 columns temporarily; later, only 3 columns
-    // (Canvas Course URL, User ID, and Role) will be included in the final output.
-    // Remove duplicate rows while preserving the original header as the first row.
-    const trimmed = matches.map((r) => (Array.isArray(r) ? r.slice(0, 5) : []));
+    const filtered = rows
+      .filter((row) => {
+        const col6 = Array.isArray(row) && row.length > 5 ? String(row[5]).trim() : "";
+        const col9 = Array.isArray(row) && row.length > 8 ? String(row[8]).trim() : "";
+        return col6 === String(expectedRoleId) && col9 === "active";
+      })
+      .map((r) => (Array.isArray(r) ? r.slice(0, 5) : []));
 
     const seen = new Set();
-    const unique = [];
-    if (trimmed.length > 0) {
-      unique.push(trimmed[0]); // header
-    }
-    for (let i = 1; i < trimmed.length; i++) {
-      const row = trimmed[i];
-      // Use a simple join for dedupe keys which is faster than JSON.stringify
+    const unique = filtered.reduce((acc, row) => {
       const key = Array.isArray(row) ? row.join("|") : String(row);
       if (!seen.has(key)) {
         seen.add(key);
-        unique.push(row);
+        acc.push(row);
       }
-    }
+      return acc;
+    }, []);
 
     // Prepend canvasBaseUrl/courses/ to the first column for each data row (leave header unchanged) append /users.
     const hostBase = (this.canvasBaseUrl || "").replace(/\/$/, "");
