@@ -9,7 +9,7 @@
   },
   "devDependencies": {
     "@oxctl/deployment-test-utils": "1.1.2",
-    "@playwright/test": "^1.36.2",
+    "@playwright/test": "^1.55.1",
     "dotenv": "^16.3.1"
   }
 }
