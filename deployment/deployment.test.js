@@ -1,12 +1,11 @@
 import { test, expect } from '@playwright/test'
-import { dismissBetaBanner, getLtiIFrame, waitForNoSpinners } from '@oxctl/deployment-test-utils'
+import { dismissBetaBanner, getLtiIFrame, waitForNoSpinners, TEST_URL } from '@oxctl/deployment-test-utils'
 
-const host = process.env.CANVAS_HOST
-const url = process.env.URL
+// TEST_URL is provided by @oxctl/deployment-test-utils and composes host+path
 
 test.describe('Test deployment', () => {
     test('The tool should load and the title "Account Reports" should be shown', async ({context, page}) => {
-    await page.goto(`${host}/${url}`)
+    await page.goto(TEST_URL)
     await dismissBetaBanner(page)
     const ltiIFrame = getLtiIFrame(page)
     await waitForNoSpinners(ltiIFrame)
