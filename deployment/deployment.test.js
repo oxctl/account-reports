@@ -9,9 +9,6 @@ test.describe('Test deployment', () => {
     const ltiIFrame = getLtiIFrame(page)
     await waitForNoSpinners(ltiIFrame)
 
-    // shouldnt need to wait but oxeval was acting strangely! (Waiting didnt cure the problem.)
-    // await new Promise(r => setTimeout(r, 10000)); 
-
     // Check there's a title Account Reports
     const title = ltiIFrame.getByText("Account Reports")
     await expect(title).toBeVisible();
