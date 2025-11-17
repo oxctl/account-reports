@@ -1,4 +1,5 @@
 .env
+node_modules/
 # Playwright outputs
 playwright-report/
 test-results/
