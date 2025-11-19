@@ -8,8 +8,8 @@
         "title": "Account Tools (New)$TITLE_SUFFIX",
         "description": "Presents links to useful Canvas reports: account reports, provisioning and SIS imports.",
         "target_link_uri": "$TOOL_URL",
-        "oidc_initiation_url": "$TOOLS_SERVER_URL/lti/login_initiation/",
-        "public_jwk_url": "$TOOLS_SERVER_URL/.well-known/jwks.json",
+        "oidc_initiation_url": "$TOOL_SUPPORT_URL/lti/login_initiation/",
+        "public_jwk_url": "$TOOL_SUPPORT_URL/.well-known/jwks.json",
         "scopes": [],
         "extensions": [
           {
@@ -35,7 +35,7 @@
     },
     "developer_key": {
       "name": "Account Tools (New)$TITLE_SUFFIX",
-      "redirect_uris": "$TOOLS_SERVER_URL/lti/login",
+      "redirect_uris": "$TOOL_SUPPORT_URL/lti/login",
       "scopes": []
     }
   },
@@ -43,7 +43,7 @@
     "developer_key": {
       "name": "Account Tools (New) API$TITLE_SUFFIX",
       "require_scopes": true,
-      "redirect_uris" : "$TOOLS_SERVER_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
+      "redirect_uris" : "$TOOL_SUPPORT_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
       "scopes": [
         "url:GET|/api/v1/accounts/:account_id/reports",     
         "url:GET|/api/v1/accounts/:account_id/reports/:report", 
@@ -104,7 +104,7 @@
       "$TOOL_URL"
     ],
     "secret": null,
-    "issuer": "$TOOLS_SERVER_URL",
+    "issuer": "$TOOL_SUPPORT_URL",
     "nrpsAllowedRoles": []
   }
 }

@@ -1,0 +1,46 @@
+name: Update tool configuration in Canvas and Tool Support
+on:
+  workflow_call:
+    inputs:
+      account_type:
+        description: 'Prod or preview account'
+        type: string
+      app_name:
+        description: 'The name of the app'
+        type: string
+      env_type:
+        description: 'The environment type, e.g. test, beta, prod'
+        type: string
+        
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.env_type }}
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+      # escape JSON, inject front end, back end & canvas provider into template file
+      - run: cat tool-config/${{ inputs.env_type }}-template.json > tool-config/default.json
+      # This sets up the configuration for the tool config update
+      - run: |
+          mkdir -p ~/.tool-config
+          jq -n '{"setup": {"canvas_url": $ENV.CANVAS_HOST, "tool_support_url": $ENV.TOOL_SUPPORT_URL }, "secrets": { "canvas_token": $ENV.CANVAS_TOKEN, "tool_support_username": $ENV.TOOL_SUPPORT_USERNAME, "tool_support_password": $ENV.TOOL_SUPPORT_PASSWORD } }' > ~/.tool-config/default.json
+        env:
+          CANVAS_HOST: ${{ vars.CANVAS_HOST }}
+          TOOL_SUPPORT_URL: ${{ vars.TOOL_SUPPORT_URL }}
+          CANVAS_TOKEN: ${{ secrets.CANVAS_TOKEN }}
+          TOOL_SUPPORT_USERNAME: ${{ secrets.TOOL_SUPPORT_USERNAME }}
+          TOOL_SUPPORT_PASSWORD: ${{ secrets.TOOL_SUPPORT_PASSWORD }}
+      - name: Update or create tool configuration
+        run: |
+          npm install -g @oxctl/lti-auto-configuration
+          if npx @oxctl/lti-auto-configuration validate; then
+            npx @oxctl/lti-auto-configuration update
+          else
+            npx @oxctl/lti-auto-configuration create
+          fi
+      
