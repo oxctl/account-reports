@@ -17,8 +17,8 @@ class ReportApi {
     interval: 5000,
     // Age of an existing report we might use (ms). Set to 0 to never using existing, default 10 minutes
     reportAge: 1000 * 60 * 10,
-    // The timeout on running the report before aborting (ms), default 40 minutes
-    timeout: 1000 * 60 * 40,
+    // The timeout on running the report before aborting (ms), default 100 minutes
+    timeout: 1000 * 60 * 100,
   };
 
   runReport = async (reportType, parameters = {}, options = {}) => {
