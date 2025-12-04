@@ -11,10 +11,6 @@ export default defineConfig({
   base: "./",
 
   plugins: [
-    mkcert({
-      keyFileName: "./localhost-key.pem",
-      certFileName: "./localhost.pem",
-    }),
     react(),
     process.env.CI !== "true" && mkcert(),
   ],
@@ -31,8 +27,6 @@ export default defineConfig({
     },
   },
   build: {
-    rollupOptions: {
-    },
     // This means we don't have to change the config in cloudflare.
     outDir: "build",
   },
