@@ -2,12 +2,6 @@ name: Update tool configuration in Canvas and Tool Support
 on:
   workflow_call:
     inputs:
-      account_type:
-        description: 'Prod or preview account'
-        type: string
-      app_name:
-        description: 'The name of the app'
-        type: string
       env_type:
         description: 'The environment type, e.g. test, beta, prod'
         type: string
