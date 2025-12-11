@@ -36,7 +36,6 @@
     "developer_key": {
       "name": "Account Tools (New)$TITLE_SUFFIX",
       "redirect_uris": "$TOOL_SUPPORT_URL/lti/login",
-      "notes": "Auto-Config: $CURRENT_DATETIME",
       "scopes": []
     }
   },
@@ -52,8 +51,7 @@
         "url:POST|/api/v1/accounts/:account_id/reports/:report",
         "url:GET|/api/v1/accounts/:account_id/sis_imports/:id",      
         "url:GET|/api/v1/accounts/:account_id/sis_imports"
-      ],
-      "notes": "Auto-Config: $CURRENT_DATETIME"
+      ]
     }
   },
   "toolReg": {
