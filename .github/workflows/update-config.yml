@@ -5,6 +5,16 @@ on:
       env_type:
         description: 'The environment type, e.g. test, beta, prod'
         type: string
+  workflow_dispatch:
+    inputs:
+      env_type:
+        type: choice
+        description: "Environment"
+        required: true
+        default: 'beta'
+        options:
+        - beta
+        - prod
         
 jobs:
   update:

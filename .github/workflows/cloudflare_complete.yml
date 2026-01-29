@@ -1,6 +1,6 @@
 # runs when a Cloudflare deployment is successful
-name: Cloudflare Deploy Complete - Test Deployment
-run-name: "Cloudflare Deployment Tests - ${{ github.event.check_run.check_suite.head_branch }}"
+name: Cloudflare Deploy Complete - Update Config and Test Deployment
+run-name: "Cloudflare Update Config and Deployment Tests - ${{ github.event.check_run.check_suite.head_branch }}"
 
 on:
   check_run:
