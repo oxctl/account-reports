@@ -1,12 +1,8 @@
-import React, { useState, useCallback, useMemo } from "react";
-import { Grid } from "@instructure/ui";
-import { Text } from "@instructure/ui";
-import { Heading } from "@instructure/ui";
+import React, { useCallback, useMemo, useState } from "react";
+import { Alert, Grid, Heading, Text, View } from "@instructure/ui";
 import DuplicateLoginsJob from "./jobs/DuplicateLoginsJob";
 import RoleMatchJob from "./jobs/RoleMatchJob";
 import { ENROL_REPORTS } from "./utils/constants";
-import { View } from "@instructure/ui";
-import { Alert } from "@instructure/ui";
 import AccountAdminUsersJob from "./jobs/AccountAdminUsersJob";
 import ExternalAdminUsersJob from "./jobs/ExternalAdminUsersJob";
 import SubaccountAdminsJob from "./jobs/SubaccountAdminsJob";

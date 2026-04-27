@@ -1,7 +1,5 @@
-import React, { useState, useRef } from "react";
-import { Button } from "@instructure/ui";
-import { Spinner } from "@instructure/ui";
-import { Link } from "@instructure/ui";
+import React, { useRef, useState } from "react";
+import { Button, Link, Spinner } from "@instructure/ui";
 
 /**
  * A UI component that runs a report and allows the result to be downloaded.
