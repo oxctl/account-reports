@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 
-import { Tabs } from "@instructure/ui-tabs";
-import { Text } from "@instructure/ui-text";
+import { Tabs } from "@instructure/ui";
+import { Text } from "@instructure/ui";
 import {
   LtiPageSettings,
   LtiTokenRetriever,
@@ -10,9 +10,9 @@ import {
 } from "@oxctl/ui-lti";
 
 import { jwtDecode } from "jwt-decode";
-import { View } from "@instructure/ui-view";
-import { Heading } from "@instructure/ui-heading";
-import { Alert } from "@instructure/ui-alerts";
+import { View } from "@instructure/ui";
+import { Heading } from "@instructure/ui";
+import { Alert } from "@instructure/ui";
 
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
 import SearchPage from "./SearchPage";

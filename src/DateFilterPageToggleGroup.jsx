@@ -1,4 +1,4 @@
-import { ToggleDetails } from "@instructure/ui-toggle-details";
+import { ToggleDetails } from "@instructure/ui";
 
 function DateFilterPageToggleGroup({ expanded, setExpanded, children }) {
   return (

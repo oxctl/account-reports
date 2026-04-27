@@ -1,7 +1,7 @@
-import { List } from "@instructure/ui-list";
-import { Text } from "@instructure/ui-text";
-import { Link } from "@instructure/ui-link";
-import { ToggleDetails } from "@instructure/ui-toggle-details";
+import { List } from "@instructure/ui";
+import { Text } from "@instructure/ui";
+import { Link } from "@instructure/ui";
+import { ToggleDetails } from "@instructure/ui";
 
 export function SisImportListItem({ sisImport }) {
   const AttachmentsList = ({ attachments }) => {

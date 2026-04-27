@@ -1,5 +1,5 @@
 import React from "react";
-import { Spinner } from "@instructure/ui-spinner";
+import { Spinner } from "@instructure/ui";
 
 /**
  * Just a standard loading element that we display before the tool is functional.

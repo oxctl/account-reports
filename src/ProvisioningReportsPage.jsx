@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { View } from "@instructure/ui-view";
-import { List } from "@instructure/ui-list";
-import { Heading } from "@instructure/ui-heading";
-import { Link } from "@instructure/ui-link";
-import { Alert } from "@instructure/ui-alerts";
-import { Text } from "@instructure/ui-text";
+import { View } from "@instructure/ui";
+import { List } from "@instructure/ui";
+import { Heading } from "@instructure/ui";
+import { Link } from "@instructure/ui";
+import { Alert } from "@instructure/ui";
+import { Text } from "@instructure/ui";
 
 import { parseLinkHeader } from "@web3-storage/parse-link-header";
 import { capitalizeFirstLetter } from "./utils/utils";

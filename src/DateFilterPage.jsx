@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useRef } from "react";
 
-import { View } from "@instructure/ui-view";
-import { List } from "@instructure/ui-list";
-import { Heading } from "@instructure/ui-heading";
-import { Alert } from "@instructure/ui-alerts";
-import { DateTimeInput } from "@instructure/ui-date-time-input";
-import { ScreenReaderContent } from "@instructure/ui-a11y-content";
-import { IconXSolid } from "@instructure/ui-icons";
-import { Flex } from "@instructure/ui-flex";
-import { IconButton, Button } from "@instructure/ui-buttons";
+import { View } from "@instructure/ui";
+import { List } from "@instructure/ui";
+import { Heading } from "@instructure/ui";
+import { Alert } from "@instructure/ui";
+import { DateTimeInput } from "@instructure/ui";
+import { ScreenReaderContent } from "@instructure/ui";
+import { IconXSolid } from "@instructure/ui";
+import { Flex } from "@instructure/ui";
+import { IconButton, Button } from "@instructure/ui";
 
 import { parseLinkHeader } from "@web3-storage/parse-link-header";
 

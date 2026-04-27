@@ -1,4 +1,4 @@
-import { Pagination } from "@instructure/ui-pagination";
+import { Pagination } from "@instructure/ui";
 
 export function AddPagination({ prevUrl, currUrl, nextUrl, setCurrUrl }) {
   const onClick = (url) => {
