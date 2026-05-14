@@ -7,6 +7,7 @@ import AccountAdminUsersJob from "./jobs/AccountAdminUsersJob";
 import ExternalAdminUsersJob from "./jobs/ExternalAdminUsersJob";
 import SubaccountAdminsJob from "./jobs/SubaccountAdminsJob";
 import ReportAction from "./ReportAction";
+import UserAccessTokensCSVJob from "./jobs/UserAccessTokensCSVJob.js";
 
 /**
  * Renders the Account Reports page for a Canvas account.
@@ -83,6 +84,13 @@ function AccountReportsPage({
           new RoleMatchJob(server, token, { ...options, roleId: r.id }),
         showOnSubaccount: true,
       })),
+      {
+        name: "User Access Tokens Report",
+        description: "A list of user access tokens for the root account that are older than a year or expire more than a year from now.",
+        run: (server, token, options) =>
+          new UserAccessTokensCSVJob(server, token, options),
+        showOnSubaccount: true,
+      },
     ],
     [ENROL_REPORTS],
   );
