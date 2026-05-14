@@ -60,6 +60,7 @@ class UserAccessTokensCSVJob {
         const reasons = [];
 
         if (token.status?.toLowerCase() !== "active") continue;
+        if (token.dev_key_name !== 'User-Generated') continue;
 
         const createdAt =
           token.creation && token.creation !== "never"
