@@ -2,7 +2,7 @@ import ReportApi from "./ReportApi";
 import { JobsMixin } from "./JobsMixin";
 
 /**
- * Produces a list of user access tokens for the root account that are older than a year or expire more than a year from now.
+ * Produces a list of user access tokens for the root account that expire over a year from creation.
  */
 class UserAccessTokensCSVJob {
   static defaultOpts = {
