@@ -52,9 +52,6 @@ class UserAccessTokensCSVJob {
       this.adminsRows = await this.parseCsv(adminsCsv);
       const tokenRows = await this.parseCsv(tokensCsv);
 
-      const oneYearAgo = new Date();
-      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-
       const tokensByUserId = new Map();
       for (const token of Object.values(tokenRows)) {
         const reasons = [];
