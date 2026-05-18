@@ -71,11 +71,15 @@ class UserAccessTokensCSVJob {
             ? new Date(token.expiration)
             : null;
 
-        if (createdAt?.getTime() > oneYearAgo.getTime())
-          reasons.push("Created within last year");
-        if (expiresAt?.getTime() > oneYearAgo.getTime())
-          reasons.push("Expires over a year from now");
-        if (token.expiration === "never") reasons.push("Never expires");
+        if (token.expiration === "never") {
+          reasons.push("Never expires");
+        } else if (createdAt && expiresAt) {
+          const lifetimeMs = expiresAt.getTime() - createdAt.getTime();
+          const oneYearMs = 365 * 24 * 60 * 60 * 1000;
+          if (lifetimeMs > oneYearMs) {
+            reasons.push("Expires more than a year after creation");
+          }
+        }
 
         if (reasons.length === 0) continue;
 
