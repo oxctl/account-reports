@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { View } from "@instructure/ui-view";
-import { List } from "@instructure/ui-list";
-import { Heading } from "@instructure/ui-heading";
-import { Alert } from "@instructure/ui-alerts";
+import { Alert, Heading, List, View } from "@instructure/ui";
 
 import { parseLinkHeader } from "@web3-storage/parse-link-header";
 

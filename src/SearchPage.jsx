@@ -1,13 +1,17 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { View } from "@instructure/ui-view";
-import { List } from "@instructure/ui-list";
-import { Heading } from "@instructure/ui-heading";
-import { TextInput } from "@instructure/ui-text-input";
-import { ScreenReaderContent } from "@instructure/ui-a11y-content";
-import { IconSearchLine, IconXSolid } from "@instructure/ui-icons";
-import { Flex } from "@instructure/ui-flex";
-import { IconButton, Button } from "@instructure/ui-buttons";
+import {
+  Button,
+  Flex,
+  Heading,
+  IconButton,
+  IconSearchLine,
+  IconXSolid,
+  List,
+  ScreenReaderContent,
+  TextInput,
+  View
+} from "@instructure/ui";
 
 import { SisImportListItem } from "./SisImportListItem";
 import { Loading } from "./Loading";

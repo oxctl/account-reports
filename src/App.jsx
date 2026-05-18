@@ -1,18 +1,9 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useState } from "react";
 
-import { Tabs } from "@instructure/ui-tabs";
-import { Text } from "@instructure/ui-text";
-import {
-  LtiPageSettings,
-  LtiTokenRetriever,
-  LaunchOAuth,
-  LtiHeightLimit,
-} from "@oxctl/ui-lti";
+import { Alert, Heading, Tabs, Text, View } from "@instructure/ui";
+import { LaunchOAuth, LtiHeightLimit, LtiPageSettings, LtiTokenRetriever, } from "@oxctl/ui-lti";
 
 import { jwtDecode } from "jwt-decode";
-import { View } from "@instructure/ui-view";
-import { Heading } from "@instructure/ui-heading";
-import { Alert } from "@instructure/ui-alerts";
 
 import ProvisioningReportsPage from "./ProvisioningReportsPage";
 import SearchPage from "./SearchPage";

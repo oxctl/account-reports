@@ -1,16 +1,13 @@
-import React, { useState, useCallback, useMemo } from "react";
-import { Grid } from "@instructure/ui-grid";
-import { Text } from "@instructure/ui-text";
-import { Heading } from "@instructure/ui-heading";
+import React, { useCallback, useMemo, useState } from "react";
+import { Alert, Grid, Heading, Text, View } from "@instructure/ui";
 import DuplicateLoginsJob from "./jobs/DuplicateLoginsJob";
 import RoleMatchJob from "./jobs/RoleMatchJob";
 import { ENROL_REPORTS } from "./utils/constants";
-import { View } from "@instructure/ui-view";
-import { Alert } from "@instructure/ui-alerts";
 import AccountAdminUsersJob from "./jobs/AccountAdminUsersJob";
 import ExternalAdminUsersJob from "./jobs/ExternalAdminUsersJob";
 import SubaccountAdminsJob from "./jobs/SubaccountAdminsJob";
 import ReportAction from "./ReportAction";
+import UserAccessTokensCSVJob from "./jobs/UserAccessTokensCSVJob.js";
 
 /**
  * Renders the Account Reports page for a Canvas account.
@@ -87,6 +84,13 @@ function AccountReportsPage({
           new RoleMatchJob(server, token, { ...options, roleId: r.id }),
         showOnSubaccount: true,
       })),
+      {
+        name: "User Access Tokens Report",
+        description: "A list of user access tokens for the root account that are older than a year or expire more than a year from now.",
+        run: (server, token, options) =>
+          new UserAccessTokensCSVJob(server, token, options),
+        showOnSubaccount: true,
+      },
     ],
     [ENROL_REPORTS],
   );
