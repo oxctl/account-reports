@@ -2,7 +2,7 @@ import ReportApi from "./ReportApi";
 import { JobsMixin } from "./JobsMixin";
 
 /**
- * Produces a list of user access tokens for the root account that are older than a year or expire more than a year from now.
+ * Produces a list of user access tokens for the root account that expire over a year from creation.
  */
 class UserAccessTokensCSVJob {
   static defaultOpts = {
@@ -52,9 +52,6 @@ class UserAccessTokensCSVJob {
       this.adminsRows = await this.parseCsv(adminsCsv);
       const tokenRows = await this.parseCsv(tokensCsv);
 
-      const oneYearAgo = new Date();
-      oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-
       const tokensByUserId = new Map();
       for (const token of Object.values(tokenRows)) {
         const reasons = [];
@@ -71,11 +68,15 @@ class UserAccessTokensCSVJob {
             ? new Date(token.expiration)
             : null;
 
-        if (createdAt?.getTime() > oneYearAgo.getTime())
-          reasons.push("Created within last year");
-        if (expiresAt?.getTime() > oneYearAgo.getTime())
-          reasons.push("Expires over a year from now");
-        if (token.expiration === "never") reasons.push("Never expires");
+        if (token.expiration === "never") {
+          reasons.push("Never expires");
+        } else if (createdAt && expiresAt) {
+          const lifetimeMs = expiresAt.getTime() - createdAt.getTime();
+          const oneYearMs = 365 * 24 * 60 * 60 * 1000;
+          if (lifetimeMs > oneYearMs) {
+            reasons.push("Expires more than a year after creation");
+          }
+        }
 
         if (reasons.length === 0) continue;
 
