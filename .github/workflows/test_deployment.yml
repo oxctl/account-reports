@@ -25,7 +25,7 @@ on:
 jobs:
   deployment-tests:
     runs-on: ubuntu-22.04
-    timeout-minutes: 10
+    timeout-minutes: 5
     environment: ${{ inputs.execution-environment }}
     env:
       CANVAS_HOST: ${{ vars.CANVAS_HOST }}
