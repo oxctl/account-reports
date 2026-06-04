@@ -25,7 +25,7 @@ on:
 jobs:
   deployment-tests:
     runs-on: ubuntu-22.04
-    timeout-minutes: 10
+    timeout-minutes: 15
     environment: ${{ inputs.execution-environment }}
     env:
       CANVAS_HOST: ${{ vars.CANVAS_HOST }}
@@ -42,7 +42,11 @@ jobs:
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
       - run: npm ci
-      - run: npm run install-browsers
+      - name: Install Playwright Chromium
+        run: |
+          echo "Starting browser install at $(date -Iseconds)"
+          npx playwright install chromium
+          echo "Finished browser install at $(date -Iseconds)"
       - run: npm test
       - name: Upload test-results
         uses: actions/upload-artifact@v4
