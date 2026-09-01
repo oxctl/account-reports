@@ -5,7 +5,7 @@
     "tool_configuration": {
       "settings": {
         "public_jwk": {},
-        "title": "Account Tools (New)$TITLE_SUFFIX",
+        "title": "Account Tools $TITLE_SUFFIX",
         "description": "Presents links to useful Canvas reports: account reports, provisioning and SIS imports.",
         "target_link_uri": "$TOOL_URL",
         "oidc_initiation_url": "$TOOL_SUPPORT_URL/lti/login_initiation/",
@@ -42,7 +42,7 @@
   },
   "apiKey"  : {
     "developer_key": {
-      "name": "Account Tools (New) API$TITLE_SUFFIX",
+      "name": "Account Tools API$TITLE_SUFFIX",
       "require_scopes": true,
       "redirect_uris" : "$TOOL_SUPPORT_URL/login/oauth2/code/$LTI_REGISTRATION_ID",
       "notes": "Auto-Config: $CURRENT_DATETIME",
