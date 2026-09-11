@@ -1,0 +1,20 @@
+# This is kicked off by automated-tasks/trigger-deployments
+name: Beta Refresh - Update Config and Test Deployment
+
+on:
+  repository_dispatch:
+    types: [ sns_event ]
+
+jobs:
+  update-config:
+    uses: ./.github/workflows/update-config.yml
+    with:
+      env_type: beta
+    secrets: inherit
+
+  deployment-tests:
+    needs: update-config
+    uses: ./.github/workflows/test_deployment.yml
+    with:
+      execution-environment: beta
+    secrets: inherit
